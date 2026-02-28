@@ -24,20 +24,67 @@ import { createPaymentPreference, initMercadoPago } from "./mercadopago";
 import { authRouter } from "./_core/systemRouter";
 
 // ============================================================================
-// DORES ALEATÓRIAS PARA FECHAMENTO PERSUASIVO
+// DORES ALEATÓRIAS PARA FECHAMENTO PERSUASIVO - DIRETO E ESPECÍFICO
 // ============================================================================
-const EMOTIONAL_PAINS = [
-  "instabilidade financeira que tem tirado seu sono e feito você questionar seu próprio valor",
-  "um vazio no peito depois de um término ou traição que ainda dói todos os dias",
-  "uma sensação constante de cansaço e exaustão que médicos não explicam",
-  "medo de nunca conseguir construir a família ou relacionamento estável que você sonha",
-  "sensação de estar preso numa carreira que suga sua alma sem dar retorno financeiro",
-  "um problema de saúde recorrente ou medo de doença grave que ronda sua mente",
-  "solidão profunda mesmo estando cercado de gente",
-  "ansiedade constante sobre o futuro financeiro da família",
-  "dificuldade em dormir por preocupações que não saem da cabeça",
-  "sentimento de que a vida está passando e você está ficando para trás",
+const SPECIFIC_PAINS = [
+  // SAÚDE MENTAL
+  {
+    category: "Saúde Mental",
+    pains: [
+      "a ansiedade que não deixa você respirar fundo, aquela que acorda você no meio da noite com o coração acelerado",
+      "a depressão silenciosa que você esconde de todos, aquela que tira sua vontade de viver cada dia",
+      "o burnout profissional que está consumindo você, aquele cansaço que nem fim de semana resolve",
+      "a insônia que rouba suas noites, deixando você exausto durante o dia",
+      "a irritabilidade constante que está afastando as pessoas que você ama",
+    ]
+  },
+  // DOENÇAS FÍSICAS
+  {
+    category: "Saúde Física",
+    pains: [
+      "o medo silencioso de um problema cardiovascular que ronda sua mente",
+      "a hipertensão ou diabetes que você tenta controlar mas que parece escapar de suas mãos",
+      "o peso que carrega no corpo e que afeta sua autoestima todos os dias",
+      "os sintomas físicos do estresse que os médicos não conseguem explicar",
+      "o medo de receber um diagnóstico grave que mude sua vida para sempre",
+    ]
+  },
+  // FAMÍLIA
+  {
+    category: "Família",
+    pains: [
+      "os conflitos constantes com pessoas que você ama, aqueles que deixam cicatrizes profundas",
+      "a inveja e a falta de sinceridade dentro da sua própria família",
+      "a dificuldade em se dar bem com membros da família que deveriam ser seu porto seguro",
+      "a bagunça emocional causada pelo uso excessivo de celulares e redes sociais",
+      "a falta de diálogo real que deixa você isolado mesmo entre os seus",
+    ]
+  },
+  // AMOR E RELACIONAMENTO
+  {
+    category: "Amor e Relacionamento",
+    pains: [
+      "o vazio no peito depois de um término que ainda dói todos os dias",
+      "a desconfiança e a infidelidade que destruíram sua confiança em relacionamentos",
+      "a solidão crônica que afeta seu corpo e sua mente",
+      "a dificuldade em encontrar alguém que realmente te compreenda",
+      "o medo de ficar sozinho para o resto da vida",
+    ]
+  },
+  // FINANÇAS
+  {
+    category: "Finanças",
+    pains: [
+      "a instabilidade financeira que tem tirado seu sono e feito você questionar seu próprio valor",
+      "as brigas constantes sobre dinheiro que estão destruindo seus relacionamentos",
+      "a sensação de estar preso numa carreira que suga sua alma sem dar retorno financeiro",
+      "o medo de não conseguir sustentar sua família",
+      "a dívida que parece crescer mais rápido do que você consegue pagar",
+    ]
+  },
 ];
+
+const EMOTIONAL_PAINS = SPECIFIC_PAINS.flatMap(cat => cat.pains);
 
 let lastSelectedPain: string | null = null;
 
@@ -48,6 +95,11 @@ function getRandomPain(): string {
   } while (selectedPain === lastSelectedPain);
   lastSelectedPain = selectedPain;
   return selectedPain;
+}
+
+function getRandomCategory(): string {
+  const categories = SPECIFIC_PAINS.map(cat => cat.category);
+  return categories[Math.floor(Math.random() * categories.length)];
 }
 
 function getRandomUrgency(): { type: "date" | "counter"; value: string } {
@@ -171,7 +223,7 @@ Escreva em português brasileiro fluente, poético, acolhedor e misterioso. Use 
 
 **FECHAMENTO PERSUASIVO OBRIGATÓRIO (deve ser o ÚLTIMO parágrafo, copie exatamente):**
 
-"Eu vejo claramente nos seus Pilares o peso que você carrega neste exato momento da vida. Sei exatamente por que você chegou até aqui hoje… sei que me procurou porque ${closingClosingPain}.
+"Eu vejo claramente nos seus Pilares o peso que você carrega neste exato momento da vida. Sei exatamente por que você chegou até aqui hoje… sei que me procurou porque ${getRandomPain()}.
 
 Essa dor não é acaso. Ela está escrita nos seus Pilares há muito tempo e tem um propósito ancestral. A boa notícia? Existe um caminho exato, preciso e poderoso para atravessar esse vale, transformar essa angústia em força, abundância, amor verdadeiro e paz interior.
 
