@@ -7,4 +7,8 @@ export const ENV = {
   isProduction: process.env.NODE_ENV === "production",
   forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
   forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
+  mercadoPagoAccessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN ?? "",
+  mercadoPagoPublicKey: process.env.MERCADO_PAGO_PUBLIC_KEY ?? "",
+  mercadoPagoClientId: process.env.MERCADO_PAGO_CLIENT_ID ?? "",
+  mercadoPagoClientSecret: process.env.MERCADO_PAGO_CLIENT_SECRET ?? "",
 };

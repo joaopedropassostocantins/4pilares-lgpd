@@ -13,6 +13,7 @@ import {
   updateDiagnostic,
 } from "./db";
 import { calculatePillars } from "./sajo";
+import { createPaymentPreference, initMercadoPago } from "./mercadopago";
 
 const diagnosticRouter = router({
   create: publicProcedure
@@ -172,7 +173,7 @@ Use markdown para formatação rica. Seja profundo, poético e específico.`;
       try {
         await notifyOwner({
           title: "✦ Pagamento Recebido - Análise Desbloqueada",
-          content: `${diagnostic.consultantName || "Consulente"} desbloqueou a análise completa. ID: ${input.publicId}. Valor: R$ 20,00`,
+          content: `${diagnostic.consultantName || "Consulente"} desbloqueou a análise completa. ID: ${input.publicId}. Valor: R$ 14,99`,
         });
       } catch (err) {
         console.warn("[Notification] Failed to notify owner of payment:", err);
@@ -183,13 +184,48 @@ Use markdown para formatação rica. Seja profundo, poético e específico.`;
 });
 
 const paymentRouter = router({
+  createPreference: publicProcedure
+    .input(z.object({ 
+      diagnosticId: z.string(),
+      userEmail: z.string().email(),
+      userName: z.string(),
+      returnUrl: z.string(),
+    }))
+    .mutation(async ({ input }) => {
+      try {
+        // Initialize Mercado Pago if not already done
+        initMercadoPago();
+
+        const preference = await createPaymentPreference({
+          diagnosticId: input.diagnosticId,
+          userEmail: input.userEmail,
+          userName: input.userName,
+          amount: 14.99,
+          returnUrl: input.returnUrl,
+        });
+
+        return {
+          preferenceId: preference.preferenceId,
+          initPoint: preference.initPoint,
+          sandboxInitPoint: preference.sandboxInitPoint,
+        };
+      } catch (error) {
+        console.error("[Payment] Failed to create preference:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Falha ao criar preferência de pagamento",
+        });
+      }
+    }),
+
+  // Legacy Pix endpoint (kept for backward compatibility)
   createPix: publicProcedure
     .input(z.object({ diagnosticId: z.string() }))
     .mutation(async () => {
       return {
         pixKey: "55 63 98438-1782",
         beneficiary: "FUSION-SAJO Diagnósticos Ancestrais",
-        amount: 20.0,
+        amount: 14.99,
       };
     }),
 

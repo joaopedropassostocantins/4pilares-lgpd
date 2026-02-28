@@ -59,6 +59,6 @@ describe("payment.createPix", () => {
     const result = await caller.payment.createPix({ diagnosticId: "test-id" });
     expect(result.pixKey).toBe("55 63 98438-1782");
     expect(result.beneficiary).toContain("FUSION-SAJO");
-    expect(result.amount).toBe(20.0);
+    expect(result.amount).toBe(14.99);
   });
 });
