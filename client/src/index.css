@@ -43,40 +43,41 @@
 }
 
 :root {
-  /* FUSION-SAJO — Dark Mystic Theme */
+  /* FUSION-SAJO — Xamanismo Coreano Theme */
   --radius: 0.65rem;
-  --background: oklch(0.12 0.02 30);
-  --foreground: oklch(0.92 0.05 60);
-  --card: oklch(0.16 0.025 30);
-  --card-foreground: oklch(0.92 0.05 60);
-  --popover: oklch(0.16 0.025 30);
-  --popover-foreground: oklch(0.92 0.05 60);
-  --primary: oklch(0.72 0.12 55);
-  --primary-foreground: oklch(0.12 0.02 30);
-  --secondary: oklch(0.22 0.03 30);
-  --secondary-foreground: oklch(0.85 0.05 60);
-  --muted: oklch(0.20 0.025 30);
-  --muted-foreground: oklch(0.60 0.04 50);
-  --accent: oklch(0.25 0.04 30);
-  --accent-foreground: oklch(0.92 0.05 60);
-  --destructive: oklch(0.55 0.18 25);
-  --destructive-foreground: oklch(0.92 0.05 60);
-  --border: oklch(0.28 0.04 40);
-  --input: oklch(0.20 0.025 30);
-  --ring: oklch(0.72 0.12 55);
-  --chart-1: oklch(0.72 0.15 145);
-  --chart-2: oklch(0.75 0.18 25);
-  --chart-3: oklch(0.78 0.12 80);
-  --chart-4: oklch(0.85 0.03 60);
-  --chart-5: oklch(0.70 0.12 240);
-  --sidebar: oklch(0.14 0.022 30);
-  --sidebar-foreground: oklch(0.92 0.05 60);
-  --sidebar-primary: oklch(0.72 0.12 55);
-  --sidebar-primary-foreground: oklch(0.12 0.02 30);
-  --sidebar-accent: oklch(0.22 0.03 30);
-  --sidebar-accent-foreground: oklch(0.92 0.05 60);
-  --sidebar-border: oklch(0.28 0.04 40);
-  --sidebar-ring: oklch(0.72 0.12 55);
+  /* Paleta: Azul Profundo (Yin), Vermelho Vivo (Yang), Amarelo Ouro (Equilíbrio), Branco Puro */
+  --background: oklch(0.95 0.02 60);  /* Branco quase puro para legibilidade */
+  --foreground: oklch(0.15 0.04 240); /* Azul profundo para texto */
+  --card: oklch(0.98 0.01 60);        /* Branco com leve tom quente */
+  --card-foreground: oklch(0.15 0.04 240); /* Azul profundo */
+  --popover: oklch(0.98 0.01 60);
+  --popover-foreground: oklch(0.15 0.04 240);
+  --primary: oklch(0.60 0.20 25);     /* Vermelho vivo (Yang) */
+  --primary-foreground: oklch(0.98 0.01 60); /* Branco */
+  --secondary: oklch(0.35 0.15 240);  /* Azul profundo (Yin) */
+  --secondary-foreground: oklch(0.98 0.01 60);
+  --muted: oklch(0.80 0.05 60);
+  --muted-foreground: oklch(0.40 0.08 240); /* Azul mais claro */
+  --accent: oklch(0.75 0.18 80);      /* Amarelo ouro (Equilíbrio) */
+  --accent-foreground: oklch(0.15 0.04 240); /* Azul profundo */
+  --destructive: oklch(0.60 0.20 25); /* Vermelho */
+  --destructive-foreground: oklch(0.98 0.01 60);
+  --border: oklch(0.85 0.05 240);     /* Azul muito claro */
+  --input: oklch(0.98 0.01 60);
+  --ring: oklch(0.60 0.20 25);        /* Vermelho */
+  --chart-1: oklch(0.60 0.20 25);     /* Vermelho */
+  --chart-2: oklch(0.35 0.15 240);    /* Azul */
+  --chart-3: oklch(0.75 0.18 80);     /* Amarelo */
+  --chart-4: oklch(0.50 0.12 10);     /* Marrom escuro */
+  --chart-5: oklch(0.70 0.12 240);    /* Azul claro */
+  --sidebar: oklch(0.98 0.01 60);
+  --sidebar-foreground: oklch(0.15 0.04 240);
+  --sidebar-primary: oklch(0.60 0.20 25);
+  --sidebar-primary-foreground: oklch(0.98 0.01 60);
+  --sidebar-accent: oklch(0.35 0.15 240);
+  --sidebar-accent-foreground: oklch(0.98 0.01 60);
+  --sidebar-border: oklch(0.85 0.05 240);
+  --sidebar-ring: oklch(0.60 0.20 25);
 }
 
 /* Dark mode inherits same mystic theme */
@@ -105,12 +106,12 @@
 /* ===================== MYSTIC STYLES ===================== */
 
 .mystic-gradient {
-  background: radial-gradient(ellipse at top, oklch(0.18 0.04 30) 0%, oklch(0.10 0.02 25) 60%, oklch(0.08 0.01 20) 100%);
+  background: linear-gradient(135deg, oklch(0.95 0.02 60) 0%, oklch(0.92 0.03 240) 50%, oklch(0.90 0.04 80) 100%);
   min-height: 100vh;
 }
 
 .shimmer-text {
-  background: linear-gradient(90deg, oklch(0.72 0.12 55), oklch(0.85 0.08 65), oklch(0.72 0.12 55));
+  background: linear-gradient(90deg, oklch(0.60 0.20 25), oklch(0.75 0.18 80), oklch(0.60 0.20 25));
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -124,7 +125,7 @@
 }
 
 .mystic-glow {
-  text-shadow: 0 0 20px oklch(0.72 0.12 55 / 0.6), 0 0 40px oklch(0.72 0.12 55 / 0.3);
+  text-shadow: 0 0 20px oklch(0.60 0.20 25 / 0.6), 0 0 40px oklch(0.60 0.20 25 / 0.3);
 }
 
 .ornamental-divider {
@@ -138,7 +139,7 @@
   content: '';
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, transparent, oklch(0.72 0.12 55 / 0.5), transparent);
+  background: linear-gradient(90deg, transparent, oklch(0.60 0.20 25 / 0.5), transparent);
 }
 
 .element-badge {
@@ -151,11 +152,11 @@
   font-weight: 600;
 }
 
-.element-Madeira { background: oklch(0.35 0.12 145 / 0.3); color: oklch(0.72 0.15 145); border: 1px solid oklch(0.72 0.15 145 / 0.4); }
-.element-Fogo    { background: oklch(0.35 0.15 25 / 0.3);  color: oklch(0.75 0.18 25);  border: 1px solid oklch(0.75 0.18 25 / 0.4); }
-.element-Terra   { background: oklch(0.35 0.10 80 / 0.3);  color: oklch(0.78 0.12 80);  border: 1px solid oklch(0.78 0.12 80 / 0.4); }
-.element-Metal   { background: oklch(0.35 0.03 60 / 0.3);  color: oklch(0.85 0.03 60);  border: 1px solid oklch(0.85 0.03 60 / 0.4); }
-.element-Água    { background: oklch(0.25 0.10 240 / 0.3); color: oklch(0.70 0.12 240); border: 1px solid oklch(0.70 0.12 240 / 0.4); }
+.element-Madeira { background: oklch(0.70 0.12 145 / 0.2); color: oklch(0.30 0.12 145); border: 1.5px solid oklch(0.30 0.12 145); }
+.element-Fogo    { background: oklch(0.70 0.15 25 / 0.2);  color: oklch(0.40 0.18 25);  border: 1.5px solid oklch(0.40 0.18 25); }
+.element-Terra   { background: oklch(0.75 0.10 80 / 0.2);  color: oklch(0.35 0.12 80);  border: 1.5px solid oklch(0.35 0.12 80); }
+.element-Metal   { background: oklch(0.80 0.03 60 / 0.2);  color: oklch(0.25 0.03 60);  border: 1.5px solid oklch(0.25 0.03 60); }
+.element-Água    { background: oklch(0.65 0.10 240 / 0.2); color: oklch(0.25 0.12 240); border: 1.5px solid oklch(0.25 0.12 240); }
 
 @keyframes float {
   0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.6; }
@@ -234,4 +235,88 @@
       max-width: 1280px; /* Standard content width */
     }
   }
+}
+
+/* ===================== IMPROVED CONTRAST STYLES ===================== */
+
+/* Card com melhor contraste */
+.prose-mystic {
+  color: oklch(0.15 0.04 240); /* Azul profundo para melhor legibilidade */
+  line-height: 1.8;
+  font-size: 1rem;
+}
+
+/* Headings com contraste máximo */
+h1, h2, h3, h4, h5, h6 {
+  color: oklch(0.15 0.04 240); /* Azul profundo */
+  font-weight: 700;
+}
+
+/* Links com cor vibrante */
+a {
+  color: oklch(0.60 0.20 25); /* Vermelho vivo */
+  text-decoration: underline;
+}
+
+a:hover {
+  color: oklch(0.35 0.15 240); /* Azul mais escuro */
+}
+
+/* Buttons com melhor contraste */
+button {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Muted text com melhor legibilidade */
+.text-muted-foreground {
+  color: oklch(0.40 0.08 240) !important; /* Azul mais claro mas legível */
+}
+
+/* Cards com sombra para profundidade */
+.bg-card {
+  background-color: oklch(0.98 0.01 60);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Borders mais visíveis */
+.border {
+  border-color: oklch(0.70 0.08 240) !important;
+}
+
+/* Archetype selection cards */
+.archetype-card {
+  background: oklch(0.98 0.01 60);
+  border: 2px solid oklch(0.80 0.05 240);
+  color: oklch(0.15 0.04 240);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.archetype-card:hover {
+  border-color: oklch(0.60 0.20 25);
+  box-shadow: 0 4px 12px rgba(153, 51, 51, 0.15);
+}
+
+.archetype-card.selected {
+  background: oklch(0.75 0.18 80 / 0.1);
+  border-color: oklch(0.60 0.20 25);
+  box-shadow: 0 4px 12px rgba(153, 51, 51, 0.25);
+}
+
+/* Form inputs com melhor contraste */
+input, textarea, select {
+  background: oklch(0.98 0.01 60) !important;
+  color: oklch(0.15 0.04 240) !important;
+  border: 1.5px solid oklch(0.80 0.05 240) !important;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: oklch(0.60 0.20 25) !important;
+  box-shadow: 0 0 0 3px oklch(0.60 0.20 25 / 0.1) !important;
+}
+
+/* Placeholder text */
+input::placeholder, textarea::placeholder {
+  color: oklch(0.50 0.06 240) !important;
 }

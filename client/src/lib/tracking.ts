@@ -5,16 +5,16 @@
 export const TRACKING_CONFIG = {
   // Google Ads Conversion Tracking
   googleAds: {
-    conversionId: process.env.VITE_GOOGLE_ADS_CONVERSION_ID || "AW-XXXXXXXXXX",
+    conversionId: import.meta.env.VITE_GOOGLE_ADS_CONVERSION_ID || "AW-XXXXXXXXXX",
     conversionLabel: {
-      diagnosticCreated: process.env.VITE_GOOGLE_ADS_LABEL_DIAGNOSTIC || "XXXXXXXXX",
-      paymentCompleted: process.env.VITE_GOOGLE_ADS_LABEL_PAYMENT || "XXXXXXXXX",
+      diagnosticCreated: import.meta.env.VITE_GOOGLE_ADS_LABEL_DIAGNOSTIC || "XXXXXXXXX",
+      paymentCompleted: import.meta.env.VITE_GOOGLE_ADS_LABEL_PAYMENT || "XXXXXXXXX",
     },
   },
 
   // Meta Pixel (Facebook)
   metaPixel: {
-    pixelId: process.env.VITE_META_PIXEL_ID || "XXXXXXXXXXXXXXXXX",
+    pixelId: import.meta.env.VITE_META_PIXEL_ID || "XXXXXXXXXXXXXXXXX",
     events: {
       pageView: "PageView",
       viewContent: "ViewContent",
@@ -26,17 +26,17 @@ export const TRACKING_CONFIG = {
 
   // TikTok Pixel
   tikTok: {
-    pixelId: process.env.VITE_TIKTOK_PIXEL_ID || "XXXXXXXXXXXXXXXXX",
+    pixelId: import.meta.env.VITE_TIKTOK_PIXEL_ID || "XXXXXXXXXXXXXXXXX",
   },
 
   // Hotjar
   hotjar: {
-    siteId: process.env.VITE_HOTJAR_SITE_ID || "XXXXXXXXX",
+    siteId: import.meta.env.VITE_HOTJAR_SITE_ID || "XXXXXXXXX",
   },
 
   // Segment (if using)
   segment: {
-    writeKey: process.env.VITE_SEGMENT_WRITE_KEY || "",
+    writeKey: import.meta.env.VITE_SEGMENT_WRITE_KEY || "",
   },
 };
 

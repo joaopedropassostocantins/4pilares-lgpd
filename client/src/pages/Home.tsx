@@ -30,18 +30,18 @@ async function fetchAddressByCep(cep: string): Promise<string | null> {
   }
 }
 
-// ─── 10 Archetypes ──────────────────────────────────────────────────────────
+/// ─── 10 Archetypes (Xamanismo Coreano) ──────────────────────────────────────────────────────
 const ARCHETYPES = [
-  { id: "big_tree", name: "🌳 Big Tree", desc: "Força, estabilidade, liderança natural" },
-  { id: "flower", name: "🌸 Flower", desc: "Beleza, delicadeza, sensibilidade" },
-  { id: "sun", name: "☀️ Sun", desc: "Energia, brilho, carisma irradiante" },
-  { id: "candle", name: "🕯️ Candle", desc: "Iluminação, guia, sacrifício nobre" },
-  { id: "land", name: "🌍 Land", desc: "Raízes, conexão, abundância" },
-  { id: "fertile_soil", name: "🌱 Fertile Soil", desc: "Nutrição, crescimento, potencial" },
-  { id: "rock", name: "🪨 Rock", desc: "Solidez, resistência, imutabilidade" },
-  { id: "gemstone", name: "💎 Gemstone", desc: "Raridade, valor, brilho interior" },
-  { id: "ocean", name: "🌊 Ocean", desc: "Profundidade, mistério, vastidão" },
-  { id: "stream", name: "💧 Stream", desc: "Fluidez, adaptação, movimento constante" },
+  { id: "big_tree", name: "🌳 Árvore Sagrada", desc: "Força" },
+  { id: "flower", name: "🌸 Flor Celestial", desc: "Beleza" },
+  { id: "sun", name: "☀️ Sol Radiante", desc: "Energia" },
+  { id: "candle", name: "🕯️ Chama Sagrada", desc: "Iluminação" },
+  { id: "land", name: "🌍 Terra Mãe", desc: "Raízes" },
+  { id: "fertile_soil", name: "🌱 Solo Fértil", desc: "Crescimento" },
+  { id: "rock", name: "🪨 Pedra Ancestral", desc: "Solidez" },
+  { id: "gemstone", name: "💎 Joia Rara", desc: "Raridade" },
+  { id: "ocean", name: "🌊 Oceano Profundo", desc: "Profundidade" },
+  { id: "stream", name: "💧 Riacho Fluido", desc: "Fluidez" },
 ];
 
 // ─── Element display ─────────────────────────────────────────────────────────
