@@ -238,8 +238,11 @@ export default function Home() {
       {/* ── HOW IT WORKS ── */}
       <section id="como-funciona" className="max-w-6xl mx-auto px-4 py-16">
         <h2 className="text-3xl font-bold text-center text-primary mb-12" style={{ fontFamily: "'Cinzel', serif" }}>
-          Como Funciona
+          Como Funciona a Astrologia SAJO
         </h2>
+        <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
+          Entenda como a análise dos 4 Pilares SAJO (Ano, Mês, Dia e Hora) revela seu destino através da tradição milenar coreana
+        </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {HOW_IT_WORKS.map((item) => (
             <Card key={item.step} className="bg-card/60 border-primary/30 text-center">
@@ -447,8 +450,11 @@ export default function Home() {
       {/* ── TESTIMONIALS ── */}
       <section id="depoimentos" className="max-w-6xl mx-auto px-4 py-16">
         <h2 className="text-3xl font-bold text-center text-primary mb-12" style={{ fontFamily: "'Cinzel', serif" }}>
-          O Que Dizem Nossos Usuários
+          Depoimentos - Transformações Reais com Astrologia SAJO
         </h2>
+        <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
+          Veja como a análise dos 4 Pilares SAJO ajudou milhares de pessoas a descobrir seu potencial em amor, carreira e saúde
+        </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {TESTIMONIALS.map((testimonial, idx) => (
             <Card key={idx} className="bg-card/60 border-primary/30">
