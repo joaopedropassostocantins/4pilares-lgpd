@@ -59,23 +59,23 @@ const diagnosticRouter = router({
       z.object({
         consultantName: z.string().optional(),
         birthDate: z.string(),
-        birthTime: z.string(),
-        birthPlace: z.string(),
+        birthTime: z.string().optional(),
+        birthPlace: z.string().optional(),
         hasDst: z.boolean().default(false),
       })
     )
     .mutation(async ({ input }) => {
       const publicId = nanoid(16);
-      const pillarsData = calculatePillars(input.birthDate, input.birthTime, input.hasDst);
+      const pillarsData = calculatePillars(input.birthDate, input.birthTime || "12:00", input.hasDst);
 
       // Generate tasting analysis with LLM
       const name = input.consultantName || "Viajante";
-      const prompt = `Você é um analista de padrões comportamentais baseado em ciclos coreanos SAJO (사주). Seu tom é direto, preditivo e hipnotizante — sem linguagem épica ou fantasia. Fale em português brasileiro.
+      const prompt = `Você é um especialista em padrões de destino baseado no sistema SAJO coreano (사주). Seu tom é direto, assertivo, contundente e hipnotizante — sem floreios. Fale em português brasileiro.
 
 Dados do consulente:
 - Nome: ${name}
 - Signo Animal: ${pillarsData.animalSign}
-- Pilar do Dia (essencial): ${pillarsData.dayPillar.stem.name} sobre ${pillarsData.dayPillar.branch.name}
+- Pilar do Dia (essência): ${pillarsData.dayPillar.stem.name} sobre ${pillarsData.dayPillar.branch.name}
 - Elemento dominante: ${pillarsData.dominantElement}
 - Traços observáveis: ${pillarsData.personalityTraits.join(", ")}
 - Pontos fortes: ${pillarsData.strengths.join(", ")}
@@ -83,20 +83,20 @@ Dados do consulente:
 - Equilíbrio dos elementos: ${JSON.stringify(pillarsData.elementBalance)}
 
 Escreva uma análise de degustação (4-5 parágrafos) que:
-1. Abra com 1-2 frases que acertam em cheio: uma afirmação forte + 1 pergunta de checagem ("Se eu estiver certo, você vai reconhecer... é isso ou aquilo?").
-2. Revele padrões de comportamento, ciclos de decisão, riscos típicos e trade-offs baseados no Pilar do Dia.
-3. Inclua detalhes únicos (palavras-chave, eventos, escolhas, sinais de burnout, finanças, trabalho, relacionamentos).
-4. Use linguagem de probabilidade e timing: "agora", "próximos 7-30 dias", "tendência", "risco iminente".
+1. Abra com 1-2 frases que acertam em cheio: uma afirmação CONTUNDENTE + 1 pergunta de checagem ("Você reconhece isso, certo?").
+2. Revele padrões de comportamento, ciclos de decisão, riscos típicos e trade-offs com AFIRMAÇÕES CONCRETAS (não especulativo).
+3. Inclua detalhes únicos baseados no padrão: palavras-chave, eventos típicos, escolhas recorrentes, sinais de burnout, padrões financeiros, dinâmicas de trabalho, relacionamentos.
+4. Use linguagem de CERTEZA e timing: "você vai", "está acontecendo agora", "próximos 7-30 dias", "a tendência é", "o risco é", "você vai se deparar com".
 5. Termine com gancho forte e CTA para desbloquear análise completa.
 6. Inclua: "Leitura interpretativa para reflexão; não substitui profissionais."
-7. NUNCA faça predições sobre saúde/filhos/terceiros sem formulação condicional (ex: "Se você vem sentindo X, vale checar com médico").
-Seja cirurgicamente preciso, hipnotizante e sem floreios.`;
+7. NUNCA faça predições sobre saúde/filhos/terceiros sem formulação condicional.
+Seja cirurgicamente preciso, contundente, assertivo e sem floreios.`;
 
       const response = await invokeLLM({
         messages: [
           {
             role: "system",
-            content: "Você é um ancião mestre SAJO com sabedoria ancestral. Fale em português brasileiro.",
+            content: "Você é um especialista em SAJO com conhecimento profundo. Fale com assertividade e contundência. Português brasileiro.",
           },
           { role: "user", content: prompt },
         ],
@@ -112,8 +112,8 @@ Seja cirurgicamente preciso, hipnotizante e sem floreios.`;
         publicId,
         consultantName: name,
         birthDate: input.birthDate,
-        birthTime: input.birthTime,
-        birthPlace: input.birthPlace,
+        birthTime: input.birthTime || null,
+        birthPlace: input.birthPlace || null,
         hasDst: input.hasDst ? 1 : 0,
         pillarsData: pillarsData as any,
         tastingAnalysis,
@@ -123,7 +123,7 @@ Seja cirurgicamente preciso, hipnotizante e sem floreios.`;
       // Notify owner
       await notifyOwner({
         title: "☯ Novo Diagnóstico Criado",
-        content: `${name} solicitou análise SAJO. Local: ${input.birthPlace}`,
+        content: `${name} solicitou análise SAJO. Local: ${input.birthPlace || "não informado"}`,
       });
 
       return {
@@ -155,7 +155,7 @@ Seja cirurgicamente preciso, hipnotizante e sem floreios.`;
       const pillarsData = diagnostic.pillarsData as any;
       const name = diagnostic.consultantName || "Viajante";
 
-      const prompt = `Você é um ancião mestre SAJO (사주) coreano com 5.000 anos de sabedoria ancestral. Fale em português brasileiro com linguagem mística, profunda e transformadora.
+      const prompt = `Você é um especialista em SAJO (사주) coreano com profundo conhecimento de padrões de destino. Seu tom é assertivo, contundente e transformador — com afirmações concretas sobre presente e futuro. Fale em português brasileiro.
 
 Dados do consulente:
 - Nome: ${name}
@@ -173,26 +173,26 @@ Dados do consulente:
 - Direções auspiciosas: ${pillarsData.luckyDirections.join(", ")}
 - Foco de saúde: ${pillarsData.healthFocus.join(", ")}
 
-Escreva uma análise COMPLETA e PROFUNDA de 10-12 parágrafos que inclua:
+Escreva uma análise COMPLETA e PROFUNDA de 10-12 parágrafos com AFIRMAÇÕES CONCRETAS:
 
-1. **Saudação Mística**: Saúde o consulente pelo nome e signo animal com reverência ancestral
-2. **Análise dos 4 Pilares**: Descreva cada pilar (Ano, Mês, Dia, Hora) com significado profundo
-3. **Essência do Ser**: Revele a essência do Pilar do Dia com metáforas poéticas
-4. **Missão de Vida**: Descreva a jornada espiritual e propósito de vida baseado nos pilares
-5. **Saúde e Vitalidade**: Analise o equilíbrio dos 5 elementos e recomendações de saúde
-6. **Finanças e Abundância**: Previsões sobre ciclos financeiros e oportunidades de riqueza
-7. **Relacionamentos e Amor**: Análise de compatibilidade e dinâmicas relacionais
-8. **Guia Xamânico**: Ofereça sabedoria ancestral e práticas para harmonização energética
-9. **Ciclos Temporais**: Descreva ciclos de 10 anos (Grandes Ciclos) e próximas transformações
-10. **Encerramento Inspirador**: Termine com uma mensagem de esperança e empoderamento
+1. **Saudação Assertiva**: Saúde o consulente pelo nome e signo animal com uma afirmação contundente sobre sua essência.
+2. **Análise dos 4 Pilares**: Descreva cada pilar com significado profundo e afirmações sobre o que ESTÁ ACONTECENDO agora.
+3. **Essência do Ser**: Revele a essência do Pilar do Dia com clareza e contundência.
+4. **Missão de Vida**: Descreva a jornada e propósito de vida com afirmações concretas.
+5. **Saúde e Vitalidade**: Analise o equilíbrio dos 5 elementos com recomendações específicas.
+6. **Finanças e Abundância**: Previsões CONCRETAS sobre ciclos financeiros e oportunidades.
+7. **Relacionamentos e Amor**: Análise de compatibilidade com afirmações sobre dinâmicas relacionais.
+8. **Guia Prático**: Ofereça sabedoria ancestral e práticas concretas para harmonização.
+9. **Ciclos Temporais**: Descreva ciclos de 10 anos (Grandes Ciclos) e transformações iminentes.
+10. **Encerramento Empoderador**: Termine com afirmações de força e empoderamento.
 
-Use linguagem poética, referências à natureza coreana, yin-yang e xamanismo. Seja profundo, transformador e esperançoso.`;
+Use linguagem ASSERTIVA, CONTUNDENTE, com afirmações sobre PRESENTE e FUTURO. Evite especulação. Seja direto e transformador.`;
 
       const response = await invokeLLM({
         messages: [
           {
             role: "system",
-            content: "Você é um ancião mestre SAJO com sabedoria ancestral. Fale em português brasileiro.",
+            content: "Você é um especialista em SAJO com conhecimento profundo. Fale com assertividade, contundência e certeza. Português brasileiro.",
           },
           { role: "user", content: prompt },
         ],
@@ -267,6 +267,11 @@ const paymentRouter = router({
           userName: input.userName,
           amount: 14.99,
           returnUrl: input.returnUrl,
+        });
+
+        // Store payment ID in diagnostic for webhook linking
+        await updateDiagnostic(input.diagnosticId, {
+          paymentId: preference.preferenceId,
         });
 
         return {

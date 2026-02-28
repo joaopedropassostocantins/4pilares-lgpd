@@ -1,0 +1,16 @@
+{
+  "query": "SELECT id, publicId, paymentId, paymentStatus FROM diagnostics WHERE publicId='jA5AsFY3vTDI5t4L' LIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GxbsQmoYM7gXTW.root --database g9GC8npXGtLqRcd8tG3q6A --execute SELECT id, publicId, paymentId, paymentStatus FROM diagnostics WHERE publicId='jA5AsFY3vTDI5t4L' LIMIT 1;",
+  "rows": [
+    {
+      "id": "120004",
+      "publicId": "jA5AsFY3vTDI5t4L",
+      "paymentId": "240523153-08085091-1433-474b-a3e5-6de249503f3d",
+      "paymentStatus": "pending"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tpublicId\tpaymentId\tpaymentStatus\n120004\tjA5AsFY3vTDI5t4L\t240523153-08085091-1433-474b-a3e5-6de249503f3d\tpending\n",
+  "stderr": "",
+  "execution_time_ms": 549
+}

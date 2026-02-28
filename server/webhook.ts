@@ -1,7 +1,9 @@
 import { getPaymentDetails } from "./mercadopago";
-import { getDiagnosticByPublicId, updateDiagnostic } from "./db";
+import { getDiagnosticByPublicId, updateDiagnostic, getDb } from "./db";
 import { invokeLLM } from "./_core/llm";
 import { notifyOwner } from "./_core/notification";
+import { diagnostics } from "../drizzle/schema";
+import { eq } from "drizzle-orm";
 
 /**
  * Process Mercado Pago webhook event
@@ -34,40 +36,44 @@ export async function processMercadoPagoWebhook(event: {
       return;
     }
 
-    // Find diagnostic by payment ID (we need to store payment ID in diagnostic)
-    // For now, we'll search by recent diagnostics with pending payment
-    // In production, you should store the payment ID in the diagnostic record
-    console.log(`[Webhook] Payment approved! Amount: R$ ${paymentDetails.amount}`);
+    // Find diagnostic by payment ID
+    const db = await getDb();
+    if (!db) {
+      console.error("[Webhook] Database not available");
+      return;
+    }
+
+    const diagnostic = await db
+      .select()
+      .from(diagnostics)
+      .where(eq(diagnostics.paymentId, paymentId))
+      .limit(1);
+
+    if (!diagnostic || diagnostic.length === 0) {
+      console.error(`[Webhook] Diagnostic not found for payment: ${paymentId}`);
+      return;
+    }
+
+    const diagnosticRecord = diagnostic[0];
+    console.log(`[Webhook] Found diagnostic: ${diagnosticRecord.publicId}`);
+
+    // Generate full analysis
+    await generateFullAnalysisOnPayment(diagnosticRecord.publicId);
+
+    // Update payment status
+    await updateDiagnostic(diagnosticRecord.publicId, {
+      paymentStatus: "paid",
+    });
+
+    console.log(`[Webhook] Payment confirmed and analysis generated for: ${diagnosticRecord.publicId}`);
 
     // Notify owner of successful payment
     await notifyOwner({
       title: "✦ Pagamento Confirmado!",
-      content: `Pagamento de R$ ${paymentDetails.amount} foi confirmado. ID: ${paymentId}`,
+      content: `Pagamento de R$ ${paymentDetails.amount} foi confirmado. Análise desbloqueada para ${diagnosticRecord.consultantName || "Viajante"}. ID: ${paymentId}`,
     });
   } catch (error) {
     console.error("[Webhook] Error processing Mercado Pago event:", error);
-    throw error;
-  }
-}
-
-/**
- * Link payment ID to diagnostic for webhook processing
- */
-export async function linkPaymentToDiagnostic(
-  diagnosticId: string,
-  paymentId: string
-): Promise<void> {
-  try {
-    // Store payment ID in diagnostic metadata
-    const diagnostic = await getDiagnosticByPublicId(diagnosticId);
-    if (!diagnostic) {
-      throw new Error(`Diagnostic not found: ${diagnosticId}`);
-    }
-
-    // Update diagnostic with payment ID (you may need to extend the schema)
-    console.log(`[Webhook] Linked payment ${paymentId} to diagnostic ${diagnosticId}`);
-  } catch (error) {
-    console.error("[Webhook] Error linking payment to diagnostic:", error);
     throw error;
   }
 }
@@ -85,7 +91,7 @@ export async function generateFullAnalysisOnPayment(diagnosticId: string): Promi
     const pillarsData = diagnostic.pillarsData as any;
     const name = diagnostic.consultantName || "Viajante";
 
-    const prompt = `Você é um ancião mestre SAJO (사주) coreano com 5.000 anos de sabedoria ancestral. Fale em português brasileiro com linguagem mística, profunda e transformadora.
+    const prompt = `Você é um especialista em SAJO (사주) coreano com profundo conhecimento de padrões de destino. Seu tom é assertivo, contundente e transformador — com afirmações concretas sobre presente e futuro. Fale em português brasileiro.
 
 Dados do consulente:
 - Nome: ${name}
@@ -103,26 +109,26 @@ Dados do consulente:
 - Direções auspiciosas: ${pillarsData.luckyDirections.join(", ")}
 - Foco de saúde: ${pillarsData.healthFocus.join(", ")}
 
-Escreva uma análise COMPLETA e PROFUNDA de 8-10 parágrafos que inclua:
+Escreva uma análise COMPLETA e PROFUNDA de 10-12 parágrafos com AFIRMAÇÕES CONCRETAS:
 
-1. **Saudação Mística**: Saúde o consulente pelo nome e signo animal com reverência ancestral
-2. **Análise dos 4 Pilares**: Descreva cada pilar (Ano, Mês, Dia, Hora) com significado profundo
-3. **Essência do Ser**: Revele a essência do Pilar do Dia com metáforas poéticas
-4. **Missão de Vida**: Descreva a jornada espiritual e propósito de vida baseado nos pilares
-5. **Saúde e Vitalidade**: Analise o equilíbrio dos 5 elementos e recomendações de saúde
-6. **Finanças e Abundância**: Previsões sobre ciclos financeiros e oportunidades de riqueza
-7. **Relacionamentos e Amor**: Análise de compatibilidade e dinâmicas relacionais
-8. **Guia Xamânico**: Ofereça sabedoria ancestral e práticas para harmonização energética
-9. **Ciclos Temporais**: Descreva ciclos de 10 anos (Grandes Ciclos) e próximas transformações
-10. **Encerramento Inspirador**: Termine com uma mensagem de esperança e empoderamento
+1. **Saudação Assertiva**: Saúde o consulente pelo nome e signo animal com uma afirmação contundente sobre sua essência.
+2. **Análise dos 4 Pilares**: Descreva cada pilar com significado profundo e afirmações sobre o que ESTÁ ACONTECENDO agora.
+3. **Essência do Ser**: Revele a essência do Pilar do Dia com clareza e contundência.
+4. **Missão de Vida**: Descreva a jornada e propósito de vida com afirmações concretas.
+5. **Saúde e Vitalidade**: Analise o equilíbrio dos 5 elementos com recomendações específicas.
+6. **Finanças e Abundância**: Previsões CONCRETAS sobre ciclos financeiros e oportunidades.
+7. **Relacionamentos e Amor**: Análise de compatibilidade com afirmações sobre dinâmicas relacionais.
+8. **Guia Prático**: Ofereça sabedoria ancestral e práticas concretas para harmonização.
+9. **Ciclos Temporais**: Descreva ciclos de 10 anos (Grandes Ciclos) e transformações iminentes.
+10. **Encerramento Empoderador**: Termine com afirmações de força e empoderamento.
 
-Use linguagem poética, referências à natureza coreana, yin-yang e xamanismo. Seja profundo, transformador e esperançoso.`;
+Use linguagem ASSERTIVA, CONTUNDENTE, com afirmações sobre PRESENTE e FUTURO. Evite especulação. Seja direto e transformador.`;
 
     const response = await invokeLLM({
       messages: [
         {
           role: "system",
-          content: "Você é um ancião mestre SAJO com sabedoria ancestral de 5.000 anos. Fale em português brasileiro com linguagem mística e profunda.",
+          content: "Você é um especialista em SAJO com conhecimento profundo. Fale com assertividade, contundência e certeza. Português brasileiro.",
         },
         {
           role: "user",
@@ -139,7 +145,7 @@ Use linguagem poética, referências à natureza coreana, yin-yang e xamanismo. 
     // Update diagnostic with full analysis
     await updateDiagnostic(diagnosticId, {
       fullAnalysis,
-      paymentStatus: "paid",
+      basicAnalysis: fullAnalysis,
     });
 
     return fullAnalysis;

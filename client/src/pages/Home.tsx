@@ -141,15 +141,15 @@ export default function Home() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!birthDate || !birthTime || !birthPlace) {
-      toast.error("Preencha data, hora e local de nascimento.");
+    if (!birthDate) {
+      toast.error("Preencha a data de nascimento.");
       return;
     }
     createDiagnostic.mutate({
       consultantName: name || undefined,
       birthDate,
-      birthTime,
-      birthPlace,
+      birthTime: birthTime || undefined,
+      birthPlace: birthPlace || undefined,
       hasDst,
     });
   };
@@ -271,14 +271,13 @@ export default function Home() {
                 {/* Birth Time */}
                 <div className="space-y-2">
                   <Label htmlFor="birthTime" className="text-foreground/80">
-                    Hora de Nascimento <span className="text-primary">*</span>
+                    Hora de Nascimento <span className="text-muted-foreground/60">(opcional)</span>
                   </Label>
                   <Input
                     id="birthTime"
                     type="time"
                     value={birthTime}
                     onChange={(e) => setBirthTime(e.target.value)}
-                    required
                     className="bg-input/50 border-border/50 focus:border-primary/60"
                   />
                 </div>
@@ -286,7 +285,7 @@ export default function Home() {
                 {/* Birth Place with CEP search */}
                 <div className="space-y-2">
                   <Label htmlFor="birthPlace" className="text-foreground/80">
-                    Local de Nascimento <span className="text-primary">*</span>
+                    Local de Nascimento <span className="text-muted-foreground/60">(opcional)</span>
                   </Label>
 
                   {/* CEP search row */}
@@ -323,7 +322,6 @@ export default function Home() {
                     placeholder="Cidade, estado e país (ex: São Paulo, SP, Brasil)"
                     value={birthPlace}
                     onChange={(e) => setBirthPlace(e.target.value)}
-                    required
                     className="bg-input/50 border-border/50 focus:border-primary/60"
                   />
                   <p className="text-xs text-muted-foreground/60">

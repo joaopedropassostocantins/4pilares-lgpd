@@ -106,3 +106,12 @@
 - [x] Corrigir formato de dados (email, valor, ID do produto)
 - [x] Validar credenciais do Mercado Pago
 - [x] Testar fluxo completo de pagamento
+
+## Correção de Problemas Críticos Reportados
+
+- [x] Debugar webhook de Mercado Pago - pagamento não está desbloqueando análise completa
+- [x] Tornar hora de nascimento opcional (permitir degustação sem hora exata)
+- [x] Tornar cidade opcional (permitir degustação apenas com CEP ou país/estado)
+- [x] Reescrever prompts com tom mais assertivo e contundente
+- [x] Afirmações concretas sobre presente e futuro (não especulativo)
+- [x] Testar fluxo completo: pagamento → webhook → desbloqueio
