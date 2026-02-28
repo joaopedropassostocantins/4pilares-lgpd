@@ -7,6 +7,7 @@ import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
+import { processMercadoPagoWebhook, generateFullAnalysisOnPayment } from "../webhook";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -35,6 +36,19 @@ async function startServer() {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
+
+  // Mercado Pago webhook
+  app.post("/api/webhooks/mercadopago", express.json(), async (req, res) => {
+    try {
+      console.log("[Webhook] Received Mercado Pago event:", req.body);
+      await processMercadoPagoWebhook(req.body);
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error("[Webhook] Error processing Mercado Pago event:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
   // tRPC API
   app.use(
     "/api/trpc",
@@ -51,6 +65,7 @@ async function startServer() {
   }
 
   const preferredPort = parseInt(process.env.PORT || "3000");
+  console.log("[Server] Starting on port", preferredPort);
   const port = await findAvailablePort(preferredPort);
 
   if (port !== preferredPort) {

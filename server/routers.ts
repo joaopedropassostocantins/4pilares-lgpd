@@ -4,16 +4,51 @@ import { TRPCError } from "@trpc/server";
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router } from "./_core/trpc";
+import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
 import { notifyOwner } from "./_core/notification";
 import {
   createDiagnostic,
   getDiagnosticByPublicId,
   updateDiagnostic,
+  getAllDiagnostics,
+  getDiagnosticsCount,
+  getPaidDiagnosticsCount,
+  getTotalRevenue,
 } from "./db";
 import { calculatePillars } from "./sajo";
 import { createPaymentPreference, initMercadoPago } from "./mercadopago";
+
+// Admin procedure with role check
+const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
+  if (ctx.user?.role !== "admin") {
+    throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+  }
+  return next({ ctx });
+});
+
+const adminRouter = router({
+  stats: adminProcedure.query(async () => {
+    const total = await getDiagnosticsCount();
+    const paid = await getPaidDiagnosticsCount();
+    const revenue = await getTotalRevenue();
+    const conversionRate = total > 0 ? ((paid / total) * 100).toFixed(2) : "0.00";
+    return {
+      totalDiagnostics: total,
+      paidDiagnostics: paid,
+      totalRevenue: revenue.toFixed(2),
+      conversionRate: parseFloat(conversionRate),
+    };
+  }),
+
+  diagnostics: adminProcedure
+    .input(z.object({ limit: z.number().default(50), offset: z.number().default(0) }))
+    .query(async ({ input }) => {
+      const items = await getAllDiagnostics(input.limit, input.offset);
+      const total = await getDiagnosticsCount();
+      return { items, total };
+    }),
+});
 
 const diagnosticRouter = router({
   create: publicProcedure
@@ -48,136 +83,131 @@ Escreva uma análise de degustação gratuita de 4-5 parágrafos que:
 1. Saúde o consulente pelo nome e signo animal
 2. Revele a essência do Pilar do Dia com metáforas poéticas
 3. Descreva os traços de personalidade de forma mística
-4. Mencione brevemente os desafios como oportunidades de crescimento
-5. Convide para a análise completa sem ser agressivo
+4. Mencione um desafio e um ponto forte
+5. Termine com uma frase inspiradora sobre seu destino`;
 
-Use markdown para formatação (negrito para conceitos importantes). Não use emojis excessivos.`;
+      const response = await invokeLLM({
+        messages: [
+          {
+            role: "system",
+            content: "Você é um ancião mestre SAJO com sabedoria ancestral. Fale em português brasileiro.",
+          },
+          { role: "user", content: prompt },
+        ],
+      });
 
-      let tastingAnalysis = "";
-      try {
-        const llmResponse = await invokeLLM({
-          messages: [
-            { role: "system", content: "Você é um mestre ancestral SAJO coreano. Responda sempre em português brasileiro com linguagem mística e poética." },
-            { role: "user", content: prompt },
-          ],
-        });
-        tastingAnalysis = (llmResponse.choices?.[0]?.message?.content as string) || "";
-      } catch (err) {
-        console.error("[LLM] Failed to generate tasting analysis:", err);
-        tastingAnalysis = `Ó ${name}, alma nascida sob o signo do ${pillarsData.animalSign}! Os ancestrais revelam que sua essência é marcada pelo elemento **${pillarsData.dominantElement}**, trazendo ${pillarsData.personalityTraits[0]}. A análise completa aguarda para revelar os segredos mais profundos do seu destino.`;
-      }
+      const tastingAnalysis =
+        typeof response.choices[0].message.content === "string"
+          ? response.choices[0].message.content
+          : "";
 
-      await createDiagnostic({
+      // Create diagnostic record
+      const diagnostic = await createDiagnostic({
         publicId,
-        consultantName: input.consultantName || null,
+        consultantName: name,
         birthDate: input.birthDate,
         birthTime: input.birthTime,
         birthPlace: input.birthPlace,
         hasDst: input.hasDst ? 1 : 0,
-        pillarsData: pillarsData as unknown as Record<string, unknown>,
+        pillarsData: pillarsData as any,
         tastingAnalysis,
         paymentStatus: "pending",
       });
 
-      // Notify owner of new diagnostic
-      try {
-        await notifyOwner({
-          title: "✦ Novo Diagnóstico SAJO Criado",
-          content: `Um novo consulente (${input.consultantName || "Anônimo"}) solicitou diagnóstico SAJO de ${input.birthPlace}. ID: ${publicId}`,
-        });
-      } catch (err) {
-        console.warn("[Notification] Failed to notify owner of new diagnostic:", err);
-      }
+      // Notify owner
+      await notifyOwner({
+        title: "☯ Novo Diagnóstico Criado",
+        content: `${name} solicitou análise SAJO. Local: ${input.birthPlace}`,
+      });
 
-      return { publicId };
+      return {
+        publicId,
+        pillarsData,
+        tastingAnalysis,
+      };
     }),
 
   getByPublicId: publicProcedure
     .input(z.object({ publicId: z.string() }))
     .query(async ({ input }) => {
       const diagnostic = await getDiagnosticByPublicId(input.publicId);
-      if (!diagnostic) throw new TRPCError({ code: "NOT_FOUND", message: "Diagnóstico não encontrado" });
-      return {
-        publicId: diagnostic.publicId,
-        consultantName: diagnostic.consultantName,
-        pillarsData: diagnostic.pillarsData,
-        tastingAnalysis: diagnostic.tastingAnalysis,
-        basicAnalysis: diagnostic.basicAnalysis,
-        fullAnalysis: diagnostic.fullAnalysis,
-        paymentStatus: diagnostic.paymentStatus,
-        createdAt: diagnostic.createdAt,
-      };
+      if (!diagnostic) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Diagnostic not found" });
+      }
+      return diagnostic;
     }),
 
   unlock: publicProcedure
     .input(z.object({ publicId: z.string() }))
     .mutation(async ({ input }) => {
       const diagnostic = await getDiagnosticByPublicId(input.publicId);
-      if (!diagnostic) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!diagnostic) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Diagnostic not found" });
+      }
 
+      // Generate full analysis
       const pillarsData = diagnostic.pillarsData as any;
       const name = diagnostic.consultantName || "Viajante";
 
-      const basicPrompt = `Você é um mestre SAJO coreano. Escreva em português brasileiro uma análise básica dos 4 Pilares do Destino para ${name}.
+      const prompt = `Você é um ancião mestre SAJO (사주) coreano com 5.000 anos de sabedoria ancestral. Fale em português brasileiro com linguagem mística, profunda e transformadora.
 
-Dados:
-- Pilar do Ano: ${pillarsData?.yearPillar?.stem?.name} / ${pillarsData?.yearPillar?.branch?.name} — ${pillarsData?.yearPillar?.label}
-- Pilar do Mês: ${pillarsData?.monthPillar?.stem?.name} / ${pillarsData?.monthPillar?.branch?.name} — ${pillarsData?.monthPillar?.label}
-- Pilar do Dia: ${pillarsData?.dayPillar?.stem?.name} / ${pillarsData?.dayPillar?.branch?.name} — ${pillarsData?.dayPillar?.label}
-- Pilar da Hora: ${pillarsData?.hourPillar?.stem?.name} / ${pillarsData?.hourPillar?.branch?.name} — ${pillarsData?.hourPillar?.label}
-- Elemento dominante: ${pillarsData?.dominantElement}
-- Equilíbrio Yin/Yang: ${JSON.stringify(pillarsData?.yinYangBalance)}
+Dados do consulente:
+- Nome: ${name}
+- Signo Animal: ${pillarsData.animalSign}
+- Pilar do Ano: ${pillarsData.yearPillar.stem.name} sobre ${pillarsData.yearPillar.branch.name}
+- Pilar do Mês: ${pillarsData.monthPillar.stem.name} sobre ${pillarsData.monthPillar.branch.name}
+- Pilar do Dia (essência): ${pillarsData.dayPillar.stem.name} sobre ${pillarsData.dayPillar.branch.name}
+- Pilar da Hora: ${pillarsData.hourPillar.stem.name} sobre ${pillarsData.hourPillar.branch.name}
+- Elemento dominante: ${pillarsData.dominantElement}
+- Equilíbrio dos elementos: ${JSON.stringify(pillarsData.elementBalance)}
+- Traços de personalidade: ${pillarsData.personalityTraits.join(", ")}
+- Pontos fortes: ${pillarsData.strengths.join(", ")}
+- Desafios: ${pillarsData.challenges.join(", ")}
+- Signos compatíveis: ${pillarsData.compatibleSigns.join(", ")}
+- Direções auspiciosas: ${pillarsData.luckyDirections.join(", ")}
+- Foco de saúde: ${pillarsData.healthFocus.join(", ")}
 
-Escreva 3-4 parágrafos explicando o significado de cada pilar e como eles interagem na vida de ${name}. Use markdown para formatação.`;
+Escreva uma análise COMPLETA e PROFUNDA de 10-12 parágrafos que inclua:
 
-      const fullPrompt = `Você é um mestre SAJO coreano e xamã Musok. Escreva em português brasileiro uma análise completa e profunda para ${name}.
+1. **Saudação Mística**: Saúde o consulente pelo nome e signo animal com reverência ancestral
+2. **Análise dos 4 Pilares**: Descreva cada pilar (Ano, Mês, Dia, Hora) com significado profundo
+3. **Essência do Ser**: Revele a essência do Pilar do Dia com metáforas poéticas
+4. **Missão de Vida**: Descreva a jornada espiritual e propósito de vida baseado nos pilares
+5. **Saúde e Vitalidade**: Analise o equilíbrio dos 5 elementos e recomendações de saúde
+6. **Finanças e Abundância**: Previsões sobre ciclos financeiros e oportunidades de riqueza
+7. **Relacionamentos e Amor**: Análise de compatibilidade e dinâmicas relacionais
+8. **Guia Xamânico**: Ofereça sabedoria ancestral e práticas para harmonização energética
+9. **Ciclos Temporais**: Descreva ciclos de 10 anos (Grandes Ciclos) e próximas transformações
+10. **Encerramento Inspirador**: Termine com uma mensagem de esperança e empoderamento
 
-Dados completos:
-${JSON.stringify(pillarsData, null, 2)}
+Use linguagem poética, referências à natureza coreana, yin-yang e xamanismo. Seja profundo, transformador e esperançoso.`;
 
-Escreva uma análise detalhada (6-8 parágrafos) cobrindo:
-1. **Missão de Vida** — propósito ancestral revelado pelos pilares
-2. **Saúde e Vitalidade** — foco em ${pillarsData?.healthFocus?.join(", ")}
-3. **Finanças e Prosperidade** — caminhos de abundância segundo os elementos
-4. **Relacionamentos e Amor** — compatibilidade com ${pillarsData?.compatibleSigns?.join(", ")}
-5. **Direções Auspiciosas** — ${pillarsData?.luckyDirections?.join(", ")}
-6. **Guia Xamânico** — práticas espirituais recomendadas pelo Musok
-7. **Ciclos de Vida** — períodos favoráveis e desafiadores
-8. **Mensagem Final** — sabedoria ancestral personalizada
-
-Use markdown para formatação rica. Seja profundo, poético e específico.`;
-
-      let basicAnalysis = "";
-      let fullAnalysis = "";
-
-      try {
-        const [basicRes, fullRes] = await Promise.all([
-          invokeLLM({ messages: [{ role: "system", content: "Mestre SAJO ancestral. Responda em português brasileiro." }, { role: "user", content: basicPrompt }] }),
-          invokeLLM({ messages: [{ role: "system", content: "Mestre SAJO ancestral e xamã Musok. Responda em português brasileiro." }, { role: "user", content: fullPrompt }] }),
-        ]);
-        basicAnalysis = (basicRes.choices?.[0]?.message?.content as string) || "";
-        fullAnalysis = (fullRes.choices?.[0]?.message?.content as string) || "";
-      } catch (err) {
-        console.error("[LLM] Failed to generate full analysis:", err);
-        basicAnalysis = `A análise dos seus 4 Pilares revela uma alma com elemento dominante **${pillarsData?.dominantElement}**, trazendo ${pillarsData?.strengths?.[0] || "grande potencial"}.`;
-        fullAnalysis = `Sua jornada ancestral é guiada pelo elemento **${pillarsData?.dominantElement}**. Os espíritos ancestrais revelam caminhos de prosperidade nas direções ${pillarsData?.luckyDirections?.join(", ")}.`;
-      }
-
-      await updateDiagnostic(input.publicId, {
-        basicAnalysis,
-        fullAnalysis,
-        paymentStatus: "paid",
+      const response = await invokeLLM({
+        messages: [
+          {
+            role: "system",
+            content: "Você é um ancião mestre SAJO com sabedoria ancestral. Fale em português brasileiro.",
+          },
+          { role: "user", content: prompt },
+        ],
       });
 
-      // Notify owner of successful payment
-      try {
-        await notifyOwner({
-          title: "✦ Pagamento Recebido - Análise Desbloqueada",
-          content: `${diagnostic.consultantName || "Consulente"} desbloqueou a análise completa. ID: ${input.publicId}. Valor: R$ 14,99`,
-        });
-      } catch (err) {
-        console.warn("[Notification] Failed to notify owner of payment:", err);
-      }
+      const fullAnalysis =
+        typeof response.choices[0].message.content === "string"
+          ? response.choices[0].message.content
+          : "";
+
+      // Update diagnostic with full analysis
+      await updateDiagnostic(input.publicId, {
+        fullAnalysis,
+        basicAnalysis: fullAnalysis,
+      });
+
+      // Notify owner
+      await notifyOwner({
+        title: "✦ Análise Completa Desbloqueada",
+        content: `${name} desbloqueou a análise completa dos 4 Pilares.`,
+      });
 
       return { success: true };
     }),
@@ -185,17 +215,17 @@ Use markdown para formatação rica. Seja profundo, poético e específico.`;
 
 const paymentRouter = router({
   createPreference: publicProcedure
-    .input(z.object({ 
-      diagnosticId: z.string(),
-      userEmail: z.string().email(),
-      userName: z.string(),
-      returnUrl: z.string(),
-    }))
+    .input(
+      z.object({
+        diagnosticId: z.string(),
+        userEmail: z.string(),
+        userName: z.string(),
+        returnUrl: z.string(),
+      })
+    )
     .mutation(async ({ input }) => {
       try {
-        // Initialize Mercado Pago if not already done
         initMercadoPago();
-
         const preference = await createPaymentPreference({
           diagnosticId: input.diagnosticId,
           userEmail: input.userEmail,
@@ -250,6 +280,7 @@ export const appRouter = router({
   }),
   diagnostic: diagnosticRouter,
   payment: paymentRouter,
+  admin: adminRouter,
 });
 
 export type AppRouter = typeof appRouter;

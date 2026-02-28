@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, diagnostics, InsertDiagnostic } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -69,4 +69,42 @@ export async function updateDiagnostic(publicId: string, data: Partial<InsertDia
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.update(diagnostics).set(data).where(eq(diagnostics.publicId, publicId));
+}
+
+// Admin queries
+export async function getAllDiagnostics(limit = 50, offset = 0) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db
+    .select()
+    .from(diagnostics)
+    .orderBy(desc(diagnostics.createdAt))
+    .limit(limit)
+    .offset(offset);
+  return result;
+}
+
+export async function getDiagnosticsCount() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.select({ count: diagnostics.id }).from(diagnostics);
+  return result[0]?.count || 0;
+}
+
+export async function getPaidDiagnosticsCount() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db
+    .select({ count: diagnostics.id })
+    .from(diagnostics)
+    .where(eq(diagnostics.paymentStatus, "paid"));
+  return result[0]?.count || 0;
+}
+
+export async function getTotalRevenue() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  // Each paid diagnostic = R$ 14.99
+  const paidCount = await getPaidDiagnosticsCount();
+  return paidCount * 14.99;
 }

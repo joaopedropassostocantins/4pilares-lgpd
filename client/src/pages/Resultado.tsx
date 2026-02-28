@@ -2,7 +2,7 @@ import { useParams, useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Lock, Copy, Check, CreditCard, MessageCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { Loader2, Lock, Copy, Check, CreditCard, MessageCircle, ChevronDown, ChevronUp, Share2, Facebook, Twitter } from "lucide-react";
 import { Streamdown } from "streamdown";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
@@ -237,6 +237,33 @@ export default function Resultado() {
     { key: "hourPillar" as const, title: "Pilar da Hora" },
   ];
 
+  // Share functions
+  const shareText = `Descobri meu destino ancestral com FUSION-SAJO! Signo: ${pillarsData?.animalSign}, Elemento: ${pillarsData?.dominantElement}. Desbloqueie sua análise dos 4 Pilares!`;
+  const shareUrl = window.location.href;
+
+  const handleShareWhatsApp = () => {
+    const url = `https://wa.me/?text=${encodeURIComponent(shareText + " " + shareUrl)}`;
+    window.open(url, "_blank");
+    toast.success("Link compartilhado no WhatsApp!");
+  };
+
+  const handleShareFacebook = () => {
+    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
+    window.open(url, "_blank");
+    toast.success("Compartilhado no Facebook!");
+  };
+
+  const handleShareTwitter = () => {
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+    window.open(url, "_blank");
+    toast.success("Compartilhado no Twitter!");
+  };
+
+  const handleShareLink = () => {
+    navigator.clipboard.writeText(shareUrl);
+    toast.success("Link copiado para compartilhar!");
+  };
+
   return (
     <div className="mystic-gradient min-h-screen">
       {/* ── Header ── */}
@@ -392,15 +419,68 @@ export default function Resultado() {
           </Card>
         )}
 
-        {/* ── Paid: WhatsApp CTA ── */}
+        {/* Share Section */}
+        <Card className="bg-card/60 border-primary/30 mb-8">
+          <CardHeader>
+            <CardTitle className="text-center text-lg flex items-center justify-center gap-2">
+              <Share2 className="h-5 w-5" />
+              Compartilhe seu Destino
+            </CardTitle>
+            <p className="text-center text-muted-foreground text-sm mt-2">
+              Inspire amigos e familiares a descobrirem seus 4 Pilares
+            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-3 justify-center">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleShareWhatsApp}
+                className="border-green-500/40 hover:border-green-500 hover:bg-green-500/10 text-green-600"
+              >
+                <MessageCircle className="h-4 w-4 mr-2" />
+                WhatsApp
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleShareFacebook}
+                className="border-blue-500/40 hover:border-blue-500 hover:bg-blue-500/10 text-blue-600"
+              >
+                <Facebook className="h-4 w-4 mr-2" />
+                Facebook
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleShareTwitter}
+                className="border-sky-500/40 hover:border-sky-500 hover:bg-sky-500/10 text-sky-600"
+              >
+                <Twitter className="h-4 w-4 mr-2" />
+                Twitter
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleShareLink}
+                className="border-primary/40 hover:border-primary"
+              >
+                <Copy className="h-4 w-4 mr-2" />
+                Copiar Link
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Paid: WhatsApp CTA */}
         {isPaid && (
           <Card className="bg-primary/10 border-primary/30 mb-8">
             <CardContent className="pt-6 text-center">
               <p className="text-sm text-muted-foreground mb-4">
-                <strong>Dúvidas sobre sua análise?</strong> Fale com nossos mestres SAJO para aconselhamento personalizado.
+                <strong>Du00favidas sobre sua anu00e1lise?</strong> Fale com nossos mestres SAJO para aconselhamento personalizado.
               </p>
               <a
-                href="https://wa.me/5563984381782?text=Olá%20FUSION-SAJO%2C%20tenho%20dúvidas%20sobre%20minha%20análise%20e%20gostaria%20de%20aconselhamento."
+                href="https://wa.me/5563984381782?text=Ol%C3%A1%20FUSION-SAJO%2C%20tenho%20du00favidas%20sobre%20minha%20an%C3%A1lise%20e%20gostaria%20de%20aconselhamento."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 py-3 px-6 bg-green-600 hover:bg-green-700 text-white rounded-full font-medium transition-colors"

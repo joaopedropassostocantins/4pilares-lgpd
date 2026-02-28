@@ -34,3 +34,33 @@
 - [x] Atualizar valor para R$ 14,99
 - [x] Testar fluxo completo com testes Vitest (17 testes passando)
 - [x] Validar credenciais do Mercado Pago
+
+## Webhook de Mercado Pago (Confirmação Automática)
+
+- [x] Implementar endpoint POST /api/webhooks/mercadopago para receber eventos
+- [x] Processar evento payment.updated para confirmar pagamento automaticamente
+- [x] Criar arquivo webhook.ts com lógica de processamento
+- [x] Integrar webhook no servidor Express (_core/index.ts)
+- [x] Implementar função generateFullAnalysisOnPayment
+- [x] Enviar notificação ao proprietário de pagamento confirmado
+
+## Painel Administrativo
+
+- [x] Criar rota /admin protegida (apenas admin)
+- [x] Implementar componente AdminLayout com sidebar
+- [x] Criar página Admin/Dashboard com estatísticas (total diagnósticos, receita, taxa conversão)
+- [x] Criar página Admin/Diagnostics com tabela de todos os diagnósticos
+- [x] Adicionar botão para visualizar diagnóstico completo
+- [x] Implementar paginação para listas grandes
+- [x] Testar acesso protegido (apenas admin)
+- [x] Adicionar admin router ao tRPC com stats e diagnostics
+- [x] Criar funções de query no db.ts (getAllDiagnostics, getDiagnosticsCount, getPaidDiagnosticsCount, getTotalRevenue)
+
+## Compartilhamento Social
+
+- [x] Implementar botão "Compartilhar no WhatsApp" na página Resultado
+- [x] Implementar botão "Compartilhar no Facebook" com preview
+- [x] Implementar botão "Compartilhar no Twitter/X" com preview
+- [x] Implementar botão "Copiar Link" para compartilhamento
+- [x] Adicionar funções de compartilhamento no Resultado.tsx
+- [x] Adicionar seção "Compartilhe seu Destino" com botões coloridos
