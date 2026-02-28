@@ -190,7 +190,7 @@ const diagnosticRouter = router({
       if (urgency.type === "date") {
         urgencyText = `Promoção especial válida apenas ${urgency.value} — depois o valor volta ao normal.`;
       } else {
-        urgencyText = `Esta oferta de R$ 9,99 está disponível somente para os próximos 100 acessos que chegarem hoje — ${urgency.value}.`;
+         urgencyText = `Esta oferta de R$ 14,99 está disponível somente para os próximos 100 acessos que chegarem hoje — ${urgency.value}`;
       }
 
       // Build closing with pain variation
@@ -231,7 +231,7 @@ Essa dor não é acaso. Ela está escrita nos seus Pilares há muito tempo e tem
 
 ${urgencyText}
 
-Efetue o pagamento agora (apenas R$ 9,99) para desbloquear imediatamente a análise completa e detalhada dos seus 4 Pilares: previsões exatas para amor, carreira, saúde, ciclos de sorte nos próximos 12–24 meses, rituais/ações corretivas ancestrais e, principalmente, o que você PRECISA fazer AGORA para virar esse jogo de uma vez por todas.
+Efetue o pagamento agora (apenas R$ 14,99) para desbloquear imediatamente a análise completa e detalhada dos seus 4 Pilares: previsões exatas para amor, carreira, saúde, ciclos de sorte nos próximos 12–24 meses, rituais/ações corretivas ancestrais e, principalmente, o que você PRECISA fazer AGORA para virar esse jogo de uma vez por todas.
 
 Não deixe essa dor decidir mais um dia do seu futuro. Clique em 'Desbloquear tudo agora' e receba sua resposta completa em segundos. Estou aqui, esperando para guiar você de volta à sua verdadeira força.`;
 
