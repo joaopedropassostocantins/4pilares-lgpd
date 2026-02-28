@@ -1,6 +1,8 @@
 import { useRef, useState } from "react";
 import { useLocation } from "wouter";
+import { useEffect } from "react";
 import { trpc } from "@/lib/trpc";
+import { trackDiagnosticCreated, trackPageView } from "@/lib/tracking";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -114,8 +116,20 @@ export default function Home() {
   const [selectedArchetype, setSelectedArchetype] = useState<string>("");
   const [headlineVariant] = useState<"a" | "b">(() => (Math.random() > 0.5 ? "a" : "b") as "a" | "b");
 
+  // Track page view on mount
+  useEffect(() => {
+    trackPageView("Home", headlineVariant === "a" ? "A" : "B");
+  }, [headlineVariant]);
+
   const createDiagnostic = trpc.diagnostic.create.useMutation({
     onSuccess: (data) => {
+      // Track diagnostic creation
+      trackDiagnosticCreated({
+        publicId: data.publicId,
+        abTestVariant: headlineVariant === "a" ? "A" : "B",
+        archetype: selectedArchetype,
+      });
+      
       toast.success("☯ Diagnóstico criado! Os ancestrais revelam seu destino...", {
         description: "Análise de degustação pronta. Desbloqueie a análise completa.",
       });
@@ -164,6 +178,7 @@ export default function Home() {
       hasDst: hasDst,
       gender: (gender || undefined) as "male" | "female" | "other" | undefined,
       archetype: selectedArchetype || undefined,
+      abTestVariant: headlineVariant === "a" ? "A" : "B",
     });
   };
 
@@ -198,9 +213,11 @@ export default function Home() {
           <p className="text-primary/60 text-sm tracking-widest uppercase mb-4">Astrologia Coreana Ancestral</p>
           <h1
             className="text-4xl md:text-6xl font-bold text-primary mb-6 leading-tight"
+            data-ab-test={headlineVariant}
             style={{ fontFamily: "'Cinzel', serif" }}
           >
             {HEADLINES[headlineVariant]}
+            <span className="text-xs text-muted-foreground ml-2">(Variant {headlineVariant.toUpperCase()})</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
             Seus 4 Pilares SAJO revelam quem você realmente é. Saiba seu potencial em relacionamentos, finanças, saúde e bem-estar.

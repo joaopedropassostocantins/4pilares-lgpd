@@ -116,6 +116,8 @@ const diagnosticRouter = router({
         birthTime: z.string().optional(),
         birthPlace: z.string().optional(),
         hasDst: z.boolean().default(false),
+        abTestVariant: z.enum(["A", "B"]).optional(),
+        selectedPlan: z.enum(["promo", "normal", "lifetime"]).optional(),
       })
     )
     .mutation(async ({ input }) => {
@@ -209,15 +211,25 @@ Não deixe essa dor decidir mais um dia do seu futuro. Clique em 'Desbloquear tu
         pillarsData: pillarsData as any,
         tastingAnalysis,
         paymentStatus: "pending",
+        abTestVariant: input.abTestVariant || "A",
+        selectedPlan: input.selectedPlan || null,
       });
 
       // Notify owner
       await notifyOwner({
         title: "Novo Diagnóstico Criado",
-        content: `${name} iniciou análise SAJO. Signo: ${pillarsData.animalSign}`,
+        content: `${name} iniciou análise SAJO. Signo: ${pillarsData.animalSign}. A/B Test: ${input.abTestVariant || "A"}`,
       });
 
-      return { publicId, diagnostic };
+      // Track analytics
+      console.log("[Analytics] Diagnostic created:", {
+        publicId,
+        abTestVariant: input.abTestVariant || "A",
+        selectedPlan: input.selectedPlan,
+        timestamp: new Date().toISOString(),
+      });
+
+      return { publicId, diagnostic, abTestVariant: input.abTestVariant || "A" };
     }),
 
   getByPublicId: publicProcedure

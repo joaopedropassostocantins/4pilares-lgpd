@@ -36,6 +36,8 @@ export const diagnostics = mysqlTable("diagnostics", {
   whatsappPhone: varchar("whatsappPhone", { length: 20 }),
   whatsappSentAt: timestamp("whatsappSentAt"),
   emailSentAt: timestamp("emailSentAt"),
+  abTestVariant: mysqlEnum("abTestVariant", ["A", "B"]).default("A").notNull(),
+  selectedPlan: mysqlEnum("selectedPlan", ["promo", "normal", "lifetime"]),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
