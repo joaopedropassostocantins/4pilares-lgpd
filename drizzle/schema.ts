@@ -28,8 +28,20 @@ export const diagnostics = mysqlTable("diagnostics", {
   basicAnalysis: text("basicAnalysis"),
   fullAnalysis: text("fullAnalysis"),
   paymentStatus: mysqlEnum("paymentStatus", ["pending", "paid"]).default("pending").notNull(),
+  analysisVariant: mysqlEnum("analysisVariant", ["epic", "predictive"]).default("predictive").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
 export type Diagnostic = typeof diagnostics.$inferSelect;
 export type InsertDiagnostic = typeof diagnostics.$inferInsert;
+
+export const feedbacks = mysqlTable("feedbacks", {
+  id: int("id").autoincrement().primaryKey(),
+  diagnosticId: int("diagnosticId").notNull(),
+  accuracy: mysqlEnum("accuracy", ["very_accurate", "accurate", "neutral", "inaccurate", "very_inaccurate"]).notNull(),
+  comment: text("comment"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Feedback = typeof feedbacks.$inferSelect;
+export type InsertFeedback = typeof feedbacks.$inferInsert;

@@ -86,3 +86,15 @@
 - [x] Adicionar gancho final e CTA para desbloquear análise completa
 - [x] Incluir disclaimer responsável
 - [x] Implementar formulação condicional para saúde/filhos/terceiros
+
+## A/B Testing, Análise Completa Preditiva e Feedback Loop
+
+- [x] Implementar A/B Testing (variante A: tom épico, variante B: tom preditivo)
+- [x] Adicionar campo "analysisVariant" na tabela diagnostics
+- [x] Criar endpoint tRPC para rastrear qual variante foi entregue
+- [x] Estender tom preditivo para análise completa (5 pilares + elementos + ciclos de vida)
+- [x] Criar novo prompt para análise completa preditiva
+- [x] Implementar formulário de feedback pós-análise ("Essa previsão acertou?")
+- [x] Adicionar tabela "feedbacks" para armazenar respostas
+- [x] Criar endpoint tRPC para salvar feedback
+- [x] Testar fluxo completo de A/B Testing e feedback

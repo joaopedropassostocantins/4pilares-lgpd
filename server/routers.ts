@@ -15,6 +15,9 @@ import {
   getDiagnosticsCount,
   getPaidDiagnosticsCount,
   getTotalRevenue,
+  createFeedback,
+  getFeedbackByDiagnosticId,
+  getAccuracyStats,
 } from "./db";
 import { calculatePillars } from "./sajo";
 import { createPaymentPreference, initMercadoPago } from "./mercadopago";
@@ -216,6 +219,35 @@ Use linguagem poética, referências à natureza coreana, yin-yang e xamanismo. 
     }),
 });
 
+const feedbackRouter = router({
+  submit: publicProcedure
+    .input(
+      z.object({
+        diagnosticId: z.number(),
+        accuracy: z.enum(["very_accurate", "accurate", "neutral", "inaccurate", "very_inaccurate"]),
+        comment: z.string().optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const feedback = await createFeedback({
+        diagnosticId: input.diagnosticId,
+        accuracy: input.accuracy,
+        comment: input.comment,
+      });
+      return feedback;
+    }),
+
+  getByDiagnosticId: publicProcedure
+    .input(z.object({ diagnosticId: z.number() }))
+    .query(async ({ input }) => {
+      return await getFeedbackByDiagnosticId(input.diagnosticId);
+    }),
+
+  stats: adminProcedure.query(async () => {
+    return await getAccuracyStats();
+  }),
+});
+
 const paymentRouter = router({
   createPreference: publicProcedure
     .input(
@@ -283,6 +315,7 @@ export const appRouter = router({
   }),
   diagnostic: diagnosticRouter,
   payment: paymentRouter,
+  feedback: feedbackRouter,
   admin: adminRouter,
 });
 

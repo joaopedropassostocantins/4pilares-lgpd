@@ -1,6 +1,6 @@
 import { eq, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, diagnostics, InsertDiagnostic } from "../drizzle/schema";
+import { InsertUser, users, diagnostics, InsertDiagnostic, feedbacks, InsertFeedback } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -107,4 +107,27 @@ export async function getTotalRevenue() {
   // Each paid diagnostic = R$ 14.99
   const paidCount = await getPaidDiagnosticsCount();
   return paidCount * 14.99;
+}
+
+// Feedback queries
+export async function createFeedback(data: InsertFeedback) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(feedbacks).values(data);
+  const result = await db.select().from(feedbacks).orderBy(desc(feedbacks.createdAt)).limit(1);
+  return result[0];
+}
+
+export async function getFeedbackByDiagnosticId(diagnosticId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.select().from(feedbacks).where(eq(feedbacks.diagnosticId, diagnosticId));
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function getAccuracyStats() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.select({ accuracy: feedbacks.accuracy, count: feedbacks.id }).from(feedbacks).groupBy(feedbacks.accuracy);
+  return result;
 }
