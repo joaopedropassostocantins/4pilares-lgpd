@@ -7,6 +7,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Ads from "./pages/Ads";
 import Resultado from "./pages/Resultado";
+import Obrigado from "./pages/Obrigado";
 import AdminLayout from "./components/AdminLayout";
 import AdminDashboard from "./pages/Admin/Dashboard";
 import AdminDiagnostics from "./pages/Admin/Diagnostics";
@@ -17,6 +18,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/ads" component={Ads} />
       <Route path="/resultado/:publicId" component={Resultado} />
+      <Route path="/obrigado/:publicId" component={Obrigado} />
       <Route path="/admin">
         {() => (
           <AdminLayout>

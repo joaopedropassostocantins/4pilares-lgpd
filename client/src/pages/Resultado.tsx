@@ -130,13 +130,19 @@ export default function Resultado() {
     lifetime: { price: 299.90, label: "Vitalício", description: "Acesso ilimitado + atualizações" },
   };
 
-  // Track conversion when payment is completed
+  // Track conversion when payment is completed and redirect to thank you page
   useEffect(() => {
-    if (isPaid && typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'conversion', {
-        'send_to': 'AW-17943086003/ealSCPLWzYAcELOH9-tC',
-        'transaction_id': diagnostic?.publicId || '',
-      });
+    if (isPaid && diagnostic?.publicId && typeof window !== 'undefined') {
+      if ((window as any).gtag) {
+        (window as any).gtag('event', 'conversion', {
+          'send_to': 'AW-17943086003/ealSCPLWzYAcELOH9-tC',
+          'transaction_id': diagnostic.publicId,
+        });
+      }
+      const timer = setTimeout(() => {
+        window.location.href = `/obrigado/${diagnostic.publicId}`;
+      }, 2000);
+      return () => clearTimeout(timer);
     }
   }, [isPaid, diagnostic?.publicId]);
 
@@ -150,6 +156,16 @@ export default function Resultado() {
       });
     }
   }, [showPayment, selectedPlan, diagnostic, publicId, createPreference]);
+
+  // Auto-detect payment completion by polling
+  useEffect(() => {
+    if (!isPaid && showPayment) {
+      const interval = setInterval(() => {
+        refetch();
+      }, 3000); // Poll every 3 seconds
+      return () => clearInterval(interval);
+    }
+  }, [isPaid, showPayment, refetch]);
 
   const handleUnlock = () => {
     setShowPayment(true);

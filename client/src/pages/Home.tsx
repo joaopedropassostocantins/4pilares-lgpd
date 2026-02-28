@@ -1,6 +1,5 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { trackDiagnosticCreated, trackPageView } from "@/lib/tracking";
 import { Button } from "@/components/ui/button";
@@ -8,8 +7,33 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Search, MapPin, Sparkles, Star, Moon, Sun, ChevronDown, TrendingUp, Heart, Zap, MessageCircle } from "lucide-react";
+import { Loader2, Search, MapPin, Sparkles, Star, Moon, Sun, ChevronDown, TrendingUp, Heart, Zap, MessageCircle, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
+
+// ─── FAQ Item Component ───────────────────────────────────────────────────
+function FAQItem({ question, answer }: { question: string; answer: string }) {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <Card className="bg-card/40 border-primary/20 hover:border-primary/40 transition-colors">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-primary/5 transition-colors"
+      >
+        <span className="font-semibold text-foreground">{question}</span>
+        {isOpen ? (
+          <ChevronUp className="h-5 w-5 text-primary flex-shrink-0" />
+        ) : (
+          <ChevronDown className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+        )}
+      </button>
+      {isOpen && (
+        <div className="px-6 py-4 border-t border-primary/10 bg-primary/5">
+          <p className="text-muted-foreground leading-relaxed">{answer}</p>
+        </div>
+      )}
+    </Card>
+  );
+}
 
 // ─── CEP lookup via ViaCEP ───────────────────────────────────────────────────
 async function fetchAddressByCep(cep: string): Promise<string | null> {
@@ -474,6 +498,55 @@ export default function Home() {
               </CardContent>
             </Card>
           ))}
+        </div>
+      </section>
+
+      {/* ── FAQ SECTION ── */}
+      <section id="faq" className="max-w-4xl mx-auto px-4 py-16">
+        <h2 className="text-3xl font-bold text-center text-primary mb-12" style={{ fontFamily: "'Cinzel', serif" }}>
+          Perguntas Frequentes
+        </h2>
+        <div className="space-y-4">
+          <FAQItem
+            question="O que é SAJO?"
+            answer="SAJO é um sistema ancestral coreano de astrologia que analisa os 4 Pilares do Destino (Ano, Mês, Dia e Hora de nascimento) para revelar sua personalidade, potencial e desafios em amor, carreira, saúde e bem-estar."
+          />
+          <FAQItem
+            question="Como funciona a análise dos 4 Pilares?"
+            answer="Cada pilar representa uma dimensão diferente do seu destino. O Ano revela sua missão de vida, o Mês sua natureza emocional, o Dia sua essência verdadeira, e a Hora seu potencial oculto. Juntos, formam um mapa completo do seu ser."
+          />
+          <FAQItem
+            question="Preciso saber a hora exata do meu nascimento?"
+            answer="Sim, a hora é importante para maior precisão. Se não souber, use a hora aproximada ou entre em contato com sua mãe/família. Mesmo sem a hora exata, a análise dos outros 3 pilares já fornece insights valiosos."
+          />
+          <FAQItem
+            question="As previsões são 100% precisas?"
+            answer="A astrologia SAJO oferece insights profundos baseados em padrões ancestrais. A precisão depende também de sua abertura para receber a mensagem. Use as previsões como guia para autoconhecimento e tomada de decisão consciente."
+          />
+          <FAQItem
+            question="Qual é a diferença entre os planos?"
+            answer="Promoção (R$ 14,99): Acesso único à análise completa. Normal (R$ 29,99): Acesso único com suporte. Vitalício (R$ 299,90): Acesso ilimitado, atualizações perpétuas e suporte prioritário."
+          />
+          <FAQItem
+            question="Posso compartilhar meu link de referral?"
+            answer="Sim! Cada amigo que se inscrever usando seu link de referral gera R$ 9,99 de desconto para você. Não há limite de referrals. Compartilhe em WhatsApp, Facebook, Twitter ou copie o link."
+          />
+          <FAQItem
+            question="Como recebo minha análise após o pagamento?"
+            answer="Após confirmar o pagamento, você é redirecionado para a página de agradecimento e a análise completa é enviada por email e WhatsApp (se fornecido) em até 5 minutos."
+          />
+          <FAQItem
+            question="Há garantia de satisfação?"
+            answer="Sim! Se não estiver satisfeito com a análise nos primeiros 7 dias, oferecemos reembolso total. Entre em contato conosco via WhatsApp ou email."
+          />
+          <FAQItem
+            question="Meus dados são seguros?"
+            answer="Sim. Usamos criptografia SSL e não compartilhamos seus dados com terceiros. Sua privacidade é nossa prioridade."
+          />
+          <FAQItem
+            question="Como entro em contato com suporte?"
+            answer="Você pode nos contatar via WhatsApp, email ou formulário de contato. Respondemos em até 24 horas. Clientes do plano Vitalício recebem suporte prioritário."
+          />
         </div>
       </section>
 

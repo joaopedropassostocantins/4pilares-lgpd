@@ -123,6 +123,40 @@ export async function getPaymentDetails(paymentId: string) {
 }
 
 /**
+ * Process webhook from Mercado Pago
+ * Returns payment status and external reference (diagnosticId)
+ */
+export async function processWebhook(webhookData: any) {
+  try {
+    // Webhook can be payment.created, payment.updated, or payment.approved
+    if (webhookData.type === "payment") {
+      const paymentId = webhookData.data?.id;
+      if (!paymentId) {
+        console.warn("[Mercado Pago Webhook] No payment ID in webhook data");
+        return null;
+      }
+
+      // Get payment details
+      const paymentDetails = await getPaymentDetails(paymentId.toString());
+      
+      return {
+        paymentId: paymentDetails.id,
+        status: paymentDetails.status,
+        statusDetail: paymentDetails.statusDetail,
+        amount: paymentDetails.amount,
+        paymentMethod: paymentDetails.paymentMethod,
+        createdAt: paymentDetails.createdAt,
+      };
+    }
+    
+    return null;
+  } catch (error) {
+    console.error("[Mercado Pago Webhook] Error processing webhook:", error);
+    throw error;
+  }
+}
+
+/**
  * Verify webhook signature (optional but recommended)
  */
 export function verifyWebhookSignature(
