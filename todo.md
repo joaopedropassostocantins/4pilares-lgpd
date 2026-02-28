@@ -138,3 +138,12 @@
 - [x] Adicionar diferenciação: por que SAJO é melhor
 - [ ] Criar landing page otimizada para Google Ads
 - [ ] Configurar rastreamento de conversão
+
+
+## Email Capture e Entrega de Análise
+
+- [x] Adicionar campo de email no formulário inicial (opcional)
+- [ ] Criar popup de email capture antes de gerar análise completa
+- [ ] Implementar envio de análise por email
+- [ ] Adicionar fallback: enviar por email se análise não gerar na página
+- [ ] Testar fluxo completo de email

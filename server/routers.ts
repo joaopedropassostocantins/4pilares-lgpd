@@ -58,6 +58,7 @@ const diagnosticRouter = router({
     .input(
       z.object({
         consultantName: z.string().optional(),
+        email: z.string().email().optional(),
         birthDate: z.string(),
         birthTime: z.string().optional(),
         birthPlace: z.string().optional(),
@@ -119,6 +120,7 @@ Seja DIRETO, PRÁTICO e sem floreios. Nada de "ancestrais", "espíritos" ou "né
       const diagnostic = await createDiagnostic({
         publicId,
         consultantName: name,
+        email: input.email || null,
         birthDate: input.birthDate,
         birthTime: input.birthTime || null,
         birthPlace: input.birthPlace || null,

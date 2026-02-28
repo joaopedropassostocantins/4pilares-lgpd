@@ -19,6 +19,7 @@ export const diagnostics = mysqlTable("diagnostics", {
   id: int("id").autoincrement().primaryKey(),
   publicId: varchar("publicId", { length: 32 }).notNull().unique(),
   consultantName: varchar("consultantName", { length: 128 }),
+  email: varchar("email", { length: 320 }),
   birthDate: varchar("birthDate", { length: 20 }).notNull(),
   birthTime: varchar("birthTime", { length: 10 }),
   birthPlace: varchar("birthPlace", { length: 256 }),
@@ -30,6 +31,7 @@ export const diagnostics = mysqlTable("diagnostics", {
   paymentId: varchar("paymentId", { length: 64 }),
   paymentStatus: mysqlEnum("paymentStatus", ["pending", "paid"]).default("pending").notNull(),
   analysisVariant: mysqlEnum("analysisVariant", ["epic", "predictive"]).default("predictive").notNull(),
+  emailSentAt: timestamp("emailSentAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 

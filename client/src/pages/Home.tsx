@@ -81,6 +81,7 @@ export default function Home() {
   const formRef = useRef<HTMLDivElement>(null);
 
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [birthTime, setBirthTime] = useState("");
   const [birthPlace, setBirthPlace] = useState("");
@@ -126,6 +127,7 @@ export default function Home() {
       return;
     }
     createDiagnostic.mutate({
+      email: email || undefined,
       consultantName: name || undefined,
       birthDate,
       birthTime: birthTime || undefined,
@@ -252,6 +254,19 @@ export default function Home() {
                     className="bg-input/50 border-border/50 focus:border-primary/60 text-sm"
                   />
                 </div>
+                {/* Email */}
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-foreground/80">Seu Email <span className="text-muted-foreground/60">(para receber análise completa)</span></Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="seu@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="bg-input/50 border-border/50 focus:border-primary/60 text-sm"
+                  />
+                </div>
+
 
                 {/* Birth Date */}
                 <div className="space-y-2">
