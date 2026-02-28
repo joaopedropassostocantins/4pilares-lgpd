@@ -225,11 +225,15 @@ export default function Resultado() {
               {!isPaid && (
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/60 to-background/95 z-10 pointer-events-none rounded-b-lg" />
               )}
-              <div className="text-foreground whitespace-pre-wrap text-sm leading-relaxed font-medium">
-                {isPaid
-                  ? (diagnostic.basicAnalysis || diagnostic.tastingAnalysis || "Análise em processamento...")
-                  : (diagnostic.tastingAnalysis || "Análise em processamento...")}
-              </div>
+              <div 
+                className="text-foreground whitespace-pre-wrap text-base leading-relaxed font-semibold"
+                dangerouslySetInnerHTML={{
+                  __html: (isPaid
+                    ? (diagnostic.basicAnalysis || diagnostic.tastingAnalysis || "Análise em processamento...")
+                    : (diagnostic.tastingAnalysis || "Análise em processamento..."))
+                    .replace(/\*\*<u>([^<]+)<\/u>\*\*/g, '<strong><u>$1</u></strong>')
+                }}
+              />
             </div>
           </CardContent>
         </Card>

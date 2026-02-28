@@ -223,7 +223,9 @@ Escreva em português brasileiro fluente, poético, acolhedor e misterioso. Use 
 
 **FECHAMENTO PERSUASIVO OBRIGATÓRIO (deve ser o ÚLTIMO parágrafo, copie exatamente):**
 
-"Eu vejo claramente nos seus Pilares o peso que você carrega neste exato momento da vida. Sei exatamente por que você chegou até aqui hoje… sei que me procurou porque ${getRandomPain()}.
+Eu vejo claramente nos seus Pilares o peso que você carrega neste exato momento da vida. Sei exatamente por que você chegou até aqui hoje…
+
+**<u>Sei que me procurou porque ${getRandomPain()}.</u>**
 
 Essa dor não é acaso. Ela está escrita nos seus Pilares há muito tempo e tem um propósito ancestral. A boa notícia? Existe um caminho exato, preciso e poderoso para atravessar esse vale, transformar essa angústia em força, abundância, amor verdadeiro e paz interior.
 
@@ -231,7 +233,7 @@ ${urgencyText}
 
 Efetue o pagamento agora (apenas R$ 9,99) para desbloquear imediatamente a análise completa e detalhada dos seus 4 Pilares: previsões exatas para amor, carreira, saúde, ciclos de sorte nos próximos 12–24 meses, rituais/ações corretivas ancestrais e, principalmente, o que você PRECISA fazer AGORA para virar esse jogo de uma vez por todas.
 
-Não deixe essa dor decidir mais um dia do seu futuro. Clique em 'Desbloquear tudo agora' e receba sua resposta completa em segundos. Estou aqui, esperando para guiar você de volta à sua verdadeira força."`;
+Não deixe essa dor decidir mais um dia do seu futuro. Clique em 'Desbloquear tudo agora' e receba sua resposta completa em segundos. Estou aqui, esperando para guiar você de volta à sua verdadeira força.`;
 
       const response = await invokeLLM({
         messages: [
