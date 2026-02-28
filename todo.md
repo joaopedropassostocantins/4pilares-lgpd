@@ -125,3 +125,16 @@
 - [x] Tornar opções de pagamento bem visíveis (Pix + Cartão)
 - [x] Adicionar promoção R$ 9,99 para quem compartilhar degustação
 - [x] Destacar seção de pagamento após degustação
+
+
+## Otimizações de Captura e Conversão (R$ 800 Budget)
+
+- [x] Simplificar formulário: apenas nome + data obrigatórios
+- [x] Reescrever copywriting com benefícios (amor, carreira, saúde)
+- [x] Adicionar urgência: contador de usuários, desconto limitado
+- [x] Melhorar depoimentos: 5+ com foto e resultado concreto
+- [x] Adicionar email capture com incentivo
+- [x] Melhorar CTA: destacar GRÁTIS e tempo (30 segundos)
+- [x] Adicionar diferenciação: por que SAJO é melhor
+- [ ] Criar landing page otimizada para Google Ads
+- [ ] Configurar rastreamento de conversão

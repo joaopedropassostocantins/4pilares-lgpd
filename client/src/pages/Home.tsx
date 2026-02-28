@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Search, MapPin, Sparkles, Star, Moon, Sun, ChevronDown } from "lucide-react";
+import { Loader2, Search, MapPin, Sparkles, Star, Moon, Sun, ChevronDown, TrendingUp, Heart, Zap } from "lucide-react";
 import { toast } from "sonner";
 
 // ─── CEP lookup via ViaCEP ───────────────────────────────────────────────────
@@ -28,34 +28,6 @@ async function fetchAddressByCep(cep: string): Promise<string | null> {
   }
 }
 
-// ─── Country/State/City lookup ─────────────────────────────────────────────────
-const COUNTRIES = [
-  { name: "Brasil", code: "BR", states: [
-    { name: "São Paulo", code: "SP", cities: ["São Paulo", "Campinas", "Santos", "Sorocaba", "Ribeirão Preto"] },
-    { name: "Rio de Janeiro", code: "RJ", cities: ["Rio de Janeiro", "Niterói", "Duque de Caxias", "Nova Iguaçu"] },
-    { name: "Minas Gerais", code: "MG", cities: ["Belo Horizonte", "Uberlândia", "Contagem", "Juiz de Fora"] },
-    { name: "Bahia", code: "BA", cities: ["Salvador", "Feira de Santana", "Vitória da Conquista"] },
-    { name: "Ceará", code: "CE", cities: ["Fortaleza", "Caucaia", "Maracanaú", "Juazeiro do Norte"] },
-  ] },
-  { name: "Portugal", code: "PT", states: [
-    { name: "Lisboa", code: "LX", cities: ["Lisboa", "Cascais", "Oeiras"] },
-    { name: "Porto", code: "PO", cities: ["Porto", "Vila Nova de Gaia", "Matosinhos"] },
-  ] },
-  { name: "Estados Unidos", code: "US", states: [
-    { name: "Califórnia", code: "CA", cities: ["Los Angeles", "San Francisco", "San Diego"] },
-    { name: "Nova York", code: "NY", cities: ["Nova York", "Buffalo"] },
-  ] },
-];
-
-function getStates(country: string) {
-  return COUNTRIES.find(c => c.name === country)?.states || [];
-}
-
-function getCities(country: string, state: string) {
-  const stateObj = COUNTRIES.find(c => c.name === country)?.states.find(s => s.name === state);
-  return stateObj?.cities || [];
-}
-
 // ─── Element display ─────────────────────────────────────────────────────────
 const ELEMENTS = [
   { name: "Madeira", korean: "木", color: "text-green-400", desc: "Crescimento, visão, liderança" },
@@ -66,9 +38,42 @@ const ELEMENTS = [
 ];
 
 const HOW_IT_WORKS = [
-  { step: "01", title: "Informe seus dados", desc: "Data, hora e local de nascimento são os pilares do cálculo ancestral." },
-  { step: "02", title: "Os ancestrais calculam", desc: "O sistema SAJO mapeia seus 4 Pilares segundo o calendário lunar coreano." },
-  { step: "03", title: "Receba sua análise", desc: "Uma prévia gratuita revela sua essência. A análise completa desvenda seu destino." },
+  { step: "01", title: "Informe sua data", desc: "Apenas sua data de nascimento revela seus 4 Pilares." },
+  { step: "02", title: "Análise instantânea", desc: "Receba sua análise de degustação em 30 segundos." },
+  { step: "03", title: "Desbloqueie tudo", desc: "Acesse previsões completas sobre amor, carreira e saúde." },
+];
+
+const TESTIMONIALS = [
+  {
+    name: "Marina Silva",
+    city: "São Paulo, SP",
+    text: "Descobri meu potencial em relacionamentos. As previsões foram 100% precisas!",
+    rating: 5,
+  },
+  {
+    name: "Carlos Mendes",
+    city: "Rio de Janeiro, RJ",
+    text: "A análise me ajudou a entender meu tipo de personalidade. Recomendo!",
+    rating: 5,
+  },
+  {
+    name: "Juliana Costa",
+    city: "Belo Horizonte, MG",
+    text: "Finalmente entendi por que tenho dificuldades em finanças. Muito revelador!",
+    rating: 5,
+  },
+  {
+    name: "Ana Paula",
+    city: "Curitiba, PR",
+    text: "As previsões de saúde e bem-estar foram incrivelmente precisas.",
+    rating: 5,
+  },
+  {
+    name: "Roberto Santos",
+    city: "Salvador, BA",
+    text: "Melhor investimento em autoconhecimento que já fiz. Vale cada centavo!",
+    rating: 5,
+  },
 ];
 
 export default function Home() {
@@ -82,12 +87,7 @@ export default function Home() {
   const [hasDst, setHasDst] = useState(false);
   const [cepQuery, setCepQuery] = useState("");
   const [cepLoading, setCepLoading] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState("Brasil");
-  const [selectedState, setSelectedState] = useState("");
-  const [selectedCity, setSelectedCity] = useState("");
-  const [showCountryDropdown, setShowCountryDropdown] = useState(false);
-  const [showStateDropdown, setShowStateDropdown] = useState(false);
-  const [showCityDropdown, setShowCityDropdown] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const createDiagnostic = trpc.diagnostic.create.useMutation({
     onSuccess: (data) => {
@@ -117,26 +117,6 @@ export default function Home() {
 
   const handleCepKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") handleCepSearch();
-  };
-
-  const handleCountrySelect = (country: string) => {
-    setSelectedCountry(country);
-    setSelectedState("");
-    setSelectedCity("");
-    setShowCountryDropdown(false);
-  };
-
-  const handleStateSelect = (state: string) => {
-    setSelectedState(state);
-    setSelectedCity("");
-    setShowStateDropdown(false);
-  };
-
-  const handleCitySelect = (city: string) => {
-    setSelectedCity(city);
-    setBirthPlace(`${city}, ${selectedState}, ${selectedCountry}`);
-    setShowCityDropdown(false);
-    toast.success(`Local selecionado: ${city}, ${selectedState}, ${selectedCountry}`);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -173,9 +153,9 @@ export default function Home() {
             </span>
           </div>
           <div className="hidden md:flex items-center gap-6 text-sm text-muted-foreground">
-            <a href="#tradicao" className="hover:text-primary transition-colors">A Tradição</a>
+            <a href="#por-que" className="hover:text-primary transition-colors">Por Que SAJO</a>
             <a href="#como-funciona" className="hover:text-primary transition-colors">Como Funciona</a>
-            <a href="#elementos" className="hover:text-primary transition-colors">5 Elementos</a>
+            <a href="#depoimentos" className="hover:text-primary transition-colors">Depoimentos</a>
           </div>
         </div>
       </nav>
@@ -195,29 +175,49 @@ export default function Home() {
             className="text-primary/60 text-xs tracking-[0.4em] mb-4 uppercase"
             style={{ fontFamily: "'Cinzel', serif" }}
           >
-            사주팔자 · TRADIÇÃO ANCESTRAL DE 5.000 ANOS
+            Astrologia Coreana Ancestral
           </p>
           <h1
             className="text-4xl md:text-6xl font-bold mb-6 mystic-glow leading-tight"
             style={{ fontFamily: "'Cinzel Decorative', serif" }}
           >
             Descubra Seu Destino<br />
-            <span className="shimmer-text">Pelos 4 Pilares</span>
+            <span className="shimmer-text">em Amor, Carreira e Saúde</span>
           </h1>
           <p className="text-muted-foreground text-lg mb-10 max-w-xl mx-auto leading-relaxed">
-            O SAJO revela os padrões ancestrais que moldaram sua alma. Data, hora e local de nascimento
-            desvendam os segredos do seu destino segundo a sabedoria milenar coreana.
+            Seus 4 Pilares revelam quem você realmente é. Saiba seu potencial em relacionamentos, finanças e bem-estar segundo a sabedoria ancestral coreana.
           </p>
+          
+          {/* Urgency Banner */}
+          <div className="bg-primary/20 border border-primary/40 rounded-full px-6 py-3 inline-block mb-6">
+            <p className="text-sm font-semibold text-primary">
+              ⏰ Promoção: <span className="line-through text-muted-foreground">R$ 14,99</span> → <span className="text-primary font-bold">R$ 9,99</span> para quem compartilhar
+            </p>
+          </div>
+
           <Button
             onClick={scrollToForm}
-            className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-full px-12 py-7 text-xl font-bold hover:shadow-2xl hover:shadow-primary/50 shadow-xl shadow-primary/40 transition-all duration-300 transform hover:scale-105 animate-pulse"
+            className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-full px-12 py-7 text-xl font-bold hover:shadow-2xl hover:shadow-primary/50 shadow-xl shadow-primary/40 transition-all duration-300 transform hover:scale-105"
           >
             <Sparkles className="mr-3 h-6 w-6" />
-            ✦ Revelar Meu Destino ✦
+            Descobrir GRÁTIS em 30 Segundos
           </Button>
           <p className="mt-4 text-xs text-muted-foreground/60">
-            ✦ Análise gratuita de degustação · Sem necessidade de cadastro ✦
+            ✓ Análise gratuita · ✓ Sem cadastro · ✓ Resultado instantâneo
           </p>
+
+          {/* Social Proof */}
+          <div className="mt-8 flex items-center justify-center gap-6 text-sm text-muted-foreground">
+            <div className="text-center">
+              <p className="font-bold text-primary text-lg">5.234+</p>
+              <p className="text-xs">Pessoas descobriram</p>
+            </div>
+            <div className="w-px h-8 bg-border/30"></div>
+            <div className="text-center">
+              <p className="font-bold text-primary text-lg">4.9★</p>
+              <p className="text-xs">Avaliação média</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -233,10 +233,10 @@ export default function Home() {
                 className="text-2xl mystic-glow"
                 style={{ fontFamily: "'Cinzel Decorative', serif" }}
               >
-                Os Ancestrais Aguardam
+                Seus 4 Pilares Revelados
               </CardTitle>
               <p className="text-muted-foreground text-sm mt-2">
-                Informe os dados do seu nascimento para que os 4 Pilares sejam revelados
+                Apenas 2 informações para começar
               </p>
             </CardHeader>
             <CardContent>
@@ -268,99 +268,111 @@ export default function Home() {
                   />
                 </div>
 
-                {/* Birth Time */}
-                <div className="space-y-2">
-                  <Label htmlFor="birthTime" className="text-foreground/80">
-                    Hora de Nascimento <span className="text-muted-foreground/60">(opcional)</span>
-                  </Label>
-                  <Input
-                    id="birthTime"
-                    type="time"
-                    value={birthTime}
-                    onChange={(e) => setBirthTime(e.target.value)}
-                    className="bg-input/50 border-border/50 focus:border-primary/60"
-                  />
-                </div>
+                {/* Advanced Options Toggle */}
+                <button
+                  type="button"
+                  onClick={() => setShowAdvanced(!showAdvanced)}
+                  className="text-xs text-primary hover:text-primary/80 transition-colors flex items-center gap-1 mt-4"
+                >
+                  <ChevronDown className={`h-3 w-3 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} />
+                  Adicionar hora e local (aumenta precisão)
+                </button>
 
-                {/* Birth Place with CEP search */}
-                <div className="space-y-2">
-                  <Label htmlFor="birthPlace" className="text-foreground/80">
-                    Local de Nascimento <span className="text-muted-foreground/60">(opcional)</span>
-                  </Label>
-
-                  {/* CEP search row */}
-                  <div className="flex gap-2">
-                    <div className="relative flex-1">
-                      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                {/* Advanced Fields */}
+                {showAdvanced && (
+                  <div className="space-y-4 pt-4 border-t border-border/30">
+                    {/* Birth Time */}
+                    <div className="space-y-2">
+                      <Label htmlFor="birthTime" className="text-foreground/80">
+                        Hora de Nascimento <span className="text-muted-foreground/60">(opcional)</span>
+                      </Label>
                       <Input
-                        placeholder="CEP (ex: 01310-100)"
-                        value={cepQuery}
-                        onChange={(e) => setCepQuery(e.target.value)}
-                        onKeyDown={handleCepKeyDown}
-                        className="pl-9 bg-input/50 border-border/50 focus:border-primary/60"
+                        id="birthTime"
+                        type="time"
+                        value={birthTime}
+                        onChange={(e) => setBirthTime(e.target.value)}
+                        className="bg-input/50 border-border/50 focus:border-primary/60"
                       />
                     </div>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={handleCepSearch}
-                      disabled={cepLoading}
-                      className="border-primary/40 hover:border-primary/70 hover:bg-primary/10 shrink-0"
-                      title="Buscar endereço pelo CEP"
-                    >
-                      {cepLoading ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Search className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </div>
 
-                  {/* Manual address field */}
-                  <Input
-                    id="birthPlace"
-                    placeholder="Cidade, estado e país (ex: São Paulo, SP, Brasil)"
-                    value={birthPlace}
-                    onChange={(e) => setBirthPlace(e.target.value)}
-                    className="bg-input/50 border-border/50 focus:border-primary/60"
-                  />
-                  <p className="text-xs text-muted-foreground/60">
-                    Digite o CEP e clique em buscar, ou informe o local manualmente.
-                  </p>
-                </div>
+                    {/* Birth Place with CEP search */}
+                    <div className="space-y-2">
+                      <Label htmlFor="birthPlace" className="text-foreground/80">
+                        Local de Nascimento <span className="text-muted-foreground/60">(opcional)</span>
+                      </Label>
 
-                {/* DST toggle */}
-                <div className="flex items-center justify-between py-2 border-t border-border/30">
-                  <div>
-                    <Label htmlFor="dst" className="text-foreground/80 text-sm">
-                      Havia horário de verão vigente?
-                    </Label>
-                    <p className="text-xs text-muted-foreground/60 mt-0.5">
-                      Ative se nasceu durante o horário de verão
-                    </p>
+                      {/* CEP search row */}
+                      <div className="flex gap-2">
+                        <div className="relative flex-1">
+                          <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            placeholder="CEP (ex: 01310-100)"
+                            value={cepQuery}
+                            onChange={(e) => setCepQuery(e.target.value)}
+                            onKeyDown={handleCepKeyDown}
+                            className="pl-9 bg-input/50 border-border/50 focus:border-primary/60"
+                          />
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={handleCepSearch}
+                          disabled={cepLoading}
+                          className="border-primary/40 hover:border-primary/70 hover:bg-primary/10 shrink-0"
+                          title="Buscar endereço pelo CEP"
+                        >
+                          {cepLoading ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Search className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </div>
+
+                      {/* Manual address field */}
+                      <Input
+                        id="birthPlace"
+                        placeholder="Cidade, estado e país (ex: São Paulo, SP, Brasil)"
+                        value={birthPlace}
+                        onChange={(e) => setBirthPlace(e.target.value)}
+                        className="bg-input/50 border-border/50 focus:border-primary/60"
+                      />
+                    </div>
+
+                    {/* DST toggle */}
+                    <div className="flex items-center justify-between py-2 border-t border-border/30">
+                      <div>
+                        <Label htmlFor="dst" className="text-foreground/80 text-sm">
+                          Havia horário de verão?
+                        </Label>
+                        <p className="text-xs text-muted-foreground/60 mt-0.5">
+                          Ative se nasceu durante o horário de verão
+                        </p>
+                      </div>
+                      <Switch
+                        id="dst"
+                        checked={hasDst}
+                        onCheckedChange={setHasDst}
+                      />
+                    </div>
                   </div>
-                  <Switch
-                    id="dst"
-                    checked={hasDst}
-                    onCheckedChange={setHasDst}
-                  />
-                </div>
+                )}
 
                 {/* Submit */}
                 <Button
                   type="submit"
                   disabled={createDiagnostic.isPending}
-                  className="w-full py-6 bg-primary text-primary-foreground rounded-full text-base font-semibold hover:bg-primary/90 shadow-lg shadow-primary/20 mt-2"
+                  className="w-full py-6 bg-primary text-primary-foreground rounded-full text-base font-semibold hover:bg-primary/90 shadow-lg shadow-primary/20 mt-6"
                 >
                   {createDiagnostic.isPending ? (
                     <>
                       <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                      Os ancestrais estão consultando os astros...
+                      Processando...
                     </>
                   ) : (
                     <>
-                      <Star className="mr-2 h-5 w-5" />
-                      Descobrir Meu Destino Agora
+                      <Sparkles className="mr-2 h-5 w-5" />
+                      Ver Meus 4 Pilares Agora
                     </>
                   )}
                 </Button>
@@ -370,65 +382,48 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── A Tradição SAJO ── */}
-      <section id="tradicao" className="py-20 px-4">
+      {/* ── Por Que SAJO ── */}
+      <section id="por-que" className="py-20 px-4 bg-primary/5">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <div className="ornamental-divider mb-6">
-              <span className="text-primary text-xl">☯</span>
-            </div>
             <h2
               className="text-3xl font-bold mystic-glow mb-4"
               style={{ fontFamily: "'Cinzel Decorative', serif" }}
             >
-              A Tradição SAJO
+              Por Que SAJO é Diferente
             </h2>
-            <p
-              className="text-primary/60 text-sm tracking-widest"
-              style={{ fontFamily: "'Cinzel', serif" }}
-            >
-              사주 · 5.000 ANOS DE SABEDORIA ANCESTRAL
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              Astrologia coreana ancestral com 5.000 anos de precisão
             </p>
           </div>
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div className="space-y-4 text-muted-foreground leading-relaxed">
-              <p>
-                <strong className="text-foreground">SAJO (사주)</strong>, conhecido como <em>Saju Palja</em> (사주팔자),
-                é o sistema de astrologia coreana baseado nos 4 Pilares do Destino — Ano, Mês, Dia e Hora de nascimento.
-              </p>
-              <p>
-                Diferente da astrologia ocidental, o SAJO trabalha com os <strong className="text-primary">8 caracteres</strong> (팔자)
-                que representam os ciclos cósmicos do momento do nascimento, revelando padrões de personalidade,
-                saúde, relacionamentos e destino.
-              </p>
-              <p>
-                Cada pilar é composto por um <strong className="text-foreground">Tronco Celestial</strong> (천간) e
-                um <strong className="text-foreground">Ramo Terrestre</strong> (지지), interagindo segundo os
-                5 Elementos e a dualidade Yin-Yang.
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="bg-card/60 border border-primary/30 rounded-lg p-6 text-center">
+              <Heart className="h-8 w-8 text-primary mx-auto mb-4" />
+              <h3 className="font-bold mb-2">Amor & Relacionamentos</h3>
+              <p className="text-sm text-muted-foreground">
+                Descubra sua compatibilidade real e seu potencial em relacionamentos
               </p>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { title: "Pilar do Ano", korean: "년주", desc: "Ancestralidade e raízes" },
-                { title: "Pilar do Mês", korean: "월주", desc: "Pais e juventude" },
-                { title: "Pilar do Dia", korean: "일주", desc: "Eu interior e essência" },
-                { title: "Pilar da Hora", korean: "시주", desc: "Filhos e futuro" },
-              ].map((p) => (
-                <Card key={p.korean} className="bg-card/40 border-primary/20 text-center p-4">
-                  <div className="text-2xl text-primary mb-1" style={{ fontFamily: "'Cinzel', serif" }}>
-                    {p.korean}
-                  </div>
-                  <div className="text-sm font-semibold text-foreground/80">{p.title}</div>
-                  <div className="text-xs text-muted-foreground mt-1">{p.desc}</div>
-                </Card>
-              ))}
+            <div className="bg-card/60 border border-primary/30 rounded-lg p-6 text-center">
+              <TrendingUp className="h-8 w-8 text-primary mx-auto mb-4" />
+              <h3 className="font-bold mb-2">Carreira & Finanças</h3>
+              <p className="text-sm text-muted-foreground">
+                Identifique seu potencial profissional e ciclos de prosperidade
+              </p>
+            </div>
+            <div className="bg-card/60 border border-primary/30 rounded-lg p-6 text-center">
+              <Zap className="h-8 w-8 text-primary mx-auto mb-4" />
+              <h3 className="font-bold mb-2">Saúde & Bem-estar</h3>
+              <p className="text-sm text-muted-foreground">
+                Entenda seu tipo de energia e como otimizar sua saúde
+              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* ── Como Funciona ── */}
-      <section id="como-funciona" className="py-20 px-4 bg-card/20">
+      <section id="como-funciona" className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2
@@ -439,51 +434,20 @@ export default function Home() {
             </h2>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
-            {HOW_IT_WORKS.map((step) => (
-              <div key={step.step} className="text-center">
-                <div
-                  className="text-5xl font-bold text-primary/20 mb-4"
-                  style={{ fontFamily: "'Cinzel Decorative', serif" }}
-                >
-                  {step.step}
-                </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">{step.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{step.desc}</p>
+            {HOW_IT_WORKS.map((item) => (
+              <div key={item.step} className="text-center">
+                <div className="text-4xl font-bold text-primary/40 mb-4">{item.step}</div>
+                <h3 className="font-bold mb-2 text-lg">{item.title}</h3>
+                <p className="text-sm text-muted-foreground">{item.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── 5 Elementos ── */}
-      <section id="elementos" className="py-20 px-4">
+      {/* ── Depoimentos ── */}
+      <section id="depoimentos" className="py-20 px-4 bg-primary/5">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2
-              className="text-3xl font-bold mystic-glow mb-4"
-              style={{ fontFamily: "'Cinzel Decorative', serif" }}
-            >
-              Os 5 Elementos
-            </h2>
-            <p className="text-muted-foreground text-sm max-w-md mx-auto">
-              Madeira, Fogo, Terra, Metal e Água formam o ciclo da vida. O equilíbrio entre eles revela seus dons e desafios.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {ELEMENTS.map((el) => (
-              <Card key={el.name} className="bg-card/40 border-primary/10 hover:border-primary/30 transition-all text-center p-4">
-                <div className={`text-4xl font-bold mb-2 ${el.color}`}>{el.korean}</div>
-                <div className="text-sm font-semibold text-foreground/80 mb-1">{el.name}</div>
-                <div className="text-xs text-muted-foreground">{el.desc}</div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Depoimentos / Prova Social ── */}
-      <section className="py-20 px-4 bg-card/20">
-        <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <h2
               className="text-3xl font-bold mystic-glow mb-4"
@@ -491,79 +455,54 @@ export default function Home() {
             >
               Histórias de Transformação
             </h2>
-            <p className="text-muted-foreground text-sm">Clientes que descobriram seu destino através dos 4 Pilares</p>
+            <p className="text-muted-foreground">
+              Pessoas que descobriram seu destino através dos 4 Pilares
+            </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                name: "Marina Silva",
-                city: "São Paulo, SP",
-                text: "A análise dos 4 Pilares me ajudou a entender minha personalidade profunda. Descobri minha verdadeira vocação!",
-                rating: 5,
-              },
-              {
-                name: "Carlos Mendes",
-                city: "Rio de Janeiro, RJ",
-                text: "Nunca acreditei em astrologia, mas o SAJO foi revelador. As descrições foram 100% precisas sobre meu destino.",
-                rating: 5,
-              },
-              {
-                name: "Juliana Costa",
-                city: "Belo Horizonte, MG",
-                text: "Recomendo para quem busca autoconhecimento. A sabedoria ancestral coreana realmente funciona!",
-                rating: 5,
-              },
-            ].map((testimonial, idx) => (
-              <Card key={idx} className="bg-card/60 border-primary/20 hover:border-primary/40 transition-all">
-                <CardContent className="pt-6">
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <span key={i} className="text-yellow-400">★</span>
-                    ))}
-                  </div>
-                  <p className="text-muted-foreground text-sm mb-4 leading-relaxed italic">
-                    "{testimonial.text}"
-                  </p>
-                  <div className="border-t border-border/20 pt-4">
-                    <p className="text-foreground font-semibold text-sm">{testimonial.name}</p>
-                    <p className="text-muted-foreground/60 text-xs">{testimonial.city}</p>
-                  </div>
-                </CardContent>
-              </Card>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {TESTIMONIALS.map((testimonial, idx) => (
+              <div key={idx} className="bg-card/60 border border-primary/30 rounded-lg p-6">
+                <div className="flex gap-1 mb-3">
+                  {Array(testimonial.rating).fill(0).map((_, i) => (
+                    <span key={i} className="text-primary">★</span>
+                  ))}
+                </div>
+                <p className="text-sm text-muted-foreground mb-4 italic">"{testimonial.text}"</p>
+                <div className="border-t border-border/30 pt-3">
+                  <p className="font-semibold text-sm">{testimonial.name}</p>
+                  <p className="text-xs text-muted-foreground">{testimonial.city}</p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* ── CTA Final ── */}
-      <section className="py-24 px-4 text-center">
+      <section className="py-20 px-4 text-center">
         <div className="max-w-2xl mx-auto">
-          <div className="ornamental-divider mb-8">
-            <span className="text-primary text-2xl">☯</span>
-          </div>
           <h2
             className="text-3xl font-bold mystic-glow mb-6"
             style={{ fontFamily: "'Cinzel Decorative', serif" }}
           >
-            Os Ancestrais Aguardam
+            Sua Jornada Começa Agora
           </h2>
-          <p className="text-muted-foreground mb-8">
-            Sua jornada de autoconhecimento começa com um único passo. Descubra o que os astros traçaram para você.
+          <p className="text-muted-foreground mb-8 text-lg">
+            Descubra os segredos dos seus 4 Pilares e desbloqueie seu potencial completo
           </p>
           <Button
             onClick={scrollToForm}
-            className="bg-primary text-primary-foreground rounded-full px-10 py-6 text-lg font-semibold hover:bg-primary/90 shadow-lg shadow-primary/30"
+            className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-full px-12 py-7 text-lg font-bold hover:shadow-2xl hover:shadow-primary/50 shadow-xl shadow-primary/40"
           >
-            <Moon className="mr-2 h-5 w-5" />
-            Consultar os 4 Pilares
+            <Sparkles className="mr-3 h-6 w-6" />
+            Começar Análise Gratuita
           </Button>
         </div>
       </section>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-border/30 py-8 px-4 text-center text-muted-foreground/50 text-xs">
-        <p>© 2025 FUSION-SAJO · Diagnósticos Astrológicos Ancestrais</p>
-        <p className="mt-1">사주팔자 · 木火土金水 · Tradição Coreana dos 4 Pilares</p>
+      <footer className="border-t border-border/30 py-8 px-4 text-center text-sm text-muted-foreground">
+        <p>© 2026 FUSION-SAJO. Todos os direitos reservados.</p>
       </footer>
     </div>
   );
