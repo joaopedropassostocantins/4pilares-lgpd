@@ -6,6 +6,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
+import { notifyOwner } from "./_core/notification";
 import {
   createDiagnostic,
   getDiagnosticByPublicId,
@@ -76,6 +77,16 @@ Use markdown para formatação (negrito para conceitos importantes). Não use em
         tastingAnalysis,
         paymentStatus: "pending",
       });
+
+      // Notify owner of new diagnostic
+      try {
+        await notifyOwner({
+          title: "✦ Novo Diagnóstico SAJO Criado",
+          content: `Um novo consulente (${input.consultantName || "Anônimo"}) solicitou diagnóstico SAJO de ${input.birthPlace}. ID: ${publicId}`,
+        });
+      } catch (err) {
+        console.warn("[Notification] Failed to notify owner of new diagnostic:", err);
+      }
 
       return { publicId };
     }),
@@ -156,6 +167,16 @@ Use markdown para formatação rica. Seja profundo, poético e específico.`;
         fullAnalysis,
         paymentStatus: "paid",
       });
+
+      // Notify owner of successful payment
+      try {
+        await notifyOwner({
+          title: "✦ Pagamento Recebido - Análise Desbloqueada",
+          content: `${diagnostic.consultantName || "Consulente"} desbloqueou a análise completa. ID: ${input.publicId}. Valor: R$ 20,00`,
+        });
+      } catch (err) {
+        console.warn("[Notification] Failed to notify owner of payment:", err);
+      }
 
       return { success: true };
     }),

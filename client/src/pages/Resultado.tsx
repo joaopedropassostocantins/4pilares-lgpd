@@ -170,13 +170,21 @@ export default function Resultado() {
   const handleUnlock = () => {
     setShowPayment(true);
     createPix.mutate({ diagnosticId: publicId });
+    toast.info("✦ Gerando dados de pagamento...", {
+      description: "Chave Pix e QR code estarão disponíveis em segundos.",
+    });
   };
 
   const handleConfirmPayment = async () => {
     try {
       await confirmPayment.mutateAsync({ diagnosticId: publicId, paymentMethod: "pix" });
+      toast.success("✦ Pagamento confirmado! Processando...", {
+        description: "Gerando análise completa com sabedoria ancestral...",
+      });
       await unlockDiagnostic.mutateAsync({ publicId });
-      toast.success("Análise desbloqueada! Os ancestrais revelam seu destino completo.");
+      toast.success("☯ Análise Completa Desbloqueada!", {
+        description: "Os ancestrais revelam seu destino completo. Missão de vida, saúde, finanças e guia xamânico.",
+      });
       refetch();
     } catch (err) {
       toast.error("Erro ao confirmar pagamento. Tente novamente.");
@@ -187,7 +195,9 @@ export default function Resultado() {
     navigator.clipboard.writeText(key);
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
-    toast.success("Chave Pix copiada!");
+    toast.success("Chave Pix copiada!", {
+      description: "Cole no seu app de banco para completar o pagamento.",
+    });
   };
 
   // ── Loading state ──

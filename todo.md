@@ -13,3 +13,12 @@
 - [x] Preservar sistema de pagamento Pix (chave 55 63 98438-1782)
 - [x] Registrar rota /resultado/:publicId no App.tsx
 - [x] Escrever testes Vitest (12 testes passando: 9 sajo + 2 routers + 1 auth)
+
+## Notificações Personalizadas
+
+- [x] Implementar notificações toast do usuário (confirmação de diagnóstico)
+- [x] Implementar notificações toast de pagamento realizado
+- [x] Implementar notificações toast de análise desbloqueada
+- [x] Implementar notificações do proprietário via Manus (novo diagnóstico)
+- [x] Implementar notificações do proprietário via Manus (novo pagamento)
+- [x] Testar fluxo completo de notificações

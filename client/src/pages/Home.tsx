@@ -57,6 +57,9 @@ export default function Home() {
 
   const createDiagnostic = trpc.diagnostic.create.useMutation({
     onSuccess: (data) => {
+      toast.success("☯ Diagnóstico criado! Os ancestrais revelam seu destino...", {
+        description: "Análise de degustação pronta. Desbloqueie a análise completa.",
+      });
       navigate(`/resultado/${data.publicId}`);
     },
     onError: (err) => {
