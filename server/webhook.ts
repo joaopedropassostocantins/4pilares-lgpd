@@ -2,6 +2,7 @@ import { getPaymentDetails } from "./mercadopago";
 import { getDiagnosticByPublicId, updateDiagnostic, getDb } from "./db";
 import { invokeLLM } from "./_core/llm";
 import { notifyOwner } from "./_core/notification";
+import { sendEmailWithAnalysis } from "./_core/email";
 import { diagnostics } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 
@@ -58,7 +59,21 @@ export async function processMercadoPagoWebhook(event: {
     console.log(`[Webhook] Found diagnostic: ${diagnosticRecord.publicId}`);
 
     // Generate full analysis
-    await generateFullAnalysisOnPayment(diagnosticRecord.publicId);
+    const fullAnalysis = await generateFullAnalysisOnPayment(diagnosticRecord.publicId);
+
+    // Send analysis via email if email is available
+    if (diagnosticRecord.email) {
+      await sendEmailWithAnalysis(
+        diagnosticRecord.email,
+        diagnosticRecord.consultantName || "Viajante",
+        fullAnalysis,
+        "full"
+      );
+      // Update emailSentAt timestamp
+      await updateDiagnostic(diagnosticRecord.publicId, {
+        emailSentAt: new Date(),
+      });
+    }
 
     // Update payment status
     await updateDiagnostic(diagnosticRecord.publicId, {
