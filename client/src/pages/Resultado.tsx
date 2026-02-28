@@ -130,8 +130,15 @@ export default function Resultado() {
     lifetime: { price: 299.90, label: "Vitalício", description: "Acesso ilimitado + atualizações" },
   };
 
-  // Track result page view (Google Analytics automatically tracks this)
-  // No need for manual tracking - Google Analytics handles it automatically
+  // Track conversion when payment is completed
+  useEffect(() => {
+    if (isPaid && typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'conversion', {
+        'send_to': 'AW-17943086003/ealSCPLWzYAcELOH9-tC',
+        'transaction_id': diagnostic?.publicId || '',
+      });
+    }
+  }, [isPaid, diagnostic?.publicId]);
 
   // Auto-create Mercado Pago preference when payment section is shown
   useEffect(() => {
