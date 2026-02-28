@@ -115,3 +115,13 @@
 - [x] Reescrever prompts com tom mais assertivo e contundente
 - [x] Afirmações concretas sobre presente e futuro (não especulativo)
 - [x] Testar fluxo completo: pagamento → webhook → desbloqueio
+
+
+## Melhorias de UX e Layout (Nova Rodada)
+
+- [x] Reorganizar layout da página Resultado (menos empilhado)
+- [x] Adicionar 3 previsões concretas: amor, finanças, saúde/família/viagens
+- [x] Reescrever tom menos profético, mais direto e objetivo
+- [x] Tornar opções de pagamento bem visíveis (Pix + Cartão)
+- [x] Adicionar promoção R$ 9,99 para quem compartilhar degustação
+- [x] Destacar seção de pagamento após degustação

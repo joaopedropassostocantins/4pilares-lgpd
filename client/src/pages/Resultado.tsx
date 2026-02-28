@@ -2,7 +2,7 @@ import { useParams, useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Lock, Copy, Check, CreditCard, MessageCircle, ChevronDown, ChevronUp, Share2, Facebook, Twitter } from "lucide-react";
+import { Loader2, Lock, Copy, Check, CreditCard, MessageCircle, ChevronDown, ChevronUp, Share2, Facebook, Twitter, Gift } from "lucide-react";
 import { Streamdown } from "streamdown";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
@@ -147,6 +147,7 @@ export default function Resultado() {
   const [showPayment, setShowPayment] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showFullAnalysis, setShowFullAnalysis] = useState(false);
+  const [hasShared, setHasShared] = useState(false);
 
   const { data: diagnostic, isLoading, error, refetch } = trpc.diagnostic.getByPublicId.useQuery(
     { publicId },
@@ -244,23 +245,27 @@ export default function Resultado() {
   const handleShareWhatsApp = () => {
     const url = `https://wa.me/?text=${encodeURIComponent(shareText + " " + shareUrl)}`;
     window.open(url, "_blank");
+    setHasShared(true);
     toast.success("Link compartilhado no WhatsApp!");
   };
 
   const handleShareFacebook = () => {
     const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
     window.open(url, "_blank");
+    setHasShared(true);
     toast.success("Compartilhado no Facebook!");
   };
 
   const handleShareTwitter = () => {
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
     window.open(url, "_blank");
+    setHasShared(true);
     toast.success("Compartilhado no Twitter!");
   };
 
   const handleShareLink = () => {
     navigator.clipboard.writeText(shareUrl);
+    setHasShared(true);
     toast.success("Link copiado para compartilhar!");
   };
 
@@ -384,6 +389,107 @@ export default function Resultado() {
           </CardContent>
         </Card>
 
+        {/* ── PAYMENT SECTION (PROMINENT & VISIBLE) ── */}
+        {!isPaid && (
+          <Card className="bg-gradient-to-br from-primary/20 to-primary/10 border-primary/50 mb-8 shadow-lg">
+            <CardHeader className="text-center">
+              <CardTitle
+                className="text-2xl mystic-glow"
+                style={{ fontFamily: "'Cinzel Decorative', serif" }}
+              >
+                ✦ Desbloqueie a Análise Completa ✦
+              </CardTitle>
+              <p className="text-primary/80 text-sm mt-2">R$ 14,99 • Acesso Vitalício</p>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Mercado Pago Button - Prominent */}
+              {createPreference.data?.initPoint ? (
+                <div className="text-center space-y-4">
+                  <p className="text-sm text-muted-foreground font-medium">Escolha seu método de pagamento:</p>
+                  <a
+                    href={createPreference.data.initPoint}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-3 py-4 px-10 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-full font-bold transition-all text-lg shadow-lg hover:shadow-xl"
+                  >
+                    <CreditCard className="h-6 w-6" />
+                    Pagar com Pix ou Cartão
+                  </a>
+                  <p className="text-xs text-muted-foreground">Ambas as opções disponíveis no checkout</p>
+                </div>
+              ) : createPreference.isPending ? (
+                <div className="text-center space-y-3">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
+                  <p className="text-sm text-muted-foreground">Preparando opções de pagamento...</p>
+                </div>
+              ) : (
+                <div className="text-center space-y-4">
+                  <Button
+                    className="w-full py-6 bg-primary text-primary-foreground rounded-full text-lg font-bold hover:bg-primary/90"
+                    onClick={handleUnlock}
+                  >
+                    <CreditCard className="mr-3 h-6 w-6" />
+                    Gerar Opções de Pagamento
+                  </Button>
+                </div>
+              )}
+
+              {/* Legacy PIX Key (fallback) */}
+              {!createPreference.data?.initPoint && !createPreference.isPending && (
+                <div className="bg-muted/50 rounded-lg p-6 text-center border border-primary/20">
+                  <p className="text-sm text-muted-foreground mb-3">Ou pague com Pix (Chave Telefone):</p>
+                  <div className="flex items-center justify-center gap-2">
+                    <code className="text-lg text-primary font-mono bg-background/50 px-4 py-2 rounded">
+                      {createPix.data?.pixKey || "55 63 98438-1782"}
+                    </code>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => copyPixKey(createPix.data?.pixKey || "55 63 98438-1782")}
+                      className="border-primary/40 hover:border-primary"
+                    >
+                      {copied ? (
+                        <Check className="h-4 w-4 text-green-400" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-3">
+                    Beneficiário: {createPix.data?.beneficiary || "FUSION-SAJO Diagnósticos Ancestrais"}
+                  </p>
+                </div>
+              )}
+
+              {/* Confirm button (legacy) */}
+              {!createPreference.data?.initPoint && (
+                <div className="text-center space-y-3">
+                  <p className="text-sm text-muted-foreground">
+                    Após realizar o Pix, clique no botão abaixo para liberar sua análise:
+                  </p>
+                  <Button
+                    className="w-full py-5 bg-primary text-primary-foreground rounded-full text-lg"
+                    onClick={handleConfirmPayment}
+                    disabled={confirmPayment.isPending || unlockDiagnostic.isPending}
+                  >
+                    {confirmPayment.isPending || unlockDiagnostic.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        Gerando sua análise completa...
+                      </>
+                    ) : (
+                      <>
+                        <CreditCard className="mr-2 h-5 w-5" />
+                        Já Paguei — Liberar Análise
+                      </>
+                    )}
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
         {/* ── Paid: Full Analysis ── */}
         {isPaid && diagnostic.fullAnalysis && (
           <Card className="bg-card/60 border-primary/30 mb-8">
@@ -419,7 +525,7 @@ export default function Resultado() {
           </Card>
         )}
 
-        {/* Share Section */}
+        {/* Share Section with Promotion */}
         <Card className="bg-card/60 border-primary/30 mb-8">
           <CardHeader>
             <CardTitle className="text-center text-lg flex items-center justify-center gap-2">
@@ -430,7 +536,7 @@ export default function Resultado() {
               Inspire amigos e familiares a descobrirem seus 4 Pilares
             </p>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-6">
             <div className="flex flex-wrap gap-3 justify-center">
               <Button
                 variant="outline"
@@ -469,6 +575,24 @@ export default function Resultado() {
                 Copiar Link
               </Button>
             </div>
+
+            {/* Promotion for sharing */}
+            {hasShared && !isPaid && (
+              <div className="bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/50 rounded-lg p-4 text-center">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <Gift className="h-5 w-5 text-amber-600" />
+                  <span className="font-bold text-amber-700">Promoção Especial!</span>
+                </div>
+                <p className="text-sm text-amber-700 mb-3">
+                  Obrigado por compartilhar! Agora você pode desbloquear a análise completa por:
+                </p>
+                <div className="text-center">
+                  <span className="text-xs text-amber-600 line-through">R$ 14,99</span>
+                  <div className="text-2xl font-bold text-amber-700">R$ 9,99</div>
+                  <p className="text-xs text-amber-600 mt-1">Válido apenas para você!</p>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -477,10 +601,10 @@ export default function Resultado() {
           <Card className="bg-primary/10 border-primary/30 mb-8">
             <CardContent className="pt-6 text-center">
               <p className="text-sm text-muted-foreground mb-4">
-                <strong>Du00favidas sobre sua anu00e1lise?</strong> Fale com nossos mestres SAJO para aconselhamento personalizado.
+                <strong>Dúvidas sobre sua análise?</strong> Fale com nossos mestres SAJO para aconselhamento personalizado.
               </p>
               <a
-                href="https://wa.me/5563984381782?text=Ol%C3%A1%20FUSION-SAJO%2C%20tenho%20du00favidas%20sobre%20minha%20an%C3%A1lise%20e%20gostaria%20de%20aconselhamento."
+                href="https://wa.me/5563984381782?text=Olá%20FUSION-SAJO%2C%20tenho%20dúvidas%20sobre%20minha%20análise%20e%20gostaria%20de%20aconselhamento."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 py-3 px-6 bg-green-600 hover:bg-green-700 text-white rounded-full font-medium transition-colors"
@@ -490,132 +614,6 @@ export default function Resultado() {
               </a>
             </CardContent>
           </Card>
-        )}
-
-        {/* ── Not Paid: Unlock CTA ── */}
-        {!isPaid && (
-          <>
-            {/* Locked overlay card */}
-            <Card className="bg-card/60 border-primary/30 mb-8 relative overflow-hidden">
-              <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-10 rounded-lg">
-                <div className="text-center px-6">
-                  <Lock className="h-12 w-12 text-primary mx-auto mb-4" />
-                  <h3 className="text-xl font-bold mb-2">Análise Completa Bloqueada</h3>
-                  <p className="text-muted-foreground mb-6 max-w-xs text-sm">
-                    Desbloqueie a análise profunda dos 4 Pilares, saúde, finanças, relacionamentos e guia xamânico.
-                  </p>
-                  <Button
-                    className="bg-primary text-primary-foreground rounded-full px-8 py-3 hover:bg-primary/90"
-                    onClick={handleUnlock}
-                  >
-                    <CreditCard className="mr-2 h-5 w-5" />
-                    Desbloquear — R$ 14,99
-                  </Button>
-                </div>
-              </div>
-              <CardContent className="pt-6 blur-sm select-none pointer-events-none">
-                <p className="text-muted-foreground">
-                  Sua missão de vida, saúde, finanças, relacionamentos e guia xamânico personalizado aguardam...
-                  Os ancestrais têm muito mais a revelar sobre os ciclos que moldam sua jornada.
-                </p>
-              </CardContent>
-            </Card>
-
-            {/* Payment section */}
-            {showPayment && (
-              <Card className="bg-card/80 border-primary/30 mb-8">
-                <CardHeader>
-                  <CardTitle
-                    className="text-center text-xl"
-                    style={{ fontFamily: "'Cinzel', serif" }}
-                  >
-                    Pagamento — R$ 14,99
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  {/* Mercado Pago Button */}
-                  {createPreference.data?.initPoint && (
-                    <div className="text-center space-y-3">
-                      <p className="text-sm text-muted-foreground">Pague com Pix ou Cartão de Crédito</p>
-                      <a
-                        href={createPreference.data.initPoint}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-2 py-4 px-8 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-medium transition-colors text-lg"
-                      >
-                        <CreditCard className="h-6 w-6" />
-                        Pagar com Mercado Pago
-                      </a>
-                    </div>
-                  )}
-
-                  {/* Loading state */}
-                  {createPreference.isPending && (
-                    <div className="text-center space-y-3">
-                      <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
-                      <p className="text-sm text-muted-foreground">Preparando opções de pagamento...</p>
-                    </div>
-                  )}
-
-                  {/* Legacy PIX Key (fallback) */}
-                  {!createPreference.data?.initPoint && !createPreference.isPending && (
-                    <div className="bg-muted/50 rounded-lg p-6 text-center">
-                      <p className="text-sm text-muted-foreground mb-3">Chave Pix (Telefone)</p>
-                      <div className="flex items-center justify-center gap-2">
-                        <code className="text-lg text-primary font-mono bg-background/50 px-4 py-2 rounded">
-                          {createPix.data?.pixKey || "55 63 98438-1782"}
-                        </code>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => copyPixKey(createPix.data?.pixKey || "55 63 98438-1782")}
-                          className="border-primary/40 hover:border-primary"
-                        >
-                          {copied ? (
-                            <Check className="h-4 w-4 text-green-400" />
-                          ) : (
-                            <Copy className="h-4 w-4" />
-                          )}
-                        </Button>
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-3">
-                        Valor: <strong className="text-primary">R$ 14,99</strong>
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Beneficiário: {createPix.data?.beneficiary || "FUSION-SAJO Diagnósticos Ancestrais"}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Confirm button (legacy) */}
-                  {!createPreference.data?.initPoint && (
-                    <div className="text-center space-y-3">
-                      <p className="text-sm text-muted-foreground">
-                        Após realizar o Pix, clique no botão abaixo para liberar sua análise:
-                      </p>
-                      <Button
-                        className="w-full py-5 bg-primary text-primary-foreground rounded-full text-lg"
-                        onClick={handleConfirmPayment}
-                        disabled={confirmPayment.isPending || unlockDiagnostic.isPending}
-                      >
-                        {confirmPayment.isPending || unlockDiagnostic.isPending ? (
-                          <>
-                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                            Gerando sua análise completa...
-                          </>
-                        ) : (
-                          <>
-                            <CreditCard className="mr-2 h-5 w-5" />
-                            Já Paguei — Liberar Análise
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
-          </>
         )}
       </main>
     </div>

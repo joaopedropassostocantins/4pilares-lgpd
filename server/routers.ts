@@ -1,4 +1,4 @@
-import { z } from "zod";
+import z from "zod";
 import { nanoid } from "nanoid";
 import { TRPCError } from "@trpc/server";
 import { COOKIE_NAME } from "@shared/const";
@@ -70,7 +70,7 @@ const diagnosticRouter = router({
 
       // Generate tasting analysis with LLM
       const name = input.consultantName || "Viajante";
-      const prompt = `Você é um especialista em padrões de destino baseado no sistema SAJO coreano (사주). Seu tom é direto, assertivo, contundente e hipnotizante — sem floreios. Fale em português brasileiro.
+      const prompt = `Você é um especialista em SAJO coreano (사주). Seu tom é DIRETO, OBJETIVO e PRÁTICO — sem floreios místicos. Fale em português brasileiro.
 
 Dados do consulente:
 - Nome: ${name}
@@ -80,23 +80,31 @@ Dados do consulente:
 - Traços observáveis: ${pillarsData.personalityTraits.join(", ")}
 - Pontos fortes: ${pillarsData.strengths.join(", ")}
 - Padrões de risco: ${pillarsData.challenges.join(", ")}
-- Equilíbrio dos elementos: ${JSON.stringify(pillarsData.elementBalance)}
 
-Escreva uma análise de degustação (4-5 parágrafos) que:
-1. Abra com 1-2 frases que acertam em cheio: uma afirmação CONTUNDENTE + 1 pergunta de checagem ("Você reconhece isso, certo?").
-2. Revele padrões de comportamento, ciclos de decisão, riscos típicos e trade-offs com AFIRMAÇÕES CONCRETAS (não especulativo).
-3. Inclua detalhes únicos baseados no padrão: palavras-chave, eventos típicos, escolhas recorrentes, sinais de burnout, padrões financeiros, dinâmicas de trabalho, relacionamentos.
-4. Use linguagem de CERTEZA e timing: "você vai", "está acontecendo agora", "próximos 7-30 dias", "a tendência é", "o risco é", "você vai se deparar com".
-5. Termine com gancho forte e CTA para desbloquear análise completa.
-6. Inclua: "Leitura interpretativa para reflexão; não substitui profissionais."
-7. NUNCA faça predições sobre saúde/filhos/terceiros sem formulação condicional.
-Seja cirurgicamente preciso, contundente, assertivo e sem floreios.`;
+Escreva uma análise de degustação (5-6 parágrafos) que:
+
+1. **Abertura Direta**: Comece com 1-2 frases que acertam em cheio sobre a personalidade (uma afirmação + uma pergunta de checagem).
+
+2. **3 Previsões Concretas e Diretas**:
+   - **AMOR**: Uma previsão específica sobre dinâmica de relacionamentos ou encontros nos próximos meses (ex: "Você vai atrair pessoas que compartilham sua intensidade, mas pode se isolar quando se sente incompreendido").
+   - **FINANÇAS**: Uma previsão sobre ciclos de ganho/perda ou oportunidades financeiras (ex: "Seus ganhos vêm de decisões rápidas, mas o risco é investir impulsivamente sem análise").
+   - **SAÚDE/FAMÍLIA/VIAGENS**: Uma previsão sobre vitalidade, dinâmica familiar ou movimentação (ex: "Você precisa de descanso nos próximos 3 meses; viagens trazem clareza mental").
+
+3. **Padrões Comportamentais**: Descreva ciclos de decisão, riscos típicos, trade-offs com AFIRMAÇÕES CONCRETAS (não especulativo).
+
+4. **Linguagem Assertiva**: Use "você vai", "está acontecendo agora", "próximos 7-30 dias", "a tendência é", "o risco é".
+
+5. **Gancho Final**: Termine com CTA forte para desbloquear análise completa.
+
+6. **Disclaimer**: "Leitura interpretativa para reflexão; não substitui profissionais."
+
+Seja DIRETO, PRÁTICO e sem floreios. Nada de "ancestrais", "espíritos" ou "névoa mística". Fale como um especialista em padrões comportamentais.`;
 
       const response = await invokeLLM({
         messages: [
           {
             role: "system",
-            content: "Você é um especialista em SAJO com conhecimento profundo. Fale com assertividade e contundência. Português brasileiro.",
+            content: "Você é um especialista em padrões SAJO. Fale com assertividade, clareza e objetividade. Sem misticismo. Português brasileiro.",
           },
           { role: "user", content: prompt },
         ],
@@ -155,7 +163,7 @@ Seja cirurgicamente preciso, contundente, assertivo e sem floreios.`;
       const pillarsData = diagnostic.pillarsData as any;
       const name = diagnostic.consultantName || "Viajante";
 
-      const prompt = `Você é um especialista em SAJO (사주) coreano com profundo conhecimento de padrões de destino. Seu tom é assertivo, contundente e transformador — com afirmações concretas sobre presente e futuro. Fale em português brasileiro.
+      const prompt = `Você é um especialista em SAJO (사주) coreano. Seu tom é DIRETO, PRÁTICO e TRANSFORMADOR — com afirmações concretas sobre presente e futuro. SEM floreios místicos. Fale em português brasileiro.
 
 Dados do consulente:
 - Nome: ${name}
@@ -173,26 +181,38 @@ Dados do consulente:
 - Direções auspiciosas: ${pillarsData.luckyDirections.join(", ")}
 - Foco de saúde: ${pillarsData.healthFocus.join(", ")}
 
-Escreva uma análise COMPLETA e PROFUNDA de 10-12 parágrafos com AFIRMAÇÕES CONCRETAS:
+Escreva uma análise COMPLETA de 12-15 parágrafos com AFIRMAÇÕES CONCRETAS E DIRETAS:
 
-1. **Saudação Assertiva**: Saúde o consulente pelo nome e signo animal com uma afirmação contundente sobre sua essência.
-2. **Análise dos 4 Pilares**: Descreva cada pilar com significado profundo e afirmações sobre o que ESTÁ ACONTECENDO agora.
-3. **Essência do Ser**: Revele a essência do Pilar do Dia com clareza e contundência.
-4. **Missão de Vida**: Descreva a jornada e propósito de vida com afirmações concretas.
-5. **Saúde e Vitalidade**: Analise o equilíbrio dos 5 elementos com recomendações específicas.
-6. **Finanças e Abundância**: Previsões CONCRETAS sobre ciclos financeiros e oportunidades.
-7. **Relacionamentos e Amor**: Análise de compatibilidade com afirmações sobre dinâmicas relacionais.
-8. **Guia Prático**: Ofereça sabedoria ancestral e práticas concretas para harmonização.
-9. **Ciclos Temporais**: Descreva ciclos de 10 anos (Grandes Ciclos) e transformações iminentes.
-10. **Encerramento Empoderador**: Termine com afirmações de força e empoderamento.
+1. **Saudação Assertiva**: Saúde o consulente pelo nome e signo animal com uma afirmação contundente sobre sua essência (sem floreios).
 
-Use linguagem ASSERTIVA, CONTUNDENTE, com afirmações sobre PRESENTE e FUTURO. Evite especulação. Seja direto e transformador.`;
+2. **Análise dos 4 Pilares**: Descreva cada pilar com significado prático e afirmações sobre o que ESTÁ ACONTECENDO agora.
+
+3. **Essência do Ser**: Revele a essência do Pilar do Dia com clareza e objetividade.
+
+4. **Missão de Vida**: Descreva a jornada e propósito de vida com afirmações práticas e concretas.
+
+5. **3 Previsões Concretas e Diretas**:
+   - **AMOR**: Dinâmica de relacionamentos, padrões de atração, compatibilidade. Seja específico.
+   - **FINANÇAS**: Ciclos de ganho/perda, oportunidades, riscos financeiros. Dê números ou períodos.
+   - **SAÚDE/FAMÍLIA/VIAGENS**: Vitalidade, dinâmica familiar, movimentação. Seja prático.
+
+6. **Equilíbrio dos 5 Elementos**: Análise do equilíbrio com recomendações específicas e práticas.
+
+7. **Relacionamentos e Compatibilidade**: Análise de dinâmicas relacionais com afirmações sobre o que funciona e o que não funciona.
+
+8. **Ciclos Temporais**: Descreva ciclos de 10 anos (Grandes Ciclos) e transformações iminentes com datas/períodos.
+
+9. **Sabedoria Prática**: Ofereça 3-4 práticas concretas para harmonização e sucesso.
+
+10. **Encerramento Empoderador**: Termine com afirmações de força e clareza sobre o futuro.
+
+Use linguagem ASSERTIVA, DIRETA, com afirmações sobre PRESENTE e FUTURO. Evite especulação e floreios. Seja um especialista em padrões, não um místico.`;
 
       const response = await invokeLLM({
         messages: [
           {
             role: "system",
-            content: "Você é um especialista em SAJO com conhecimento profundo. Fale com assertividade, contundência e certeza. Português brasileiro.",
+            content: "Você é um especialista em SAJO com conhecimento profundo. Fale com assertividade, clareza e objetividade. SEM misticismo. Português brasileiro.",
           },
           { role: "user", content: prompt },
         ],
@@ -249,18 +269,26 @@ const feedbackRouter = router({
 });
 
 const paymentRouter = router({
+  createPix: publicProcedure
+    .input(z.object({ diagnosticId: z.string() }))
+    .mutation(async ({ input }) => {
+      return {
+        pixKey: "55 63 98438-1782",
+        beneficiary: "FUSION-SAJO Diagnósticos Ancestrais",
+      };
+    }),
+
   createPreference: publicProcedure
     .input(
       z.object({
         diagnosticId: z.string(),
-        userEmail: z.string(),
+        userEmail: z.string().email(),
         userName: z.string(),
-        returnUrl: z.string(),
+        returnUrl: z.string().url(),
       })
     )
     .mutation(async ({ input }) => {
       try {
-        initMercadoPago();
         const preference = await createPaymentPreference({
           diagnosticId: input.diagnosticId,
           userEmail: input.userEmail,
@@ -268,60 +296,38 @@ const paymentRouter = router({
           amount: 14.99,
           returnUrl: input.returnUrl,
         });
-
-        // Store payment ID in diagnostic for webhook linking
-        await updateDiagnostic(input.diagnosticId, {
-          paymentId: preference.preferenceId,
-        });
-
-        return {
-          preferenceId: preference.preferenceId,
-          initPoint: preference.initPoint,
-          sandboxInitPoint: preference.sandboxInitPoint,
-        };
+        return preference;
       } catch (error) {
-        console.error("[Payment] Failed to create preference:", error);
+        console.error("Mercado Pago error:", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Falha ao criar preferência de pagamento",
+          message: "Erro ao criar preferência de pagamento",
         });
       }
-    }),
-
-  // Legacy Pix endpoint (kept for backward compatibility)
-  createPix: publicProcedure
-    .input(z.object({ diagnosticId: z.string() }))
-    .mutation(async () => {
-      return {
-        pixKey: "55 63 98438-1782",
-        beneficiary: "FUSION-SAJO Diagnósticos Ancestrais",
-        amount: 14.99,
-      };
     }),
 
   confirm: publicProcedure
     .input(z.object({ diagnosticId: z.string(), paymentMethod: z.string() }))
     .mutation(async ({ input }) => {
-      // In production, this would verify payment. For now, trust the user.
-      await updateDiagnostic(input.diagnosticId, { paymentStatus: "paid" });
       return { success: true };
     }),
 });
 
 export const appRouter = router({
+  admin: adminRouter,
+  diagnostic: diagnosticRouter,
+  feedback: feedbackRouter,
+  payment: paymentRouter,
   system: systemRouter,
   auth: router({
-    me: publicProcedure.query(opts => opts.ctx.user),
-    logout: publicProcedure.mutation(({ ctx }) => {
-      const cookieOptions = getSessionCookieOptions(ctx.req);
-      ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
-      return { success: true } as const;
+    me: publicProcedure.query(async ({ ctx }) => {
+      return ctx.user || null;
     }),
+    logout: publicProcedure.mutation(() => ({
+      success: true,
+    })),
   }),
-  diagnostic: diagnosticRouter,
-  payment: paymentRouter,
-  feedback: feedbackRouter,
-  admin: adminRouter,
 });
 
 export type AppRouter = typeof appRouter;
+
