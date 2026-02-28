@@ -130,6 +130,16 @@ export default function Resultado() {
     lifetime: { price: 299.90, label: "Vitalício", description: "Acesso ilimitado + atualizações" },
   };
 
+  // Track result page view in Google Ads conversion tracking
+  useEffect(() => {
+    if (diagnostic && window.gtag) {
+      window.gtag("event", "page_view", {
+        page_title: "Resultado - Analise SAJO",
+        page_path: `/resultado/${publicId}`,
+      });
+    }
+  }, [diagnostic, publicId]);
+
   // Auto-create Mercado Pago preference when payment section is shown
   useEffect(() => {
     if (showPayment && !createPreference.data && !createPreference.isPending && diagnostic) {
