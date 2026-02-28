@@ -20,6 +20,7 @@ export const diagnostics = mysqlTable("diagnostics", {
   publicId: varchar("publicId", { length: 32 }).notNull().unique(),
   consultantName: varchar("consultantName", { length: 128 }),
   email: varchar("email", { length: 320 }),
+  gender: mysqlEnum("gender", ["male", "female", "other"]),
   birthDate: varchar("birthDate", { length: 20 }).notNull(),
   birthTime: varchar("birthTime", { length: 10 }),
   birthPlace: varchar("birthPlace", { length: 256 }),

@@ -158,3 +158,12 @@
 - [x] Adicionar pixel Meta Ads (fbq)
 - [x] Configurar eventos de conversão (view, add_to_cart, purchase)
 - [x] Testar fluxo completo de email + rastreamento
+
+
+## Melhorias Baseadas em Análise Concorrente
+
+- [x] Adicionar gênero ao formulário (male, female, other)
+- [ ] Adicionar seção "Qual tipo de pessoa você é?" com 10 arquétipos
+- [ ] Reorganizar página de resultado em 2-3 colunas
+- [ ] Simplificar visual (menos símbolos ☯, menos decorações)
+- [ ] Corrigir erro de envio de email (simplificado para armazenar no DB)

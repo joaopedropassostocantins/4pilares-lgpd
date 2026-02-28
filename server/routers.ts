@@ -59,6 +59,7 @@ const diagnosticRouter = router({
       z.object({
         consultantName: z.string().optional(),
         email: z.string().email().optional(),
+        gender: z.enum(["male", "female", "other"]).optional(),
         birthDate: z.string(),
         birthTime: z.string().optional(),
         birthPlace: z.string().optional(),
@@ -121,6 +122,7 @@ Seja DIRETO, PRÁTICO e sem floreios. Nada de "ancestrais", "espíritos" ou "né
         publicId,
         consultantName: name,
         email: input.email || null,
+        gender: input.gender || null,
         birthDate: input.birthDate,
         birthTime: input.birthTime || null,
         birthPlace: input.birthPlace || null,

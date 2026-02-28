@@ -89,6 +89,7 @@ export default function Home() {
   const [cepQuery, setCepQuery] = useState("");
   const [cepLoading, setCepLoading] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [gender, setGender] = useState<"male" | "female" | "other" | "">("");
 
   const createDiagnostic = trpc.diagnostic.create.useMutation({
     onSuccess: (data) => {
@@ -127,6 +128,7 @@ export default function Home() {
       return;
     }
     createDiagnostic.mutate({
+      gender: gender || undefined,
       email: email || undefined,
       consultantName: name || undefined,
       birthDate,
@@ -267,6 +269,45 @@ export default function Home() {
                   />
                 </div>
 
+                {/* Gender */}
+                <div className="space-y-2">
+                  <Label className="text-foreground/80">Gênero <span className="text-muted-foreground/60">(opcional)</span></Label>
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="gender"
+                        value="female"
+                        checked={gender === "female"}
+                        onChange={(e) => setGender(e.target.value as "female")}
+                        className="w-4 h-4"
+                      />
+                      <span className="text-sm text-foreground/80">Feminino</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="gender"
+                        value="male"
+                        checked={gender === "male"}
+                        onChange={(e) => setGender(e.target.value as "male")}
+                        className="w-4 h-4"
+                      />
+                      <span className="text-sm text-foreground/80">Masculino</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="gender"
+                        value="other"
+                        checked={gender === "other"}
+                        onChange={(e) => setGender(e.target.value as "other")}
+                        className="w-4 h-4"
+                      />
+                      <span className="text-sm text-foreground/80">Outro</span>
+                    </label>
+                  </div>
+                </div>
 
                 {/* Birth Date */}
                 <div className="space-y-2">
