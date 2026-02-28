@@ -130,15 +130,8 @@ export default function Resultado() {
     lifetime: { price: 299.90, label: "Vitalício", description: "Acesso ilimitado + atualizações" },
   };
 
-  // Track result page view in Google Ads conversion tracking
-  useEffect(() => {
-    if (diagnostic && window.gtag) {
-      window.gtag("event", "page_view", {
-        page_title: "Resultado - Analise SAJO",
-        page_path: `/resultado/${publicId}`,
-      });
-    }
-  }, [diagnostic, publicId]);
+  // Track result page view (Google Analytics automatically tracks this)
+  // No need for manual tracking - Google Analytics handles it automatically
 
   // Auto-create Mercado Pago preference when payment section is shown
   useEffect(() => {

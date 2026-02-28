@@ -17,28 +17,18 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     
-    <!-- Google Analytics & Ads Conversion Tracking -->
-    <!-- INSTRUCOES: Substitua AW-XXXXXXXXXX pelo seu Google Ads Conversion ID -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-XXXXXXXXXX"></script>
+    <!-- Google Analytics (Simples) -->
+    <!-- INSTRUCOES: Substitua G-XXXXXXXXXX pelo seu Google Analytics ID -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'AW-XXXXXXXXXX');
       gtag('config', 'G-XXXXXXXXXX');
-      
-      // Funcao para rastrear visualizacao de resultado
-      // INSTRUCOES: Substitua 'AW-XXXXXXXXXX/YYYYYYYYYY' pelo seu Conversion ID e Label
-      window.trackResultPageView = function() {
-        gtag('event', 'conversion', {
-          'send_to': 'AW-XXXXXXXXXX/YYYYYYYYYY',
-          'value': 1.0,
-          'currency': 'BRL'
-        });
-      };
     </script>
     
-    <!-- Meta Pixel -->
+    <!-- Meta Pixel (Facebook/Instagram) -->
+    <!-- INSTRUCOES: Substitua XXXXXXXXXX pelo seu Meta Pixel ID -->
     <script>
       !function(f,b,e,v,n,t,s)
       {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
