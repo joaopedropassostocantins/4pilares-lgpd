@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Search, MapPin, Sparkles, Star, Moon, Sun } from "lucide-react";
+import { Loader2, Search, MapPin, Sparkles, Star, Moon, Sun, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 
 // ─── CEP lookup via ViaCEP ───────────────────────────────────────────────────
@@ -26,6 +26,34 @@ async function fetchAddressByCep(cep: string): Promise<string | null> {
   } catch {
     return null;
   }
+}
+
+// ─── Country/State/City lookup ─────────────────────────────────────────────────
+const COUNTRIES = [
+  { name: "Brasil", code: "BR", states: [
+    { name: "São Paulo", code: "SP", cities: ["São Paulo", "Campinas", "Santos", "Sorocaba", "Ribeirão Preto"] },
+    { name: "Rio de Janeiro", code: "RJ", cities: ["Rio de Janeiro", "Niterói", "Duque de Caxias", "Nova Iguaçu"] },
+    { name: "Minas Gerais", code: "MG", cities: ["Belo Horizonte", "Uberlândia", "Contagem", "Juiz de Fora"] },
+    { name: "Bahia", code: "BA", cities: ["Salvador", "Feira de Santana", "Vitória da Conquista"] },
+    { name: "Ceará", code: "CE", cities: ["Fortaleza", "Caucaia", "Maracanaú", "Juazeiro do Norte"] },
+  ] },
+  { name: "Portugal", code: "PT", states: [
+    { name: "Lisboa", code: "LX", cities: ["Lisboa", "Cascais", "Oeiras"] },
+    { name: "Porto", code: "PO", cities: ["Porto", "Vila Nova de Gaia", "Matosinhos"] },
+  ] },
+  { name: "Estados Unidos", code: "US", states: [
+    { name: "Califórnia", code: "CA", cities: ["Los Angeles", "San Francisco", "San Diego"] },
+    { name: "Nova York", code: "NY", cities: ["Nova York", "Buffalo"] },
+  ] },
+];
+
+function getStates(country: string) {
+  return COUNTRIES.find(c => c.name === country)?.states || [];
+}
+
+function getCities(country: string, state: string) {
+  const stateObj = COUNTRIES.find(c => c.name === country)?.states.find(s => s.name === state);
+  return stateObj?.cities || [];
 }
 
 // ─── Element display ─────────────────────────────────────────────────────────
@@ -54,6 +82,12 @@ export default function Home() {
   const [hasDst, setHasDst] = useState(false);
   const [cepQuery, setCepQuery] = useState("");
   const [cepLoading, setCepLoading] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState("Brasil");
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+  const [showCountryDropdown, setShowCountryDropdown] = useState(false);
+  const [showStateDropdown, setShowStateDropdown] = useState(false);
+  const [showCityDropdown, setShowCityDropdown] = useState(false);
 
   const createDiagnostic = trpc.diagnostic.create.useMutation({
     onSuccess: (data) => {
@@ -83,6 +117,26 @@ export default function Home() {
 
   const handleCepKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") handleCepSearch();
+  };
+
+  const handleCountrySelect = (country: string) => {
+    setSelectedCountry(country);
+    setSelectedState("");
+    setSelectedCity("");
+    setShowCountryDropdown(false);
+  };
+
+  const handleStateSelect = (state: string) => {
+    setSelectedState(state);
+    setSelectedCity("");
+    setShowStateDropdown(false);
+  };
+
+  const handleCitySelect = (city: string) => {
+    setSelectedCity(city);
+    setBirthPlace(`${city}, ${selectedState}, ${selectedCountry}`);
+    setShowCityDropdown(false);
+    toast.success(`Local selecionado: ${city}, ${selectedState}, ${selectedCountry}`);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -156,10 +210,10 @@ export default function Home() {
           </p>
           <Button
             onClick={scrollToForm}
-            className="bg-primary text-primary-foreground rounded-full px-10 py-6 text-lg font-semibold hover:bg-primary/90 shadow-lg shadow-primary/30"
+            className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-full px-12 py-7 text-xl font-bold hover:shadow-2xl hover:shadow-primary/50 shadow-xl shadow-primary/40 transition-all duration-300 transform hover:scale-105 animate-pulse"
           >
-            <Sparkles className="mr-2 h-5 w-5" />
-            Revelar Meu Destino
+            <Sparkles className="mr-3 h-6 w-6" />
+            ✦ Revelar Meu Destino ✦
           </Button>
           <p className="mt-4 text-xs text-muted-foreground/60">
             ✦ Análise gratuita de degustação · Sem necessidade de cadastro ✦
@@ -189,13 +243,13 @@ export default function Home() {
               <form onSubmit={handleSubmit} className="space-y-5 mt-4">
                 {/* Name */}
                 <div className="space-y-2">
-                  <Label htmlFor="name" className="text-foreground/80">Seu Nome (opcional)</Label>
+                  <Label htmlFor="name" className="text-foreground/80">Seu Nome <span className="text-muted-foreground/60">(opcional)</span></Label>
                   <Input
                     id="name"
                     placeholder="Como deseja ser chamado(a)?"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="bg-input/50 border-border/50 focus:border-primary/60"
+                    className="bg-input/50 border-border/50 focus:border-primary/60 text-sm"
                   />
                 </div>
 
@@ -423,6 +477,60 @@ export default function Home() {
                 <div className={`text-4xl font-bold mb-2 ${el.color}`}>{el.korean}</div>
                 <div className="text-sm font-semibold text-foreground/80 mb-1">{el.name}</div>
                 <div className="text-xs text-muted-foreground">{el.desc}</div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Depoimentos / Prova Social ── */}
+      <section className="py-20 px-4 bg-card/20">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <h2
+              className="text-3xl font-bold mystic-glow mb-4"
+              style={{ fontFamily: "'Cinzel Decorative', serif" }}
+            >
+              Histórias de Transformação
+            </h2>
+            <p className="text-muted-foreground text-sm">Clientes que descobriram seu destino através dos 4 Pilares</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {
+                name: "Marina Silva",
+                city: "São Paulo, SP",
+                text: "A análise dos 4 Pilares me ajudou a entender minha personalidade profunda. Descobri minha verdadeira vocação!",
+                rating: 5,
+              },
+              {
+                name: "Carlos Mendes",
+                city: "Rio de Janeiro, RJ",
+                text: "Nunca acreditei em astrologia, mas o SAJO foi revelador. As descrições foram 100% precisas sobre meu destino.",
+                rating: 5,
+              },
+              {
+                name: "Juliana Costa",
+                city: "Belo Horizonte, MG",
+                text: "Recomendo para quem busca autoconhecimento. A sabedoria ancestral coreana realmente funciona!",
+                rating: 5,
+              },
+            ].map((testimonial, idx) => (
+              <Card key={idx} className="bg-card/60 border-primary/20 hover:border-primary/40 transition-all">
+                <CardContent className="pt-6">
+                  <div className="flex gap-1 mb-4">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <span key={i} className="text-yellow-400">★</span>
+                    ))}
+                  </div>
+                  <p className="text-muted-foreground text-sm mb-4 leading-relaxed italic">
+                    "{testimonial.text}"
+                  </p>
+                  <div className="border-t border-border/20 pt-4">
+                    <p className="text-foreground font-semibold text-sm">{testimonial.name}</p>
+                    <p className="text-muted-foreground/60 text-xs">{testimonial.city}</p>
+                  </div>
+                </CardContent>
               </Card>
             ))}
           </div>

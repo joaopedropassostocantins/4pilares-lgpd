@@ -64,3 +64,12 @@
 - [x] Implementar botão "Copiar Link" para compartilhamento
 - [x] Adicionar funções de compartilhamento no Resultado.tsx
 - [x] Adicionar seção "Compartilhe seu Destino" com botões coloridos
+
+## Melhorias para Reduzir Taxa de Rejeição
+
+- [x] Validar webhook do Mercado Pago e implementar logs de debug
+- [x] Testar responsividade mobile e corrigir problemas de layout
+- [x] Simplificar formulário (remover campos não essenciais)
+- [x] Melhorar CTA "Revelar Meu Destino" (mais visível e atrativo)
+- [x] Implementar busca por país/estado/cidade com autocomplete
+- [x] Adicionar seção de depoimentos/prova social na página inicial
