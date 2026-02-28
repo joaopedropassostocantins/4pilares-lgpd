@@ -1,11 +1,10 @@
-import { useParams, useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Lock, Copy, Check, CreditCard, MessageCircle, ChevronDown, ChevronUp, Share2, Facebook, Twitter, Gift } from "lucide-react";
-import { Streamdown } from "streamdown";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
+import { useRoute } from "wouter";
 
 // ─── Type definitions ─────────────────────────────────────────────────────────
 interface StemInfo {
@@ -62,12 +61,10 @@ function elementClass(element: string): string {
 
 // ─── Pillar Card ──────────────────────────────────────────────────────────────
 function PillarCard({ title, pillar }: { title: string; pillar: Pillar }) {
-  // IMPORTANT FIX: stem and branch are objects — extract string properties explicitly
   const stemName = pillar.stem?.name ?? "";
   const stemKorean = pillar.stem?.korean ?? "";
   const stemElement = pillar.stem?.element ?? "";
   const stemYinYang = pillar.stem?.yin_yang ?? "";
-  const stemMeaning = pillar.stem?.meaning ?? "";
 
   const branchName = pillar.branch?.name ?? "";
   const branchKorean = pillar.branch?.korean ?? "";
@@ -98,56 +95,23 @@ function PillarCard({ title, pillar }: { title: string; pillar: Pillar }) {
           <div className="text-2xl font-bold text-primary/80 mb-0.5" style={{ fontFamily: "'Cinzel', serif" }}>
             {branchKorean}
           </div>
-          <div className="text-xs text-foreground/70 font-medium">{branchAnimal}</div>
+          <div className="text-xs text-foreground/70 font-medium">{branchName}</div>
+          <div className="text-xs text-muted-foreground mt-1">{branchAnimal}</div>
           <span className={`element-badge mt-1 ${elementClass(branchElement)}`}>{branchElement}</span>
-          <div className="text-xs text-muted-foreground mt-1">{branchName}</div>
         </div>
       </CardContent>
     </Card>
   );
 }
 
-// ─── Element Balance ──────────────────────────────────────────────────────────
-function ElementBalance({ balance }: { balance: Record<string, number> }) {
-  const elements = [
-    { name: "Madeira", korean: "木", color: "bg-green-500/70" },
-    { name: "Fogo", korean: "火", color: "bg-red-500/70" },
-    { name: "Terra", korean: "土", color: "bg-yellow-600/70" },
-    { name: "Metal", korean: "金", color: "bg-gray-400/70" },
-    { name: "Água", korean: "水", color: "bg-blue-500/70" },
-  ];
-
-  return (
-    <div className="space-y-3">
-      {elements.map((el) => {
-        const pct = Math.round(balance[el.name] || 0);
-        return (
-          <div key={el.name} className="flex items-center gap-3">
-            <span className="w-6 text-center text-sm">{el.korean}</span>
-            <div className="flex-1 bg-muted/40 rounded-full h-2 overflow-hidden">
-              <div
-                className={`h-full rounded-full ${el.color} transition-all duration-700`}
-                style={{ width: `${pct}%` }}
-              />
-            </div>
-            <span className="text-xs text-muted-foreground w-8 text-right">{pct}%</span>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-// ─── Main Component ───────────────────────────────────────────────────────────
+// ─── MAIN COMPONENT ──────────────────────────────────────────────────────────
 export default function Resultado() {
-  const params = useParams<{ publicId: string }>();
-  const [, navigate] = useLocation();
-  const publicId = params.publicId || "";
+  const [, params] = useRoute("/resultado/:publicId");
+  const publicId = params?.publicId || "";
 
   const [showPayment, setShowPayment] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<"promo" | "normal" | "lifetime">("promo");
   const [copied, setCopied] = useState(false);
-  const [showFullAnalysis, setShowFullAnalysis] = useState(false);
-  const [hasShared, setHasShared] = useState(false);
 
   const { data: diagnostic, isLoading, error, refetch } = trpc.diagnostic.getByPublicId.useQuery(
     { publicId },
@@ -159,15 +123,22 @@ export default function Resultado() {
   const isPaid = diagnostic?.paymentStatus === "paid";
   const pillarsData = diagnostic?.pillarsData as PillarsData | null | undefined;
 
+  // Plan prices
+  const plans = {
+    promo: { price: 14.99, label: "Promoção", description: "Acesso 1x à análise completa" },
+    normal: { price: 29.99, label: "Normal", description: "Acesso 1x à análise completa" },
+    lifetime: { price: 299.90, label: "Vitalício", description: "Acesso ilimitado + atualizações" },
+  };
+
   // Auto-create Mercado Pago preference when payment section is shown
   useEffect(() => {
     if (showPayment && !createPreference.data && !createPreference.isPending && diagnostic) {
       createPreference.mutate({
         diagnosticPublicId: publicId,
-        amount: 9.99,
+        amount: plans[selectedPlan].price,
       });
     }
-  }, [showPayment, diagnostic, publicId, createPreference]);
+  }, [showPayment, selectedPlan, diagnostic, publicId, createPreference]);
 
   const handleUnlock = () => {
     setShowPayment(true);
@@ -181,15 +152,6 @@ export default function Resultado() {
       description: "Atualizando página em 3 segundos.",
     });
     setTimeout(() => refetch(), 3000);
-  };
-
-  const copyPixKey = (key: string) => {
-    navigator.clipboard.writeText(key);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 3000);
-    toast.success("Chave Pix copiada!", {
-      description: "Cole no seu app de banco para completar o pagamento.",
-    });
   };
 
   // ── Loading state ──
@@ -210,7 +172,7 @@ export default function Resultado() {
       <div className="mystic-gradient min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-destructive mb-4">Diagnóstico não encontrado</p>
-          <Button variant="outline" onClick={() => navigate("/")}>Voltar ao Início</Button>
+          <Button variant="outline" onClick={() => window.location.href = "/"}>Voltar ao Início</Button>
         </div>
       </div>
     );
@@ -223,153 +185,40 @@ export default function Resultado() {
     { key: "hourPillar" as const, title: "Pilar da Hora" },
   ];
 
-  // Share functions
-  const shareText = `Descobri meu destino ancestral com FUSION-SAJO! Signo: ${pillarsData?.animalSign}, Elemento: ${pillarsData?.dominantElement}. Desbloqueie sua análise dos 4 Pilares!`;
-  const shareUrl = window.location.href;
-
-  const handleShareWhatsApp = () => {
-    const url = `https://wa.me/?text=${encodeURIComponent(shareText + " " + shareUrl)}`;
-    window.open(url, "_blank");
-    setHasShared(true);
-    toast.success("Link compartilhado no WhatsApp!");
-  };
-
-  const handleShareFacebook = () => {
-    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
-    window.open(url, "_blank");
-    setHasShared(true);
-    toast.success("Compartilhado no Facebook!");
-  };
-
-  const handleShareTwitter = () => {
-    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
-    window.open(url, "_blank");
-    setHasShared(true);
-    toast.success("Compartilhado no Twitter!");
-  };
-
-  const handleShareLink = () => {
-    navigator.clipboard.writeText(shareUrl);
-    setHasShared(true);
-    toast.success("Link copiado para compartilhar!");
-  };
-
   return (
-    <div className="mystic-gradient min-h-screen">
-      {/* ── Header ── */}
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/30 backdrop-blur-md bg-background/60">
-        <div className="container flex items-center justify-between h-16">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">☯</span>
-            <span
-              className="text-xl font-bold shimmer-text"
-              style={{ fontFamily: "'Cinzel Decorative', serif" }}
-            >
-              FUSION-SAJO
-            </span>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate("/")}
-            className="text-muted-foreground hover:text-foreground"
-          >
-            ← Voltar
-          </Button>
+    <div className="mystic-gradient min-h-screen py-8 px-4">
+      <div className="max-w-4xl mx-auto space-y-8">
+        {/* ── HEADER ── */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-primary mb-2" style={{ fontFamily: "'Cinzel', serif" }}>
+            Seus 4 Pilares SAJO
+          </h1>
+          <p className="text-muted-foreground">Revelação ancestral para {diagnostic.consultantName}</p>
         </div>
-      </header>
 
-      <main className="container max-w-3xl mx-auto pt-24 pb-12 px-4">
-        {/* ── Greeting ── */}
-        {diagnostic.consultantName && (
-          <div className="text-center mb-8">
-            <p className="text-muted-foreground text-sm tracking-widest uppercase mb-1">Diagnóstico de</p>
-            <h1
-              className="text-3xl font-bold mystic-glow"
-              style={{ fontFamily: "'Cinzel Decorative', serif" }}
-            >
-              {diagnostic.consultantName}
-            </h1>
-          </div>
-        )}
+        {/* ── 4 PILLARS GRID ── */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {PILLAR_TITLES.map(({ key, title }) => (
+            <PillarCard key={key} title={title} pillar={pillarsData?.[key] as Pillar} />
+          ))}
+        </div>
 
-        {/* ── 4 Pillars Grid ── */}
-        {pillarsData && (
-          <>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              {PILLAR_TITLES.map(({ key, title }) =>
-                pillarsData[key] ? (
-                  <PillarCard key={key} title={title} pillar={pillarsData[key]} />
-                ) : null
-              )}
-            </div>
-
-            {/* ── Summary Cards ── */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-              <Card className="bg-card/40 border-primary/20 text-center p-3">
-                <div className="text-xs text-muted-foreground mb-1">Signo Animal</div>
-                <div className="text-sm font-bold text-primary">{pillarsData.animalSign}</div>
-              </Card>
-              <Card className="bg-card/40 border-primary/20 text-center p-3">
-                <div className="text-xs text-muted-foreground mb-1">Elemento Dom.</div>
-                <div className={`element-badge mx-auto ${elementClass(pillarsData.dominantElement)}`}>
-                  {pillarsData.dominantElement}
-                </div>
-              </Card>
-              <Card className="bg-card/40 border-primary/20 text-center p-3">
-                <div className="text-xs text-muted-foreground mb-1">Yin / Yang</div>
-                <div className="text-sm font-bold text-foreground">
-                  🌙 {pillarsData.yinYangBalance.yin} · ☀️ {pillarsData.yinYangBalance.yang}
-                </div>
-              </Card>
-              <Card className="bg-card/40 border-primary/20 text-center p-3">
-                <div className="text-xs text-muted-foreground mb-1">Compatíveis</div>
-                <div className="text-xs text-foreground/80">
-                  {pillarsData.compatibleSigns?.slice(0, 2).join(", ")}
-                </div>
-              </Card>
-            </div>
-
-            {/* ── Element Balance ── */}
-            <Card className="bg-card/60 border-primary/30 mb-8">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-muted-foreground tracking-widest uppercase">
-                  Equilíbrio dos 5 Elementos
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ElementBalance balance={pillarsData.elementBalance} />
-              </CardContent>
-            </Card>
-          </>
-        )}
-
-        {/* ── Tasting Analysis (always visible) ── */}
-        <Card className="bg-card/60 border-primary/30 mb-8">
+        {/* ── ANALYSIS SECTION ── */}
+        <Card className="bg-card/60 border-primary/30">
           <CardHeader>
-            <div className="ornamental-divider mb-4">
-              <span className="text-primary">✦</span>
-            </div>
-            <CardTitle
-              className="text-center text-2xl mystic-glow"
-              style={{ fontFamily: "'Cinzel Decorative', serif" }}
-            >
-              {isPaid ? "Análise Básica dos 4 Pilares" : "Análise de Degustação"}
-            </CardTitle>
-            <p className="text-center text-primary/60 text-sm tracking-widest">
-              {isPaid ? "DESBLOQUEADA" : "PRÉVIA GRATUITA"}
-            </p>
+            <CardTitle className="text-xl text-primary">Análise de Degustação</CardTitle>
+            <p className="text-sm text-muted-foreground mt-2">Revelação gratuita do seu destino</p>
           </CardHeader>
           <CardContent>
             <div className={`prose-mystic ${!isPaid ? "relative" : ""}`}>
               {!isPaid && (
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/60 to-background/95 z-10 pointer-events-none rounded-b-lg" />
               )}
-              <Streamdown>
+              <div className="text-foreground/90 whitespace-pre-wrap text-sm leading-relaxed">
                 {isPaid
                   ? (diagnostic.basicAnalysis || diagnostic.tastingAnalysis || "Análise em processamento...")
                   : (diagnostic.tastingAnalysis || "Análise em processamento...")}
-              </Streamdown>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -384,20 +233,49 @@ export default function Resultado() {
               >
                 ✦ Desbloqueie a Análise Completa ✦
               </CardTitle>
-              <p className="text-primary/80 text-sm mt-2">R$ 14,99 • Acesso Vitalício</p>
+              <p className="text-primary/80 text-sm mt-2">Escolha seu plano</p>
             </CardHeader>
             <CardContent className="space-y-6">
+              {/* Plan Selection */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {(Object.entries(plans) as [keyof typeof plans, typeof plans[keyof typeof plans]][]).map(
+                  ([planKey, plan]) => (
+                    <div
+                      key={planKey}
+                      className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                        selectedPlan === planKey
+                          ? "border-primary bg-primary/10"
+                          : "border-primary/30 bg-card/40 hover:border-primary/50"
+                      }`}
+                      onClick={() => {
+                        setSelectedPlan(planKey);
+                        createPreference.reset();
+                      }}
+                    >
+                      <div className="text-lg font-bold text-primary mb-1">{plan.label}</div>
+                      <div className="text-2xl font-bold text-primary mb-2">R$ {plan.price.toFixed(2)}</div>
+                      <div className="text-xs text-muted-foreground">{plan.description}</div>
+                      {planKey === "promo" && (
+                        <div className="mt-2 inline-block px-2 py-1 bg-destructive/20 text-destructive text-xs rounded">
+                          Promoção Limitada
+                        </div>
+                      )}
+                    </div>
+                  )
+                )}
+              </div>
+
               {/* Mercado Pago Button - Prominent */}
               {createPreference.data?.preferenceId ? (
                 <div className="text-center space-y-4">
-                  <p className="text-sm text-muted-foreground font-medium">Escolha seu metodo de pagamento:</p>
+                  <p className="text-sm text-muted-foreground font-medium">Escolha seu método de pagamento:</p>
                   <a
                     href={`https://mercadopago.com.br/checkout/v1/redirect?pref_id=${createPreference.data.preferenceId}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-3 py-4 px-10 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-full font-bold transition-all text-lg shadow-lg hover:shadow-xl"
+                    className="btn-pagamento"
                   >
-                    <CreditCard className="h-6 w-6" />
+                    <CreditCard className="inline h-6 w-6 mr-2" />
                     Pagar com Pix ou Cartão
                   </a>
                   <p className="text-xs text-muted-foreground">Ambas as opções disponíveis no checkout</p>
@@ -419,7 +297,7 @@ export default function Resultado() {
                 </div>
               )}
 
-              {/* Confirm button (legacy) */}
+              {/* Confirm button */}
               {!createPreference.data?.preferenceId && (
                 <div className="text-center space-y-3">
                   <p className="text-sm text-muted-foreground">
@@ -429,7 +307,7 @@ export default function Resultado() {
                     className="w-full py-5 bg-primary text-primary-foreground rounded-full text-lg"
                     onClick={handleConfirmPayment}
                   >
-                    <CreditCard className="mr-2 h-5 w-5" />
+                    <Check className="mr-2 h-5 w-5" />
                     Já Paguei — Liberar Análise
                   </Button>
                 </div>
@@ -438,132 +316,36 @@ export default function Resultado() {
           </Card>
         )}
 
-        {/* ── Paid: Full Analysis ── */}
-        {isPaid && diagnostic.fullAnalysis && (
-          <Card className="bg-card/60 border-primary/30 mb-8">
-            <CardHeader>
-              <Button
-                variant="ghost"
-                className="w-full flex items-center justify-between p-0 h-auto"
-                onClick={() => setShowFullAnalysis(!showFullAnalysis)}
-              >
-                <div>
-                  <CardTitle
-                    className="text-xl mystic-glow text-left"
-                    style={{ fontFamily: "'Cinzel Decorative', serif" }}
-                  >
-                    Análise Completa Profunda
-                  </CardTitle>
-                  <p className="text-primary/60 text-sm tracking-widest text-left">RELATÓRIO PREMIUM</p>
-                </div>
-                {showFullAnalysis ? (
-                  <ChevronUp className="h-5 w-5 text-primary" />
-                ) : (
-                  <ChevronDown className="h-5 w-5 text-primary" />
-                )}
-              </Button>
-            </CardHeader>
-            {showFullAnalysis && (
-              <CardContent>
-                <div className="prose-mystic">
-                  <Streamdown>{diagnostic.fullAnalysis}</Streamdown>
-                </div>
-              </CardContent>
-            )}
-          </Card>
-        )}
-
-        {/* Share Section with Promotion */}
-        <Card className="bg-card/60 border-primary/30 mb-8">
+        {/* ── SHARE SECTION ── */}
+        <Card className="bg-card/60 border-primary/30">
           <CardHeader>
-            <CardTitle className="text-center text-lg flex items-center justify-center gap-2">
-              <Share2 className="h-5 w-5" />
-              Compartilhe seu Destino
-            </CardTitle>
-            <p className="text-center text-muted-foreground text-sm mt-2">
-              Inspire amigos e familiares a descobrirem seus 4 Pilares
-            </p>
+            <CardTitle className="text-lg">Compartilhe seu Destino</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="flex flex-wrap gap-3 justify-center">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleShareWhatsApp}
-                className="border-green-500/40 hover:border-green-500 hover:bg-green-500/10 text-green-600"
-              >
-                <MessageCircle className="h-4 w-4 mr-2" />
-                WhatsApp
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleShareFacebook}
-                className="border-blue-500/40 hover:border-blue-500 hover:bg-blue-500/10 text-blue-600"
-              >
-                <Facebook className="h-4 w-4 mr-2" />
-                Facebook
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleShareTwitter}
-                className="border-sky-500/40 hover:border-sky-500 hover:bg-sky-500/10 text-sky-600"
-              >
-                <Twitter className="h-4 w-4 mr-2" />
-                Twitter
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleShareLink}
-                className="border-primary/40 hover:border-primary"
-              >
-                <Copy className="h-4 w-4 mr-2" />
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <Button variant="outline" size="sm" className="gap-2">
+                <Share2 className="h-4 w-4" />
                 Copiar Link
               </Button>
+              <Button variant="outline" size="sm" className="gap-2">
+                <MessageCircle className="h-4 w-4" />
+                WhatsApp
+              </Button>
+              <Button variant="outline" size="sm" className="gap-2">
+                <Facebook className="h-4 w-4" />
+                Facebook
+              </Button>
+              <Button variant="outline" size="sm" className="gap-2">
+                <Twitter className="h-4 w-4" />
+                Twitter
+              </Button>
             </div>
-
-            {/* Promotion for sharing */}
-            {hasShared && !isPaid && (
-              <div className="bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/50 rounded-lg p-4 text-center">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <Gift className="h-5 w-5 text-amber-600" />
-                  <span className="font-bold text-amber-700">Promoção Especial!</span>
-                </div>
-                <p className="text-sm text-amber-700 mb-3">
-                  Obrigado por compartilhar! Agora você pode desbloquear a análise completa por:
-                </p>
-                <div className="text-center">
-                  <span className="text-xs text-amber-600 line-through">R$ 14,99</span>
-                  <div className="text-2xl font-bold text-amber-700">R$ 9,99</div>
-                  <p className="text-xs text-amber-600 mt-1">Válido apenas para você!</p>
-                </div>
-              </div>
-            )}
+            <p className="text-xs text-muted-foreground text-center">
+              Compartilhe e ganhe R$ 9,99 de desconto na próxima análise!
+            </p>
           </CardContent>
         </Card>
-
-        {/* Paid: WhatsApp CTA */}
-        {isPaid && (
-          <Card className="bg-primary/10 border-primary/30 mb-8">
-            <CardContent className="pt-6 text-center">
-              <p className="text-sm text-muted-foreground mb-4">
-                <strong>Dúvidas sobre sua análise?</strong> Fale com nossos mestres SAJO para aconselhamento personalizado.
-              </p>
-              <a
-                href="https://wa.me/5563984381782?text=Olá%20FUSION-SAJO%2C%20tenho%20dúvidas%20sobre%20minha%20análise%20e%20gostaria%20de%20aconselhamento."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 py-3 px-6 bg-green-600 hover:bg-green-700 text-white rounded-full font-medium transition-colors"
-              >
-                <MessageCircle className="h-5 w-5" />
-                Consultar via WhatsApp
-              </a>
-            </CardContent>
-          </Card>
-        )}
-      </main>
+      </div>
     </div>
   );
 }

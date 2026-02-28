@@ -180,3 +180,12 @@
 - [x] Adicionar botão de pagamento com CSS gradient forte
 - [x] Implementar teste A/B: prompt suave vs direto
 - [x] Testar fluxo completo de geração de degustação
+
+
+## Correção de Erro e Planos de Preço
+
+- [x] Debugar e corrigir erro NotFoundError de DOM (insertBefore)
+- [x] Implementar 3 planos de preço: R$ 14,99 (promoção), R$ 29,99 (normal), R$ 299,90 (vitalicio)
+- [x] Adicionar seleção de plano na página de resultado
+- [x] Atualizar routers para aceitar tipo de plano
+- [x] Testar fluxo completo de pagamento com 3 planos
