@@ -154,10 +154,7 @@ export default function Resultado() {
     { enabled: !!publicId }
   );
 
-  const createPix = trpc.payment.createPix.useMutation();
   const createPreference = trpc.payment.createPreference.useMutation();
-  const confirmPayment = trpc.payment.confirm.useMutation();
-  const unlockDiagnostic = trpc.diagnostic.unlock.useMutation();
 
   const isPaid = diagnostic?.paymentStatus === "paid";
   const pillarsData = diagnostic?.pillarsData as PillarsData | null | undefined;
@@ -166,36 +163,24 @@ export default function Resultado() {
   useEffect(() => {
     if (showPayment && !createPreference.data && !createPreference.isPending && diagnostic) {
       createPreference.mutate({
-        diagnosticId: publicId,
-        userEmail: `${diagnostic.consultantName || "consulente"}@fusion-sajo.com`,
-        userName: diagnostic.consultantName || "Viajante",
-        returnUrl: `${window.location.origin}/resultado/${publicId}`,
+        diagnosticPublicId: publicId,
+        amount: 9.99,
       });
     }
   }, [showPayment, diagnostic, publicId, createPreference]);
 
   const handleUnlock = () => {
     setShowPayment(true);
-    createPix.mutate({ diagnosticId: publicId });
     toast.info("✦ Gerando dados de pagamento...", {
       description: "Opções de Pix e Cartão estarão disponíveis em segundos.",
     });
   };
 
   const handleConfirmPayment = async () => {
-    try {
-      await confirmPayment.mutateAsync({ diagnosticId: publicId, paymentMethod: "pix" });
-      toast.success("✦ Pagamento confirmado! Processando...", {
-        description: "Gerando análise completa com sabedoria ancestral...",
-      });
-      await unlockDiagnostic.mutateAsync({ publicId });
-      toast.success("☯ Análise Completa Desbloqueada!", {
-        description: "Os ancestrais revelam seu destino completo. Missão de vida, saúde, finanças e guia xamânico.",
-      });
-      refetch();
-    } catch (err) {
-      toast.error("Erro ao confirmar pagamento. Tente novamente.");
-    }
+    toast.info("Verificando pagamento...", {
+      description: "Atualizando página em 3 segundos.",
+    });
+    setTimeout(() => refetch(), 3000);
   };
 
   const copyPixKey = (key: string) => {
@@ -403,11 +388,11 @@ export default function Resultado() {
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Mercado Pago Button - Prominent */}
-              {createPreference.data?.initPoint ? (
+              {createPreference.data?.preferenceId ? (
                 <div className="text-center space-y-4">
-                  <p className="text-sm text-muted-foreground font-medium">Escolha seu método de pagamento:</p>
+                  <p className="text-sm text-muted-foreground font-medium">Escolha seu metodo de pagamento:</p>
                   <a
-                    href={createPreference.data.initPoint}
+                    href={`https://mercadopago.com.br/checkout/v1/redirect?pref_id=${createPreference.data.preferenceId}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center gap-3 py-4 px-10 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-full font-bold transition-all text-lg shadow-lg hover:shadow-xl"
@@ -434,35 +419,8 @@ export default function Resultado() {
                 </div>
               )}
 
-              {/* Legacy PIX Key (fallback) */}
-              {!createPreference.data?.initPoint && !createPreference.isPending && (
-                <div className="bg-muted/50 rounded-lg p-6 text-center border border-primary/20">
-                  <p className="text-sm text-muted-foreground mb-3">Ou pague com Pix (Chave Telefone):</p>
-                  <div className="flex items-center justify-center gap-2">
-                    <code className="text-lg text-primary font-mono bg-background/50 px-4 py-2 rounded">
-                      {createPix.data?.pixKey || "55 63 98438-1782"}
-                    </code>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => copyPixKey(createPix.data?.pixKey || "55 63 98438-1782")}
-                      className="border-primary/40 hover:border-primary"
-                    >
-                      {copied ? (
-                        <Check className="h-4 w-4 text-green-400" />
-                      ) : (
-                        <Copy className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-3">
-                    Beneficiário: {createPix.data?.beneficiary || "FUSION-SAJO Diagnósticos Ancestrais"}
-                  </p>
-                </div>
-              )}
-
               {/* Confirm button (legacy) */}
-              {!createPreference.data?.initPoint && (
+              {!createPreference.data?.preferenceId && (
                 <div className="text-center space-y-3">
                   <p className="text-sm text-muted-foreground">
                     Após realizar o Pix, clique no botão abaixo para liberar sua análise:
@@ -470,19 +428,9 @@ export default function Resultado() {
                   <Button
                     className="w-full py-5 bg-primary text-primary-foreground rounded-full text-lg"
                     onClick={handleConfirmPayment}
-                    disabled={confirmPayment.isPending || unlockDiagnostic.isPending}
                   >
-                    {confirmPayment.isPending || unlockDiagnostic.isPending ? (
-                      <>
-                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        Gerando sua análise completa...
-                      </>
-                    ) : (
-                      <>
-                        <CreditCard className="mr-2 h-5 w-5" />
-                        Já Paguei — Liberar Análise
-                      </>
-                    )}
+                    <CreditCard className="mr-2 h-5 w-5" />
+                    Já Paguei — Liberar Análise
                   </Button>
                 </div>
               )}

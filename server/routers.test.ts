@@ -49,12 +49,3 @@ describe("auth.logout", () => {
   });
 });
 
-describe("payment.createPix", () => {
-  it("returns PIX key and beneficiary", async () => {
-    const ctx = createPublicContext();
-    const caller = appRouter.createCaller(ctx);
-    const result = await caller.payment.createPix({ diagnosticId: "test-id" });
-    expect(result.pixKey).toBe("55 63 98438-1782");
-    expect(result.beneficiary).toContain("FUSION-SAJO");
-  });
-});

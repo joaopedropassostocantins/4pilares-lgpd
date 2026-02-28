@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { notifyOwner } from "./notification";
-import { adminProcedure, publicProcedure, router } from "./trpc";
+import { adminProcedure, publicProcedure, protectedProcedure, router } from "./trpc";
+import { getSessionCookieOptions } from "./cookies";
+import { COOKIE_NAME } from "@shared/const";
 
 export const systemRouter = router({
   health: publicProcedure
@@ -26,4 +28,14 @@ export const systemRouter = router({
         success: delivered,
       } as const;
     }),
+});
+
+export const authRouter = router({
+  me: publicProcedure.query(({ ctx }) => {
+    return ctx.user ?? null;
+  }),
+
+  logout: protectedProcedure.mutation(({ ctx }) => {
+    return { success: true };
+  }),
 });

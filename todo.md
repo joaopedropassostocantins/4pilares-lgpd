@@ -163,7 +163,8 @@
 ## Melhorias Baseadas em Análise Concorrente
 
 - [x] Adicionar gênero ao formulário (male, female, other)
+- [x] Implementar novo prompt com tom de Mestre Ancestral
+- [x] Corrigir erro de envio de email (simplificado para armazenar no DB)
 - [ ] Adicionar seção "Qual tipo de pessoa você é?" com 10 arquétipos
 - [ ] Reorganizar página de resultado em 2-3 colunas
 - [ ] Simplificar visual (menos símbolos ☯, menos decorações)
-- [ ] Corrigir erro de envio de email (simplificado para armazenar no DB)
