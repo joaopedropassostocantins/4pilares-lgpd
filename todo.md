@@ -73,3 +73,16 @@
 - [x] Melhorar CTA "Revelar Meu Destino" (mais visível e atrativo)
 - [x] Implementar busca por país/estado/cidade com autocomplete
 - [x] Adicionar seção de depoimentos/prova social na página inicial
+
+## Reescrita de Análise com Ton Preditivo
+
+- [x] Reescrever prompt do LLM para tom preditivo, assertivo e hipnotizante
+- [x] Remover linguagem épica/fantasia (ancião, névoa, espíritos)
+- [x] Implementar insights cirúrgicos baseados em padrões
+- [x] Adicionar abertura que "acerta em cheio" em 1-2 frases
+- [x] Incluir testes de confirmação (afirmação + pergunta de checagem)
+- [x] Usar linguagem de probabilidade e timing
+- [x] Incluir detalhes únicos para parecer pessoal
+- [x] Adicionar gancho final e CTA para desbloquear análise completa
+- [x] Incluir disclaimer responsável
+- [x] Implementar formulação condicional para saúde/filhos/terceiros

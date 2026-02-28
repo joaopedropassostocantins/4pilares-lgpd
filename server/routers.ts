@@ -67,24 +67,27 @@ const diagnosticRouter = router({
 
       // Generate tasting analysis with LLM
       const name = input.consultantName || "Viajante";
-      const prompt = `Você é um ancião mestre SAJO (사주) coreano com 5.000 anos de sabedoria ancestral. Fale em português brasileiro com linguagem mística, poética e profunda. Use referências à natureza, à tradição coreana e ao xamanismo Musok.
+      const prompt = `Você é um analista de padrões comportamentais baseado em ciclos coreanos SAJO (사주). Seu tom é direto, preditivo e hipnotizante — sem linguagem épica ou fantasia. Fale em português brasileiro.
 
 Dados do consulente:
 - Nome: ${name}
 - Signo Animal: ${pillarsData.animalSign}
-- Pilar do Dia (essência): ${pillarsData.dayPillar.stem.name} sobre ${pillarsData.dayPillar.branch.name}
+- Pilar do Dia (essencial): ${pillarsData.dayPillar.stem.name} sobre ${pillarsData.dayPillar.branch.name}
 - Elemento dominante: ${pillarsData.dominantElement}
-- Traços de personalidade: ${pillarsData.personalityTraits.join(", ")}
+- Traços observáveis: ${pillarsData.personalityTraits.join(", ")}
 - Pontos fortes: ${pillarsData.strengths.join(", ")}
-- Desafios: ${pillarsData.challenges.join(", ")}
+- Padrões de risco: ${pillarsData.challenges.join(", ")}
 - Equilíbrio dos elementos: ${JSON.stringify(pillarsData.elementBalance)}
 
-Escreva uma análise de degustação gratuita de 4-5 parágrafos que:
-1. Saúde o consulente pelo nome e signo animal
-2. Revele a essência do Pilar do Dia com metáforas poéticas
-3. Descreva os traços de personalidade de forma mística
-4. Mencione um desafio e um ponto forte
-5. Termine com uma frase inspiradora sobre seu destino`;
+Escreva uma análise de degustação (4-5 parágrafos) que:
+1. Abra com 1-2 frases que acertam em cheio: uma afirmação forte + 1 pergunta de checagem ("Se eu estiver certo, você vai reconhecer... é isso ou aquilo?").
+2. Revele padrões de comportamento, ciclos de decisão, riscos típicos e trade-offs baseados no Pilar do Dia.
+3. Inclua detalhes únicos (palavras-chave, eventos, escolhas, sinais de burnout, finanças, trabalho, relacionamentos).
+4. Use linguagem de probabilidade e timing: "agora", "próximos 7-30 dias", "tendência", "risco iminente".
+5. Termine com gancho forte e CTA para desbloquear análise completa.
+6. Inclua: "Leitura interpretativa para reflexão; não substitui profissionais."
+7. NUNCA faça predições sobre saúde/filhos/terceiros sem formulação condicional (ex: "Se você vem sentindo X, vale checar com médico").
+Seja cirurgicamente preciso, hipnotizante e sem floreios.`;
 
       const response = await invokeLLM({
         messages: [
