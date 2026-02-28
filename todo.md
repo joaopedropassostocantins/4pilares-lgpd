@@ -189,3 +189,11 @@
 - [x] Adicionar seleção de plano na página de resultado
 - [x] Atualizar routers para aceitar tipo de plano
 - [x] Testar fluxo completo de pagamento com 3 planos
+
+
+## 3 Features Críticas de Crescimento
+
+- [x] Integração WhatsApp: campo adicionado ao formulário para enviar análise após pagamento
+- [x] Teste A/B de headlines: 2 versões implementadas ("Descubra seu destino" vs "Saiba seu futuro")
+- [x] Adicionar 10 arquétipos de personalidade: Big Tree, Flower, Sun, Candle, Land, Fertile Soil, Rock, Gemstone, Ocean, Stream
+- [x] Testar fluxo completo de WhatsApp + A/B + Arquétipos

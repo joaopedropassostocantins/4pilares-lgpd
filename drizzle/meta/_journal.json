@@ -43,6 +43,13 @@
       "when": 1772290615986,
       "tag": "0005_numerous_forgotten_one",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1772294029074,
+      "tag": "0006_burly_whirlwind",
+      "breakpoints": true
     }
   ]
 }

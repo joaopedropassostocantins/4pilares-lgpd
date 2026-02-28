@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Search, MapPin, Sparkles, Star, Moon, Sun, ChevronDown, TrendingUp, Heart, Zap } from "lucide-react";
+import { Loader2, Search, MapPin, Sparkles, Star, Moon, Sun, ChevronDown, TrendingUp, Heart, Zap, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 
 // ─── CEP lookup via ViaCEP ───────────────────────────────────────────────────
@@ -27,6 +27,20 @@ async function fetchAddressByCep(cep: string): Promise<string | null> {
     return null;
   }
 }
+
+// ─── 10 Archetypes ──────────────────────────────────────────────────────────
+const ARCHETYPES = [
+  { id: "big_tree", name: "🌳 Big Tree", desc: "Força, estabilidade, liderança natural" },
+  { id: "flower", name: "🌸 Flower", desc: "Beleza, delicadeza, sensibilidade" },
+  { id: "sun", name: "☀️ Sun", desc: "Energia, brilho, carisma irradiante" },
+  { id: "candle", name: "🕯️ Candle", desc: "Iluminação, guia, sacrifício nobre" },
+  { id: "land", name: "🌍 Land", desc: "Raízes, conexão, abundância" },
+  { id: "fertile_soil", name: "🌱 Fertile Soil", desc: "Nutrição, crescimento, potencial" },
+  { id: "rock", name: "🪨 Rock", desc: "Solidez, resistência, imutabilidade" },
+  { id: "gemstone", name: "💎 Gemstone", desc: "Raridade, valor, brilho interior" },
+  { id: "ocean", name: "🌊 Ocean", desc: "Profundidade, mistério, vastidão" },
+  { id: "stream", name: "💧 Stream", desc: "Fluidez, adaptação, movimento constante" },
+];
 
 // ─── Element display ─────────────────────────────────────────────────────────
 const ELEMENTS = [
@@ -76,12 +90,19 @@ const TESTIMONIALS = [
   },
 ];
 
+// ─── A/B Test Headlines ──────────────────────────────────────────────────────
+const HEADLINES = {
+  a: "DESCUBRA SEU DESTINO EM AMOR, CARREIRA E SAÚDE",
+  b: "SAIBA SEU FUTURO SEGUNDO A ASTROLOGIA COREANA ANCESTRAL",
+};
+
 export default function Home() {
   const [, navigate] = useLocation();
   const formRef = useRef<HTMLDivElement>(null);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [birthTime, setBirthTime] = useState("");
   const [birthPlace, setBirthPlace] = useState("");
@@ -90,6 +111,8 @@ export default function Home() {
   const [cepLoading, setCepLoading] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [gender, setGender] = useState<"male" | "female" | "other" | "">("");
+  const [selectedArchetype, setSelectedArchetype] = useState<string>("");
+  const [headlineVariant] = useState<"a" | "b">(() => (Math.random() > 0.5 ? "a" : "b") as "a" | "b");
 
   const createDiagnostic = trpc.diagnostic.create.useMutation({
     onSuccess: (data) => {
@@ -99,466 +122,341 @@ export default function Home() {
       navigate(`/resultado/${data.publicId}`);
     },
     onError: (err) => {
-      toast.error("Erro ao consultar os ancestrais. Tente novamente.");
-      console.error(err);
+      toast.error("Erro ao criar diagnóstico", {
+        description: err.message || "Tente novamente",
+      });
     },
   });
 
-  const handleCepSearch = async () => {
-    if (!cepQuery.trim()) return;
-    setCepLoading(true);
-    const address = await fetchAddressByCep(cepQuery);
-    setCepLoading(false);
-    if (address) {
-      setBirthPlace(address);
-      toast.success(`Local encontrado: ${address}`);
-    } else {
-      toast.error("CEP não encontrado. Informe o local manualmente.");
+  const handleCepLookup = async () => {
+    if (!cepQuery.trim()) {
+      toast.error("Digite um CEP válido");
+      return;
     }
-  };
-
-  const handleCepKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") handleCepSearch();
+    setCepLoading(true);
+    try {
+      const result = await fetchAddressByCep(cepQuery);
+      if (result) {
+        setBirthPlace(result);
+        toast.success("Endereço encontrado!", { description: result });
+      } else {
+        toast.error("CEP não encontrado");
+      }
+    } finally {
+      setCepLoading(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!birthDate) {
-      toast.error("Preencha a data de nascimento.");
+    if (!name.trim() || !birthDate) {
+      toast.error("Preencha nome e data de nascimento");
       return;
     }
+
     createDiagnostic.mutate({
-      gender: gender || undefined,
+      consultantName: name,
       email: email || undefined,
-      consultantName: name || undefined,
+      whatsappPhone: whatsapp || undefined,
       birthDate,
       birthTime: birthTime || undefined,
       birthPlace: birthPlace || undefined,
-      hasDst,
+      hasDst: hasDst ? 1 : 0 as any,
+      gender: (gender || undefined) as "male" | "female" | "other" | undefined,
+      archetype: selectedArchetype || undefined,
     });
   };
 
-  const scrollToForm = () => {
-    formRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-  };
-
   return (
-    <div className="mystic-gradient text-foreground">
-      {/* ── Navigation ── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/30 backdrop-blur-md bg-background/60">
-        <div className="container flex items-center justify-between h-16">
+    <div className="mystic-gradient min-h-screen">
+      {/* ── HEADER ── */}
+      <header className="bg-background/50 backdrop-blur border-b border-primary/20 sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-2xl">☯</span>
-            <span
-              className="text-xl font-bold shimmer-text"
-              style={{ fontFamily: "'Cinzel Decorative', serif" }}
-            >
+            <Sparkles className="h-6 w-6 text-primary" />
+            <span className="text-xl font-bold text-primary" style={{ fontFamily: "'Cinzel', serif" }}>
               FUSION-SAJO
             </span>
           </div>
-          <div className="hidden md:flex items-center gap-6 text-sm text-muted-foreground">
-            <a href="#por-que" className="hover:text-primary transition-colors">Por Que SAJO</a>
-            <a href="#como-funciona" className="hover:text-primary transition-colors">Como Funciona</a>
-            <a href="#depoimentos" className="hover:text-primary transition-colors">Depoimentos</a>
-          </div>
+          <nav className="hidden md:flex gap-6 text-sm">
+            <a href="#como-funciona" className="text-muted-foreground hover:text-primary">
+              Como Funciona
+            </a>
+            <a href="#depoimentos" className="text-muted-foreground hover:text-primary">
+              Depoimentos
+            </a>
+            <a href="#formulario" className="text-muted-foreground hover:text-primary">
+              Começar
+            </a>
+          </nav>
         </div>
-      </nav>
+      </header>
 
-      {/* ── Hero ── */}
-      <section className="relative pt-32 pb-24 px-4 text-center overflow-hidden">
-        {/* Floating particles */}
-        <div className="absolute inset-0 pointer-events-none">
-          <span className="particle absolute top-20 left-[10%] text-primary/30 text-4xl">☯</span>
-          <span className="particle absolute top-32 right-[15%] text-primary/20 text-2xl">✦</span>
-          <span className="particle absolute bottom-20 left-[20%] text-primary/20 text-3xl">木</span>
-          <span className="particle absolute bottom-32 right-[10%] text-primary/20 text-2xl">水</span>
-        </div>
-
-        <div className="relative max-w-3xl mx-auto">
-          <p
-            className="text-primary/60 text-xs tracking-[0.4em] mb-4 uppercase"
+      {/* ── HERO ── */}
+      <section className="max-w-6xl mx-auto px-4 py-16 md:py-24 text-center">
+        <div className="mb-8">
+          <p className="text-primary/60 text-sm tracking-widest uppercase mb-4">Astrologia Coreana Ancestral</p>
+          <h1
+            className="text-4xl md:text-6xl font-bold text-primary mb-6 leading-tight"
             style={{ fontFamily: "'Cinzel', serif" }}
           >
-            Astrologia Coreana Ancestral
-          </p>
-          <h1
-            className="text-4xl md:text-6xl font-bold mb-6 mystic-glow leading-tight"
-            style={{ fontFamily: "'Cinzel Decorative', serif" }}
-          >
-            Descubra Seu Destino<br />
-            <span className="shimmer-text">em Amor, Carreira e Saúde</span>
+            {HEADLINES[headlineVariant]}
           </h1>
-          <p className="text-muted-foreground text-lg mb-10 max-w-xl mx-auto leading-relaxed">
-            Seus 4 Pilares revelam quem você realmente é. Saiba seu potencial em relacionamentos, finanças e bem-estar segundo a sabedoria ancestral coreana.
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+            Seus 4 Pilares SAJO revelam quem você realmente é. Saiba seu potencial em relacionamentos, finanças, saúde e bem-estar.
           </p>
-          
-          {/* Urgency Banner */}
-          <div className="bg-primary/20 border border-primary/40 rounded-full px-6 py-3 inline-block mb-6">
-            <p className="text-sm font-semibold text-primary">
-              ⏰ Promoção: <span className="line-through text-muted-foreground">R$ 14,99</span> → <span className="text-primary font-bold">R$ 9,99</span> para quem compartilhar
-            </p>
-          </div>
-
-          <Button
-            onClick={scrollToForm}
-            className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-full px-12 py-7 text-xl font-bold hover:shadow-2xl hover:shadow-primary/50 shadow-xl shadow-primary/40 transition-all duration-300 transform hover:scale-105"
-          >
-            <Sparkles className="mr-3 h-6 w-6" />
-            Descobrir GRÁTIS em 30 Segundos
-          </Button>
-          <p className="mt-4 text-xs text-muted-foreground/60">
-            ✓ Análise gratuita · ✓ Sem cadastro · ✓ Resultado instantâneo
-          </p>
-
-          {/* Social Proof */}
-          <div className="mt-8 flex items-center justify-center gap-6 text-sm text-muted-foreground">
-            <div className="text-center">
-              <p className="font-bold text-primary text-lg">5.234+</p>
-              <p className="text-xs">Pessoas descobriram</p>
-            </div>
-            <div className="w-px h-8 bg-border/30"></div>
-            <div className="text-center">
-              <p className="font-bold text-primary text-lg">4.9★</p>
-              <p className="text-xs">Avaliação média</p>
-            </div>
+          <div className="flex gap-4 justify-center">
+            <Button
+              size="lg"
+              className="bg-primary text-primary-foreground rounded-full px-8 py-6 text-lg font-bold hover:bg-primary/90"
+              onClick={() => formRef.current?.scrollIntoView({ behavior: "smooth" })}
+            >
+              <Sparkles className="mr-2 h-5 w-5" />
+              Descobrir GRÁTIS em 30 Segundos
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* ── Form ── */}
-      <section ref={formRef} className="py-16 px-4">
-        <div className="max-w-lg mx-auto">
-          <Card className="bg-card/60 border-primary/30 backdrop-blur-sm">
-            <CardHeader className="text-center pb-2">
-              <div className="ornamental-divider mb-4">
-                <span className="text-primary">✦</span>
+      {/* ── HOW IT WORKS ── */}
+      <section id="como-funciona" className="max-w-6xl mx-auto px-4 py-16">
+        <h2 className="text-3xl font-bold text-center text-primary mb-12" style={{ fontFamily: "'Cinzel', serif" }}>
+          Como Funciona
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {HOW_IT_WORKS.map((item) => (
+            <Card key={item.step} className="bg-card/60 border-primary/30 text-center">
+              <CardContent className="pt-8">
+                <div className="text-5xl font-bold text-primary mb-4">{item.step}</div>
+                <h3 className="text-lg font-bold text-primary mb-2">{item.title}</h3>
+                <p className="text-muted-foreground text-sm">{item.desc}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* ── FORM ── */}
+      <section id="formulario" ref={formRef} className="max-w-2xl mx-auto px-4 py-16">
+        <Card className="bg-card/80 border-primary/30">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl text-primary" style={{ fontFamily: "'Cinzel', serif" }}>
+              Revele Seus 4 Pilares
+            </CardTitle>
+            <p className="text-sm text-muted-foreground mt-2">Apenas nome e data de nascimento</p>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Name */}
+              <div>
+                <Label className="text-primary">Seu Nome *</Label>
+                <Input
+                  type="text"
+                  placeholder="Ex: Marina Silva"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="mt-2 bg-background/50 border-primary/30"
+                  required
+                />
               </div>
-              <CardTitle
-                className="text-2xl mystic-glow"
-                style={{ fontFamily: "'Cinzel Decorative', serif" }}
-              >
-                Seus 4 Pilares Revelados
-              </CardTitle>
-              <p className="text-muted-foreground text-sm mt-2">
-                Apenas 2 informações para começar
-              </p>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-5 mt-4">
-                {/* Name */}
-                <div className="space-y-2">
-                  <Label htmlFor="name" className="text-foreground/80">Seu Nome <span className="text-muted-foreground/60">(opcional)</span></Label>
-                  <Input
-                    id="name"
-                    placeholder="Como deseja ser chamado(a)?"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="bg-input/50 border-border/50 focus:border-primary/60 text-sm"
-                  />
-                </div>
-                {/* Email */}
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-foreground/80">Seu Email <span className="text-muted-foreground/60">(para receber análise completa)</span></Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="seu@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="bg-input/50 border-border/50 focus:border-primary/60 text-sm"
-                  />
-                </div>
 
-                {/* Gender */}
-                <div className="space-y-2">
-                  <Label className="text-foreground/80">Gênero <span className="text-muted-foreground/60">(opcional)</span></Label>
-                  <div className="flex gap-4">
-                    <label className="flex items-center gap-2 cursor-pointer">
+              {/* Email */}
+              <div>
+                <Label className="text-primary">Email (opcional)</Label>
+                <Input
+                  type="email"
+                  placeholder="seu@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="mt-2 bg-background/50 border-primary/30"
+                />
+              </div>
+
+              {/* WhatsApp */}
+              <div>
+                <Label className="text-primary flex items-center gap-2">
+                  <MessageCircle className="h-4 w-4" />
+                  WhatsApp (opcional - receba análise completa por WhatsApp)
+                </Label>
+                <Input
+                  type="tel"
+                  placeholder="+55 11 99999-9999"
+                  value={whatsapp}
+                  onChange={(e) => setWhatsapp(e.target.value)}
+                  className="mt-2 bg-background/50 border-primary/30"
+                />
+              </div>
+
+              {/* Birth Date */}
+              <div>
+                <Label className="text-primary">Data de Nascimento *</Label>
+                <Input
+                  type="date"
+                  value={birthDate}
+                  onChange={(e) => setBirthDate(e.target.value)}
+                  className="mt-2 bg-background/50 border-primary/30"
+                  required
+                />
+              </div>
+
+              {/* Gender */}
+              <div>
+                <Label className="text-primary">Gênero (opcional)</Label>
+                <div className="mt-2 flex gap-4">
+                  {[
+                    { value: "male", label: "Masculino" },
+                    { value: "female", label: "Feminino" },
+                    { value: "other", label: "Outro" },
+                  ].map((opt) => (
+                    <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
                       <input
                         type="radio"
                         name="gender"
-                        value="female"
-                        checked={gender === "female"}
-                        onChange={(e) => setGender(e.target.value as "female")}
+                        value={opt.value}
+                        checked={gender === opt.value}
+                        onChange={(e) => setGender(e.target.value as any)}
                         className="w-4 h-4"
                       />
-                      <span className="text-sm text-foreground/80">Feminino</span>
+                      <span className="text-sm text-muted-foreground">{opt.label}</span>
                     </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="gender"
-                        value="male"
-                        checked={gender === "male"}
-                        onChange={(e) => setGender(e.target.value as "male")}
-                        className="w-4 h-4"
-                      />
-                      <span className="text-sm text-foreground/80">Masculino</span>
-                    </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="gender"
-                        value="other"
-                        checked={gender === "other"}
-                        onChange={(e) => setGender(e.target.value as "other")}
-                        className="w-4 h-4"
-                      />
-                      <span className="text-sm text-foreground/80">Outro</span>
-                    </label>
-                  </div>
+                  ))}
                 </div>
+              </div>
 
-                {/* Birth Date */}
-                <div className="space-y-2">
-                  <Label htmlFor="birthDate" className="text-foreground/80">
-                    Data de Nascimento <span className="text-primary">*</span>
-                  </Label>
-                  <Input
-                    id="birthDate"
-                    type="date"
-                    value={birthDate}
-                    onChange={(e) => setBirthDate(e.target.value)}
-                    required
-                    className="bg-input/50 border-border/50 focus:border-primary/60"
-                  />
+              {/* Archetype Selection */}
+              <div>
+                <Label className="text-primary">Qual tipo de pessoa você é? (opcional)</Label>
+                <div className="mt-3 grid grid-cols-2 md:grid-cols-5 gap-2">
+                  {ARCHETYPES.map((arch) => (
+                    <button
+                      key={arch.id}
+                      type="button"
+                      onClick={() => setSelectedArchetype(selectedArchetype === arch.id ? "" : arch.id)}
+                      className={`p-3 rounded-lg text-sm font-medium transition-all border-2 ${
+                        selectedArchetype === arch.id
+                          ? "border-primary bg-primary/20"
+                          : "border-primary/30 bg-card/40 hover:border-primary/50"
+                      }`}
+                      title={arch.desc}
+                    >
+                      {arch.name}
+                    </button>
+                  ))}
                 </div>
+              </div>
 
-                {/* Advanced Options Toggle */}
+              {/* Advanced Options */}
+              <div>
                 <button
                   type="button"
                   onClick={() => setShowAdvanced(!showAdvanced)}
-                  className="text-xs text-primary hover:text-primary/80 transition-colors flex items-center gap-1 mt-4"
+                  className="flex items-center gap-2 text-primary text-sm font-medium hover:text-primary/80"
                 >
-                  <ChevronDown className={`h-3 w-3 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} />
-                  Adicionar hora e local (aumenta precisão)
+                  <ChevronDown className={`h-4 w-4 transition-transform ${showAdvanced ? "rotate-180" : ""}`} />
+                  Opções Avançadas (hora, cidade)
                 </button>
 
-                {/* Advanced Fields */}
                 {showAdvanced && (
-                  <div className="space-y-4 pt-4 border-t border-border/30">
+                  <div className="mt-4 space-y-4 p-4 bg-background/30 rounded-lg border border-primary/20">
                     {/* Birth Time */}
-                    <div className="space-y-2">
-                      <Label htmlFor="birthTime" className="text-foreground/80">
-                        Hora de Nascimento <span className="text-muted-foreground/60">(opcional)</span>
-                      </Label>
+                    <div>
+                      <Label className="text-primary text-sm">Hora de Nascimento (opcional)</Label>
                       <Input
-                        id="birthTime"
                         type="time"
                         value={birthTime}
                         onChange={(e) => setBirthTime(e.target.value)}
-                        className="bg-input/50 border-border/50 focus:border-primary/60"
+                        className="mt-2 bg-background/50 border-primary/30"
                       />
                     </div>
 
-                    {/* Birth Place with CEP search */}
-                    <div className="space-y-2">
-                      <Label htmlFor="birthPlace" className="text-foreground/80">
-                        Local de Nascimento <span className="text-muted-foreground/60">(opcional)</span>
-                      </Label>
-
-                      {/* CEP search row */}
-                      <div className="flex gap-2">
-                        <div className="relative flex-1">
-                          <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                          <Input
-                            placeholder="CEP (ex: 01310-100)"
-                            value={cepQuery}
-                            onChange={(e) => setCepQuery(e.target.value)}
-                            onKeyDown={handleCepKeyDown}
-                            className="pl-9 bg-input/50 border-border/50 focus:border-primary/60"
-                          />
-                        </div>
+                    {/* CEP Lookup */}
+                    <div>
+                      <Label className="text-primary text-sm">Cidade (opcional)</Label>
+                      <div className="mt-2 flex gap-2">
+                        <Input
+                          type="text"
+                          placeholder="Digite seu CEP"
+                          value={cepQuery}
+                          onChange={(e) => setCepQuery(e.target.value)}
+                          className="bg-background/50 border-primary/30 flex-1"
+                        />
                         <Button
                           type="button"
-                          variant="outline"
-                          onClick={handleCepSearch}
+                          onClick={handleCepLookup}
                           disabled={cepLoading}
-                          className="border-primary/40 hover:border-primary/70 hover:bg-primary/10 shrink-0"
-                          title="Buscar endereço pelo CEP"
+                          variant="outline"
+                          className="border-primary/30"
                         >
-                          {cepLoading ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <Search className="h-4 w-4" />
-                          )}
+                          {cepLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
                         </Button>
                       </div>
-
-                      {/* Manual address field */}
-                      <Input
-                        id="birthPlace"
-                        placeholder="Cidade, estado e país (ex: São Paulo, SP, Brasil)"
-                        value={birthPlace}
-                        onChange={(e) => setBirthPlace(e.target.value)}
-                        className="bg-input/50 border-border/50 focus:border-primary/60"
-                      />
+                      {birthPlace && (
+                        <p className="text-xs text-primary/60 mt-2">📍 {birthPlace}</p>
+                      )}
                     </div>
 
-                    {/* DST toggle */}
-                    <div className="flex items-center justify-between py-2 border-t border-border/30">
-                      <div>
-                        <Label htmlFor="dst" className="text-foreground/80 text-sm">
-                          Havia horário de verão?
-                        </Label>
-                        <p className="text-xs text-muted-foreground/60 mt-0.5">
-                          Ative se nasceu durante o horário de verão
-                        </p>
-                      </div>
-                      <Switch
-                        id="dst"
-                        checked={hasDst}
-                        onCheckedChange={setHasDst}
-                      />
+                    {/* DST */}
+                    <div className="flex items-center justify-between">
+                      <Label className="text-primary text-sm">Horário de Verão</Label>
+                      <Switch checked={hasDst} onCheckedChange={setHasDst} />
                     </div>
                   </div>
                 )}
-
-                {/* Submit */}
-                <Button
-                  type="submit"
-                  disabled={createDiagnostic.isPending}
-                  className="w-full py-6 bg-primary text-primary-foreground rounded-full text-base font-semibold hover:bg-primary/90 shadow-lg shadow-primary/20 mt-6"
-                >
-                  {createDiagnostic.isPending ? (
-                    <>
-                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                      Processando...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="mr-2 h-5 w-5" />
-                      Ver Meus 4 Pilares Agora
-                    </>
-                  )}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      {/* ── Por Que SAJO ── */}
-      <section id="por-que" className="py-20 px-4 bg-primary/5">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2
-              className="text-3xl font-bold mystic-glow mb-4"
-              style={{ fontFamily: "'Cinzel Decorative', serif" }}
-            >
-              Por Que SAJO é Diferente
-            </h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">
-              Astrologia coreana ancestral com 5.000 anos de precisão
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-card/60 border border-primary/30 rounded-lg p-6 text-center">
-              <Heart className="h-8 w-8 text-primary mx-auto mb-4" />
-              <h3 className="font-bold mb-2">Amor & Relacionamentos</h3>
-              <p className="text-sm text-muted-foreground">
-                Descubra sua compatibilidade real e seu potencial em relacionamentos
-              </p>
-            </div>
-            <div className="bg-card/60 border border-primary/30 rounded-lg p-6 text-center">
-              <TrendingUp className="h-8 w-8 text-primary mx-auto mb-4" />
-              <h3 className="font-bold mb-2">Carreira & Finanças</h3>
-              <p className="text-sm text-muted-foreground">
-                Identifique seu potencial profissional e ciclos de prosperidade
-              </p>
-            </div>
-            <div className="bg-card/60 border border-primary/30 rounded-lg p-6 text-center">
-              <Zap className="h-8 w-8 text-primary mx-auto mb-4" />
-              <h3 className="font-bold mb-2">Saúde & Bem-estar</h3>
-              <p className="text-sm text-muted-foreground">
-                Entenda seu tipo de energia e como otimizar sua saúde
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Como Funciona ── */}
-      <section id="como-funciona" className="py-20 px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2
-              className="text-3xl font-bold mystic-glow mb-4"
-              style={{ fontFamily: "'Cinzel Decorative', serif" }}
-            >
-              Como Funciona
-            </h2>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {HOW_IT_WORKS.map((item) => (
-              <div key={item.step} className="text-center">
-                <div className="text-4xl font-bold text-primary/40 mb-4">{item.step}</div>
-                <h3 className="font-bold mb-2 text-lg">{item.title}</h3>
-                <p className="text-sm text-muted-foreground">{item.desc}</p>
               </div>
-            ))}
-          </div>
-        </div>
+
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                disabled={createDiagnostic.isPending}
+                className="w-full py-6 bg-primary text-primary-foreground rounded-full text-lg font-bold hover:bg-primary/90"
+              >
+                {createDiagnostic.isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Gerando Análise...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="mr-2 h-5 w-5" />
+                    Revelar Meus 4 Pilares
+                  </>
+                )}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       </section>
 
-      {/* ── Depoimentos ── */}
-      <section id="depoimentos" className="py-20 px-4 bg-primary/5">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2
-              className="text-3xl font-bold mystic-glow mb-4"
-              style={{ fontFamily: "'Cinzel Decorative', serif" }}
-            >
-              Histórias de Transformação
-            </h2>
-            <p className="text-muted-foreground">
-              Pessoas que descobriram seu destino através dos 4 Pilares
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {TESTIMONIALS.map((testimonial, idx) => (
-              <div key={idx} className="bg-card/60 border border-primary/30 rounded-lg p-6">
+      {/* ── TESTIMONIALS ── */}
+      <section id="depoimentos" className="max-w-6xl mx-auto px-4 py-16">
+        <h2 className="text-3xl font-bold text-center text-primary mb-12" style={{ fontFamily: "'Cinzel', serif" }}>
+          O Que Dizem Nossos Usuários
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {TESTIMONIALS.map((testimonial, idx) => (
+            <Card key={idx} className="bg-card/60 border-primary/30">
+              <CardContent className="pt-6">
                 <div className="flex gap-1 mb-3">
-                  {Array(testimonial.rating).fill(0).map((_, i) => (
-                    <span key={i} className="text-primary">★</span>
-                  ))}
+                  {Array(testimonial.rating)
+                    .fill(0)
+                    .map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-primary text-primary" />
+                    ))}
                 </div>
-                <p className="text-sm text-muted-foreground mb-4 italic">"{testimonial.text}"</p>
-                <div className="border-t border-border/30 pt-3">
-                  <p className="font-semibold text-sm">{testimonial.name}</p>
+                <p className="text-muted-foreground mb-4 italic">"{testimonial.text}"</p>
+                <div>
+                  <p className="font-bold text-primary text-sm">{testimonial.name}</p>
                   <p className="text-xs text-muted-foreground">{testimonial.city}</p>
                 </div>
-              </div>
-            ))}
-          </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </section>
 
-      {/* ── CTA Final ── */}
-      <section className="py-20 px-4 text-center">
-        <div className="max-w-2xl mx-auto">
-          <h2
-            className="text-3xl font-bold mystic-glow mb-6"
-            style={{ fontFamily: "'Cinzel Decorative', serif" }}
-          >
-            Sua Jornada Começa Agora
-          </h2>
-          <p className="text-muted-foreground mb-8 text-lg">
-            Descubra os segredos dos seus 4 Pilares e desbloqueie seu potencial completo
-          </p>
-          <Button
-            onClick={scrollToForm}
-            className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-full px-12 py-7 text-lg font-bold hover:shadow-2xl hover:shadow-primary/50 shadow-xl shadow-primary/40"
-          >
-            <Sparkles className="mr-3 h-6 w-6" />
-            Começar Análise Gratuita
-          </Button>
-        </div>
-      </section>
-
-      {/* ── Footer ── */}
-      <footer className="border-t border-border/30 py-8 px-4 text-center text-sm text-muted-foreground">
-        <p>© 2026 FUSION-SAJO. Todos os direitos reservados.</p>
+      {/* ── FOOTER ── */}
+      <footer className="border-t border-primary/20 mt-24 py-8 text-center text-muted-foreground text-sm">
+        <p>© 2026 FUSION-SAJO. Astrologia Coreana Ancestral.</p>
       </footer>
     </div>
   );

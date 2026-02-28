@@ -32,6 +32,9 @@ export const diagnostics = mysqlTable("diagnostics", {
   paymentId: varchar("paymentId", { length: 64 }),
   paymentStatus: mysqlEnum("paymentStatus", ["pending", "paid"]).default("pending").notNull(),
   analysisVariant: mysqlEnum("analysisVariant", ["epic", "predictive"]).default("predictive").notNull(),
+  archetype: varchar("archetype", { length: 64 }),
+  whatsappPhone: varchar("whatsappPhone", { length: 20 }),
+  whatsappSentAt: timestamp("whatsappSentAt"),
   emailSentAt: timestamp("emailSentAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });

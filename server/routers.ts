@@ -109,6 +109,8 @@ const diagnosticRouter = router({
       z.object({
         consultantName: z.string().optional(),
         email: z.string().email().optional(),
+        whatsappPhone: z.string().optional(),
+        archetype: z.string().optional(),
         gender: z.enum(["male", "female", "other"]).optional(),
         birthDate: z.string(),
         birthTime: z.string().optional(),
@@ -197,6 +199,8 @@ Não deixe essa dor decidir mais um dia do seu futuro. Clique em 'Desbloquear tu
         publicId,
         consultantName: name,
         email: input.email || null,
+        whatsappPhone: input.whatsappPhone || null,
+        archetype: input.archetype || null,
         gender: input.gender || null,
         birthDate: input.birthDate,
         birthTime: input.birthTime || null,
