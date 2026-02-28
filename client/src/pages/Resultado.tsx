@@ -221,10 +221,7 @@ export default function Resultado() {
             <p className="text-sm text-muted-foreground mt-2">Revelação gratuita do seu destino</p>
           </CardHeader>
           <CardContent>
-            <div className={`prose-mystic ${!isPaid ? "relative" : ""}`}>
-              {!isPaid && (
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/40 to-white/80 z-10 pointer-events-none rounded-b-lg" />
-              )}
+            <div className={`prose-mystic`}>
               <div 
                 className="text-black whitespace-pre-wrap text-base leading-relaxed font-bold"
                 dangerouslySetInnerHTML={{
