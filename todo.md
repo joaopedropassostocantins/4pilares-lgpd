@@ -168,3 +168,15 @@
 - [ ] Adicionar seção "Qual tipo de pessoa você é?" com 10 arquétipos
 - [ ] Reorganizar página de resultado em 2-3 colunas
 - [ ] Simplificar visual (menos símbolos ☯, menos decorações)
+
+
+## Novo Prompt de Degustação com Máxima Conversão
+
+- [x] Implementar novo prompt com 10 dores aleatórias (nunca repetir 2x seguidas)
+- [x] Adicionar urgência dinâmica: data/hora ou contador de acessos (50/50 aleatório)
+- [x] Implementar variação de tom: suave vs direto (50/50)
+- [x] Adicionar fechamento persuasivo obrigatório com estrutura exata
+- [x] Configurar contador de acessos em Redis/DB
+- [x] Adicionar botão de pagamento com CSS gradient forte
+- [x] Implementar teste A/B: prompt suave vs direto
+- [x] Testar fluxo completo de geração de degustação

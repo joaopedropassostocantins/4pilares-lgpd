@@ -23,7 +23,53 @@ import { calculatePillars } from "./sajo";
 import { createPaymentPreference, initMercadoPago } from "./mercadopago";
 import { authRouter } from "./_core/systemRouter";
 
-// Admin procedure with role check
+// ============================================================================
+// DORES ALEATÓRIAS PARA FECHAMENTO PERSUASIVO
+// ============================================================================
+const EMOTIONAL_PAINS = [
+  "instabilidade financeira que tem tirado seu sono e feito você questionar seu próprio valor",
+  "um vazio no peito depois de um término ou traição que ainda dói todos os dias",
+  "uma sensação constante de cansaço e exaustão que médicos não explicam",
+  "medo de nunca conseguir construir a família ou relacionamento estável que você sonha",
+  "sensação de estar preso numa carreira que suga sua alma sem dar retorno financeiro",
+  "um problema de saúde recorrente ou medo de doença grave que ronda sua mente",
+  "solidão profunda mesmo estando cercado de gente",
+  "ansiedade constante sobre o futuro financeiro da família",
+  "dificuldade em dormir por preocupações que não saem da cabeça",
+  "sentimento de que a vida está passando e você está ficando para trás",
+];
+
+let lastSelectedPain: string | null = null;
+
+function getRandomPain(): string {
+  let selectedPain: string;
+  do {
+    selectedPain = EMOTIONAL_PAINS[Math.floor(Math.random() * EMOTIONAL_PAINS.length)];
+  } while (selectedPain === lastSelectedPain);
+  lastSelectedPain = selectedPain;
+  return selectedPain;
+}
+
+function getRandomUrgency(): { type: "date" | "counter"; value: string } {
+  const useDate = Math.random() > 0.5;
+  if (useDate) {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const formattedDate = `${tomorrow.getDate()}/${tomorrow.getMonth() + 1}/${tomorrow.getFullYear()} às 23:59`;
+    return { type: "date", value: `até ${formattedDate}` };
+  } else {
+    const usedCount = Math.floor(Math.random() * (68 - 12 + 1)) + 12;
+    return { type: "counter", value: `já foram ${usedCount} usados` };
+  }
+}
+
+function getToneVariation(): "soft" | "direct" {
+  return Math.random() > 0.5 ? "soft" : "direct";
+}
+
+// ============================================================================
+// ADMIN ROUTER
+// ============================================================================
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
   if (ctx.user?.role !== "admin") {
     throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
@@ -54,6 +100,9 @@ const adminRouter = router({
     }),
 });
 
+// ============================================================================
+// DIAGNOSTIC ROUTER
+// ============================================================================
 const diagnosticRouter = router({
   create: publicProcedure
     .input(
@@ -71,48 +120,68 @@ const diagnosticRouter = router({
       const publicId = nanoid(16);
       const pillarsData = calculatePillars(input.birthDate, input.birthTime || "12:00", input.hasDst);
 
-      // Generate tasting analysis with LLM
+      // Generate tasting analysis with new prompt
       const name = input.consultantName || "Viajante";
-      const genderText = input.gender === "male" ? "masculino" : input.gender === "female" ? "feminino" : "nao informado";
+      const genderText = input.gender === "male" ? "masculino" : input.gender === "female" ? "feminino" : "não informado";
       
-      const prompt = `Voce eh um Mestre Ancestral de SAJO, guardiao de uma sabedoria coreana de mais de 5.000 anos que le os 4 Pilares do destino com precisao cirurgica. Sua voz eh calma, profunda, compassiva e ao mesmo tempo autoritaria — como um anciao sabio que enxerga atraves da alma da pessoa, sem julgamento, mas com clareza absoluta.
+      // Get random pain and urgency
+      const selectedPain = getRandomPain();
+      const urgency = getRandomUrgency();
+      const toneVariation = getToneVariation();
+
+      // Build dynamic urgency text
+      let urgencyText = "";
+      if (urgency.type === "date") {
+        urgencyText = `Promoção especial válida apenas ${urgency.value} — depois o valor volta ao normal.`;
+      } else {
+        urgencyText = `Esta oferta de R$ 9,99 está disponível somente para os próximos 100 acessos que chegarem hoje — ${urgency.value}.`;
+      }
+
+      // Build closing with pain variation
+      const closingClosingPain = toneVariation === "soft" 
+        ? `está sentindo um peso profundo relacionado a ${selectedPain}`
+        : `está sofrendo profundamente com ${selectedPain}`;
+
+      const prompt = `Você é um Mestre Ancestral de SAJO, guardião de uma sabedoria coreana milenar que lê os 4 Pilares do destino com precisão implacável. Sua voz é profunda, serena, compassiva e ao mesmo tempo inabalavelmente certa — como um ancião que enxerga o invisível e fala diretamente à alma da pessoa.
 
 Dados do consulente:
 - Nome: ${name}
-- Genero: ${genderText}
+- Gênero: ${genderText}
 - Signo Animal: ${pillarsData.animalSign}
-- Pilar do Dia (essencia): ${pillarsData.dayPillar.stem.name} sobre ${pillarsData.dayPillar.branch.name}
+- Pilar do Dia (essência): ${pillarsData.dayPillar.stem.name} sobre ${pillarsData.dayPillar.branch.name}
 - Elemento dominante: ${pillarsData.dominantElement}
-- Tracos observaveis: ${pillarsData.personalityTraits.join(", ")}
+- Traços observáveis: ${pillarsData.personalityTraits.join(", ")}
 - Pontos fortes: ${pillarsData.strengths.join(", ")}
-- Padroes de risco: ${pillarsData.challenges.join(", ")}
+- Padrões de risco: ${pillarsData.challenges.join(", ")}
 
-Voce vai entregar a DEGUSTACAO GRATUITA: uma analise teaser curta, impactante e reveladora que mostra:
+Você vai entregar a DEGUSTAÇÃO GRATUITA: uma análise teaser curta (8–14 parágrafos), reveladora e emocionalmente impactante que segue EXATAMENTE esta estrutura:
 
-1. Os 4 Pilares revelados (em formato bonito e simbolico)
-2. Um insight poderoso sobre a essencia da personalidade / energia dominante
-3. Um teaser emocional sobre amor/relacionamentos
-4. Um teaser sobre carreira/dinheiro
-5. Um teaser sobre saude/vitalidade
+1. **Revelação dos 4 Pilares** (formato simbólico bonito: ex. "Ano do [Elemento-Animal] • Mês do [Elemento-Animal] • Dia do [Elemento-Animal] • Hora do [Elemento-Animal]")
+2. **Insight central** sobre a essência da energia / personalidade dominante (1–2 frases fortes)
+3. **Teaser amor/relacionamentos** (dor + potencial de transformação)
+4. **Teaser carreira/dinheiro** (bloqueio atual + ciclo de abertura próximo)
+5. **Teaser saúde/vitalidade** (onde a energia está mais vulnerável)
+6. **Transição para o fechamento** com tom de "eu vejo você"
 
-Escreva em portugues fluente, poetico, acolhedor e misterioso. Use linguagem que faca a pessoa sentir que voce sabe tudo sobre sua vida.
+Escreva em português brasileiro fluente, poético, acolhedor e misterioso. Use linguagem que faça a pessoa sentir que você sabe tudo sobre sua vida.
 
-IMPORTANTE: Termine SEMPRE com um fechamento persuasivo que simule uma revelacao intima sobre a angustia que levou a pessoa a buscar voce. Escolha UMA dor concreta (baseada em padroes SAJO, mas apresentada como 100% especifica):
+**FECHAMENTO PERSUASIVO OBRIGATÓRIO (deve ser o ÚLTIMO parágrafo, copie exatamente):**
 
-Estrutura do fechamento:
-"Eu vejo claramente nos seus Pilares o peso que voce carrega agora. Sei exatamente por que voce chegou ate aqui hoje... sei que me procurou porque esta profundamente angustiado(a) com [INSIRA UMA DOR CONCRETA EM 8-15 PALAVRAS].
+"Eu vejo claramente nos seus Pilares o peso que você carrega neste exato momento da vida. Sei exatamente por que você chegou até aqui hoje… sei que me procurou porque ${closingClosingPain}.
 
-Essa dor nao eh acaso — ela esta escrita nos seus Pilares e tem um motivo ancestral. A boa noticia? Existe um caminho preciso para atravessar isso e transformar essa angustia em forca, abundancia e paz.
+Essa dor não é acaso. Ela está escrita nos seus Pilares há muito tempo e tem um propósito ancestral. A boa notícia? Existe um caminho exato, preciso e poderoso para atravessar esse vale, transformar essa angústia em força, abundância, amor verdadeiro e paz interior.
 
-Efetue o pagamento agora (apenas R$ 9,99 na promocao atual) para desbloquear a analise completa e detalhada dos seus 4 Pilares — com previsoes exatas para amor, carreira, saude, ciclos de sorte nos proximos 12–24 meses e, principalmente, o que voce precisa fazer AGORA para virar esse jogo.
+${urgencyText}
 
-Nao deixe essa dor decidir seu futuro por mais um dia. Clique em 'Desbloquear tudo' e receba sua resposta completa em segundos. Estou aqui esperando para guiar voce."`;
+Efetue o pagamento agora (apenas R$ 9,99) para desbloquear imediatamente a análise completa e detalhada dos seus 4 Pilares: previsões exatas para amor, carreira, saúde, ciclos de sorte nos próximos 12–24 meses, rituais/ações corretivas ancestrais e, principalmente, o que você PRECISA fazer AGORA para virar esse jogo de uma vez por todas.
+
+Não deixe essa dor decidir mais um dia do seu futuro. Clique em 'Desbloquear tudo agora' e receba sua resposta completa em segundos. Estou aqui, esperando para guiar você de volta à sua verdadeira força."`;
 
       const response = await invokeLLM({
         messages: [
           {
             role: "system",
-            content: "Voce eh um Mestre Ancestral de SAJO. Fale com sabedoria, compaixao e autoridade. Portugues brasileiro fluente.",
+            content: "Você é um Mestre Ancestral de SAJO. Fale com sabedoria, compaixão e autoridade. Português brasileiro fluente, poético e envolvente.",
           },
           { role: "user", content: prompt },
         ],
@@ -140,8 +209,8 @@ Nao deixe essa dor decidir seu futuro por mais um dia. Clique em 'Desbloquear tu
 
       // Notify owner
       await notifyOwner({
-        title: "Novo Diagnostico Criado",
-        content: `${name} iniciou analise SAJO. Signo: ${pillarsData.animalSign}`,
+        title: "Novo Diagnóstico Criado",
+        content: `${name} iniciou análise SAJO. Signo: ${pillarsData.animalSign}`,
       });
 
       return { publicId, diagnostic };
@@ -151,17 +220,68 @@ Nao deixe essa dor decidir seu futuro por mais um dia. Clique em 'Desbloquear tu
     .input(z.object({ publicId: z.string() }))
     .query(async ({ input }) => {
       const diagnostic = await getDiagnosticByPublicId(input.publicId);
-      if (!diagnostic) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!diagnostic) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Diagnostic not found" });
+      }
       return diagnostic;
     }),
 
-  updatePaymentStatus: publicProcedure
-    .input(z.object({ publicId: z.string(), paymentStatus: z.enum(["pending", "paid"]) }))
+  generateFullAnalysis: publicProcedure
+    .input(z.object({ publicId: z.string() }))
     .mutation(async ({ input }) => {
-      return updateDiagnostic(input.publicId, { paymentStatus: input.paymentStatus });
+      const diagnostic = await getDiagnosticByPublicId(input.publicId);
+      if (!diagnostic) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Diagnostic not found" });
+      }
+
+      const pillarsData = diagnostic.pillarsData as any;
+      const prompt = `Como um Mestre Ancestral de SAJO, gere a ANÁLISE COMPLETA e DETALHADA para ${diagnostic.consultantName}.
+
+Dados:
+- Pilares: ${JSON.stringify(pillarsData)}
+- Traços: ${pillarsData.personalityTraits.join(", ")}
+- Pontos fortes: ${pillarsData.strengths.join(", ")}
+- Desafios: ${pillarsData.challenges.join(", ")}
+
+Estrutura obrigatória:
+1. Revelação profunda dos 4 Pilares com significado ancestral
+2. Missão de vida e propósito
+3. Previsões exatas para AMOR (próximos 12 meses)
+4. Previsões exatas para CARREIRA/FINANÇAS (próximos 12 meses)
+5. Previsões exatas para SAÚDE/VITALIDADE (próximos 12 meses)
+6. Ciclos de sorte e períodos críticos
+7. Rituais/ações corretivas ancestrais
+8. Mensagem final de transformação
+
+Escreva com autoridade, compaixão e certeza absoluta. Português fluente.`;
+
+      const response = await invokeLLM({
+        messages: [
+          {
+            role: "system",
+            content: "Você é um Mestre Ancestral de SAJO. Gere análises completas, precisas e transformadoras.",
+          },
+          { role: "user", content: prompt },
+        ],
+      });
+
+      const fullAnalysis =
+        typeof response.choices[0].message.content === "string"
+          ? response.choices[0].message.content
+          : "";
+
+      await updateDiagnostic(diagnostic.publicId, {
+        fullAnalysis,
+        paymentStatus: "paid",
+      });
+
+      return { success: true, fullAnalysis };
     }),
 });
 
+// ============================================================================
+// PAYMENT ROUTER
+// ============================================================================
 const paymentRouter = router({
   createPreference: publicProcedure
     .input(
@@ -172,27 +292,33 @@ const paymentRouter = router({
     )
     .mutation(async ({ input }) => {
       const diagnostic = await getDiagnosticByPublicId(input.diagnosticPublicId);
-      if (!diagnostic) throw new TRPCError({ code: "NOT_FOUND", message: "Diagnostic not found" });
-
-      initMercadoPago();
-      const preference = await createPaymentPreference({
-        diagnosticId: input.diagnosticPublicId,
-        userEmail: diagnostic.email || "usuario@exemplo.com",
-        userName: diagnostic.consultantName || "Viajante",
-        amount: input.amount,
-        returnUrl: `https://pilaresdasabedoria.club/resultado/${input.diagnosticPublicId}`,
-      });
-
-      if (preference?.preferenceId) {
-        await updateDiagnostic(input.diagnosticPublicId, { paymentId: preference.preferenceId });
+      if (!diagnostic) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Diagnostic not found" });
       }
 
-      return { preferenceId: preference?.preferenceId };
+      const preference = await createPaymentPreference({
+        diagnosticId: diagnostic.publicId,
+        userEmail: diagnostic.email || `user-${input.diagnosticPublicId}@fusion-sajo.com`,
+        userName: diagnostic.consultantName || "Viajante",
+        amount: input.amount,
+        returnUrl: `${process.env.VITE_FRONTEND_URL || "http://localhost:3000"}/resultado/${input.diagnosticPublicId}`,
+      });
+
+      if (preference.preferenceId) {
+        await updateDiagnostic(diagnostic.publicId, {
+          paymentId: preference.preferenceId,
+        });
+      }
+
+      return preference;
     }),
 });
 
+// ============================================================================
+// FEEDBACK ROUTER
+// ============================================================================
 const feedbackRouter = router({
-  create: publicProcedure
+  submit: publicProcedure
     .input(
       z.object({
         diagnosticId: z.number(),
@@ -201,20 +327,28 @@ const feedbackRouter = router({
       })
     )
     .mutation(async ({ input }) => {
-      return createFeedback(input);
+      const feedback = await createFeedback({
+        diagnosticId: input.diagnosticId,
+        accuracy: input.accuracy,
+        comment: input.comment || null,
+      });
+      return feedback;
     }),
 
   getByDiagnosticId: publicProcedure
     .input(z.object({ diagnosticId: z.number() }))
     .query(async ({ input }) => {
-      return getFeedbackByDiagnosticId(input.diagnosticId);
+      return await getFeedbackByDiagnosticId(input.diagnosticId);
     }),
 
-  getStats: publicProcedure.query(async () => {
-    return getAccuracyStats();
+  stats: publicProcedure.query(async () => {
+    return await getAccuracyStats();
   }),
 });
 
+// ============================================================================
+// APP ROUTER
+// ============================================================================
 export const appRouter = router({
   admin: adminRouter,
   diagnostic: diagnosticRouter,

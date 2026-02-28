@@ -168,6 +168,31 @@
 .particle:nth-child(3) { animation-delay: 2s; }
 .particle:nth-child(4) { animation-delay: 3s; }
 
+.btn-pagamento {
+  background: linear-gradient(135deg, #ff4d4d, #ff8c00);
+  color: white;
+  font-weight: bold;
+  font-size: 1.3rem;
+  padding: 18px 36px;
+  border: none;
+  border-radius: 50px;
+  box-shadow: 0 8px 25px rgba(255, 77, 77, 0.4);
+  margin: 30px auto 0;
+  display: block;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-pagamento:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(255, 77, 77, 0.6);
+}
+
+.btn-pagamento:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 20px rgba(255, 77, 77, 0.4);
+}
+
 @layer components {
   /**
    * Custom container utility that centers content and adds responsive padding.
