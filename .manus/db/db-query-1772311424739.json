@@ -1,0 +1,310 @@
+{
+  "query": "SELECT \n  publicId,\n  consultantName,\n  email,\n  createdAt,\n  paymentStatus,\n  selectedPlan,\n  paymentId,\n  whatsappPhone\nFROM diagnostics\nORDER BY createdAt DESC\nLIMIT 30;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GxbsQmoYM7gXTW.root --database g9GC8npXGtLqRcd8tG3q6A --execute SELECT \n  publicId,\n  consultantName,\n  email,\n  createdAt,\n  paymentStatus,\n  selectedPlan,\n  paymentId,\n  whatsappPhone\nFROM diagnostics\nORDER BY createdAt DESC\nLIMIT 30;",
+  "rows": [
+    {
+      "publicId": "4IT5htbPaqKk_wWf",
+      "consultantName": "Me cu",
+      "email": "NULL",
+      "createdAt": "2026-02-28 20:33:55",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "NULL",
+      "whatsappPhone": "NULL"
+    },
+    {
+      "publicId": "T5TBbzgUYikztVCP",
+      "consultantName": "Meu pau ",
+      "email": "NULL",
+      "createdAt": "2026-02-28 20:32:52",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "NULL",
+      "whatsappPhone": "NULL"
+    },
+    {
+      "publicId": "KfIgf3p1Yh68BNge",
+      "consultantName": "MD. Talim",
+      "email": "talim107244@gmail.com",
+      "createdAt": "2026-02-28 20:31:05",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "240523153-be2c96b9-15d0-4473-928e-1a21981475eb",
+      "whatsappPhone": "01830373610"
+    },
+    {
+      "publicId": "kCwm66wfgdBiQXi7",
+      "consultantName": "Juliana Pereira",
+      "email": "juliana@email.com",
+      "createdAt": "2026-02-28 20:30:58",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "NULL",
+      "whatsappPhone": "+55 85 988776655"
+    },
+    {
+      "publicId": "q8py6UYc6VZC0-YA",
+      "consultantName": "Ahsan",
+      "email": "mahsanchhutto756@gmail.com",
+      "createdAt": "2026-02-28 20:28:59",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "240523153-b1c609ad-b3ff-43a6-9b15-f95df1c3f82e",
+      "whatsappPhone": "03492132002"
+    },
+    {
+      "publicId": "0PzC32O9-4N_pkUX",
+      "consultantName": "Jon",
+      "email": "yonasadisuadisu@gmail.com",
+      "createdAt": "2026-02-28 20:26:25",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "240523153-59a507a6-db2b-4fe2-a56f-1a7b49816d80",
+      "whatsappPhone": "0943496023"
+    },
+    {
+      "publicId": "WM4gBmqyaIRZ44yj",
+      "consultantName": "Ana Beatriz ",
+      "email": "NULL",
+      "createdAt": "2026-02-28 20:25:00",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "NULL",
+      "whatsappPhone": "NULL"
+    },
+    {
+      "publicId": "hXnvxn6Ipr1h6Kkn",
+      "consultantName": "Carlos Oliveira",
+      "email": "carlos@email.com",
+      "createdAt": "2026-02-28 20:20:20",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "NULL",
+      "whatsappPhone": "+55 21 999887766"
+    },
+    {
+      "publicId": "BuRHqndvujFHtFMm",
+      "consultantName": "Maria Santos",
+      "email": "maria@email.com",
+      "createdAt": "2026-02-28 20:15:58",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "NULL",
+      "whatsappPhone": "+55 11 987654321"
+    },
+    {
+      "publicId": "yNu1ymJisTH9V0w8",
+      "consultantName": "Kamugisha.       Abert",
+      "email": "NULL",
+      "createdAt": "2026-02-28 20:14:35",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "240523153-358227de-0144-41a9-8284-3acd3d5709ef",
+      "whatsappPhone": "NULL"
+    },
+    {
+      "publicId": "MlFjJux9_jgt2quD",
+      "consultantName": "Mohammed  geletaw",
+      "email": "663@gmail.com",
+      "createdAt": "2026-02-28 19:57:05",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "240523153-e1d391a5-61a7-4570-af6f-6b491eab6247",
+      "whatsappPhone": "251992310890"
+    },
+    {
+      "publicId": "fviFz32UVlkMVJLw",
+      "consultantName": "Ramiro Ortiz Hidalgo ",
+      "email": "ramiroortizhidalgo@gmail.com",
+      "createdAt": "2026-02-28 19:54:52",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "NULL",
+      "whatsappPhone": "NULL"
+    },
+    {
+      "publicId": "8qzuFvG4UhR-w7cH",
+      "consultantName": "mohamed geletaw",
+      "email": "663@gmail.com",
+      "createdAt": "2026-02-28 19:53:36",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "NULL",
+      "whatsappPhone": "251992310890"
+    },
+    {
+      "publicId": "-eSJFjn38oqrJUO7",
+      "consultantName": "Pornographie ",
+      "email": "kashyavanessa@gmail.com",
+      "createdAt": "2026-02-28 19:42:16",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "240523153-3137d3aa-3ec7-4b3f-beba-b5a48c0bafae",
+      "whatsappPhone": "NULL"
+    },
+    {
+      "publicId": "W_maBCgT2fxTE52E",
+      "consultantName": "Md saiful",
+      "email": "md9381513@gmail.com",
+      "createdAt": "2026-02-28 19:40:23",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "NULL",
+      "whatsappPhone": "01308744734"
+    },
+    {
+      "publicId": "7gPYYGeqcIdlxj7l",
+      "consultantName": "João Pedro ",
+      "email": "NULL",
+      "createdAt": "2026-02-28 18:21:25",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "NULL",
+      "whatsappPhone": "NULL"
+    },
+    {
+      "publicId": "eLcAM5tZNjN3_5iz",
+      "consultantName": "Nayara ",
+      "email": "NULL",
+      "createdAt": "2026-02-28 18:17:12",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "NULL",
+      "whatsappPhone": "NULL"
+    },
+    {
+      "publicId": "bzVsTTerY59qhzrv",
+      "consultantName": "Isabela",
+      "email": "NULL",
+      "createdAt": "2026-02-28 18:12:44",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "NULL",
+      "whatsappPhone": "NULL"
+    },
+    {
+      "publicId": "eQ39yw8P1shYwNXv",
+      "consultantName": "Teste Contraste",
+      "email": "teste@test.com",
+      "createdAt": "2026-02-28 18:08:32",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "NULL",
+      "whatsappPhone": "+55 11 98765-4321"
+    },
+    {
+      "publicId": "CbLaK3B5lWUnpWZY",
+      "consultantName": "João pedro ",
+      "email": "NULL",
+      "createdAt": "2026-02-28 18:03:28",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "NULL",
+      "whatsappPhone": "NULL"
+    },
+    {
+      "publicId": "fKcoaRHgTuSgyf7m",
+      "consultantName": "Jp",
+      "email": "NULL",
+      "createdAt": "2026-02-28 17:57:58",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "NULL",
+      "whatsappPhone": "NULL"
+    },
+    {
+      "publicId": "xasIjK0E6hUeTo_J",
+      "consultantName": "Teste Silva",
+      "email": "teste@email.com",
+      "createdAt": "2026-02-28 17:53:52",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "NULL",
+      "whatsappPhone": "+55 11 98765-4321"
+    },
+    {
+      "publicId": "VAbEx_tV0HpfVKp3",
+      "consultantName": "Isabela",
+      "email": "NULL",
+      "createdAt": "2026-02-28 17:44:02",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "240523153-47ab3b28-6cb0-4034-acfd-b069fea83726",
+      "whatsappPhone": "NULL"
+    },
+    {
+      "publicId": "sm-qoFHigDKW804h",
+      "consultantName": "Isabela",
+      "email": "NULL",
+      "createdAt": "2026-02-28 16:11:28",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "NULL",
+      "whatsappPhone": "NULL"
+    },
+    {
+      "publicId": "J-J7EthiQYVIzA2q",
+      "consultantName": "Marina Silva",
+      "email": "marina@test.com",
+      "createdAt": "2026-02-28 16:04:18",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "240523153-7f9c9456-dc6a-42eb-a79e-5e5a5e36f089",
+      "whatsappPhone": "+55 11 98765-4321"
+    },
+    {
+      "publicId": "palOma_PMg2rTiF9",
+      "consultantName": "NAYARA",
+      "email": "nayadovale1994@gmail.com",
+      "createdAt": "2026-02-28 15:38:08",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "NULL",
+      "whatsappPhone": "NULL"
+    },
+    {
+      "publicId": "OdtlS1TDMOmvW9a3",
+      "consultantName": "Nayara ",
+      "email": "nayaradovale1994@gmail.com",
+      "createdAt": "2026-02-28 15:22:06",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "240523153-9dd462dc-a915-479f-a0c9-d3f1c491e28b",
+      "whatsappPhone": "NULL"
+    },
+    {
+      "publicId": "x5FdjhFT1pg9-ipu",
+      "consultantName": "JOÃO PEDRO",
+      "email": "jp.criatividade@gmail.com",
+      "createdAt": "2026-02-28 15:08:04",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "NULL",
+      "whatsappPhone": "NULL"
+    },
+    {
+      "publicId": "Mf7P1lRi_4XFOGjU",
+      "consultantName": "João pedro ",
+      "email": "Jp.criatividade@gmail.com",
+      "createdAt": "2026-02-28 15:04:55",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "NULL",
+      "whatsappPhone": "NULL"
+    },
+    {
+      "publicId": "NlivAcBEfzkDxc6F",
+      "consultantName": "João pedro ",
+      "email": "jp.criatividade@gmail.com",
+      "createdAt": "2026-02-28 14:50:40",
+      "paymentStatus": "pending",
+      "selectedPlan": "NULL",
+      "paymentId": "NULL",
+      "whatsappPhone": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "publicId\tconsultantName\temail\tcreatedAt\tpaymentStatus\tselectedPlan\tpaymentId\twhatsappPhone\n4IT5htbPaqKk_wWf\tMe cu\tNULL\t2026-02-28 20:33:55\tpending\tNULL\tNULL\tNULL\nT5TBbzgUYikztVCP\tMeu pau \tNULL\t2026-02-28 20:32:52\tpending\tNULL\tNULL\tNULL\nKfIgf3p1Yh68BNge\tMD. Talim\ttalim107244@gmail.com\t2026-02-28 20:31:05\tpending\tNULL\t240523153-be2c96b9-15d0-4473-928e-1a21981475eb\t01830373610\nkCwm66wfgdBiQXi7\tJuliana Pereira\tjuliana@email.com\t2026-02-28 20:30:58\tpending\tNULL\tNULL\t+55 85 988776655\nq8py6UYc6VZC0-YA\tAhsan\tmahsanchhutto756@gmail.com\t2026-02-28 20:28:59\tpending\tNULL\t240523153-b1c609ad-b3ff-43a6-9b15-f95df1c3f82e\t03492132002\n0PzC32O9-4N_pkUX\tJon\tyonasadisuadisu@gmail.com\t2026-02-28 20:26:25\tpending\tNULL\t240523153-59a507a6-db2b-4fe2-a56f-1a7b49816d80\t0943496023\nWM4gBmqyaIRZ44yj\tAna Beatriz \tNULL\t2026-02-28 20:25:00\tpending\tNULL\tNULL\tNULL\nhXnvxn6Ipr1h6Kkn\tCarlos Oliveira\tcarlos@email.com\t2026-02-28 20:20:20\tpending\tNULL\tNULL\t+55 21 999887766\nBuRHqndvujFHtFMm\tMaria Santos\tmaria@email.com\t2026-02-28 20:15:58\tpending\tNULL\tNULL\t+55 11 987654321\nyNu1ymJisTH9V0w8\tKamugisha.       Abert\tNULL\t2026-02-28 20:14:35\tpending\tNULL\t240523153-358227de-0144-41a9-8284-3acd3d5709ef\tNULL\nMlFjJux9_jgt2quD\tMohammed  geletaw\t663@gmail.com\t2026-02-28 19:57:05\tpending\tNULL\t240523153-e1d391a5-61a7-4570-af6f-6b491eab6247\t251992310890\nfviFz32UVlkMVJLw\tRamiro Ortiz Hidalgo \tramiroortizhidalgo@gmail.com\t2026-02-28 19:54:52\tpending\tNULL\tNULL\tNULL\n8qzuFvG4UhR-w7cH\tmohamed geletaw\t663@gmail.com\t2026-02-28 19:53:36\tpending\tNULL\tNULL\t251992310890\n-eSJFjn38oqrJUO7\tPornographie \tkashyavanessa@gmail.com\t2026-02-28 19:42:16\tpending\tNULL\t240523153-3137d3aa-3ec7-4b3f-beba-b5a48c0bafae\tNULL\nW_maBCgT2fxTE52E\tMd saiful\tmd9381513@gmail.com\t2026-02-28 19:40:23\tpending\tNULL\tNULL\t01308744734\n7gPYYGeqcIdlxj7l\tJoão Pedro \tNULL\t2026-02-28 18:21:25\tpending\tNULL\tNULL\tNULL\neLcAM5tZNjN3_5iz\tNayara \tNULL\t2026-02-28 18:17:12\tpending\tNULL\tNULL\tNULL\nbzVsTTerY59qhzrv\tIsabela\tNULL\t2026-02-28 18:12:44\tpending\tNULL\tNULL\tNULL\neQ39yw8P1shYwNXv\tTeste Contraste\tteste@test.com\t2026-02-28 18:08:32\tpending\tNULL\tNULL\t+55 11 98765-4321\nCbLaK3B5lWUnpWZY\tJoão pedro \tNULL\t2026-02-28 18:03:28\tpending\tNULL\tNULL\tNULL\nfKcoaRHgTuSgyf7m\tJp\tNULL\t2026-02-28 17:57:58\tpending\tNULL\tNULL\tNULL\nxasIjK0E6hUeTo_J\tTeste Silva\tteste@email.com\t2026-02-28 17:53:52\tpending\tNULL\tNULL\t+55 11 98765-4321\nVAbEx_tV0HpfVKp3\tIsabela\tNULL\t2026-02-28 17:44:02\tpending\tNULL\t240523153-47ab3b28-6cb0-4034-acfd-b069fea83726\tNULL\nsm-qoFHigDKW804h\tIsabela\tNULL\t2026-02-28 16:11:28\tpending\tNULL\tNULL\tNULL\nJ-J7EthiQYVIzA2q\tMarina Silva\tmarina@test.com\t2026-02-28 16:04:18\tpending\tNULL\t240523153-7f9c9456-dc6a-42eb-a79e-5e5a5e36f089\t+55 11 98765-4321\npalOma_PMg2rTiF9\tNAYARA\tnayadovale1994@gmail.com\t2026-02-28 15:38:08\tpending\tNULL\tNULL\tNULL\nOdtlS1TDMOmvW9a3\tNayara \tnayaradovale1994@gmail.com\t2026-02-28 15:22:06\tpending\tNULL\t240523153-9dd462dc-a915-479f-a0c9-d3f1c491e28b\tNULL\nx5FdjhFT1pg9-ipu\tJOÃO PEDRO\tjp.criatividade@gmail.com\t2026-02-28 15:08:04\tpending\tNULL\tNULL\tNULL\nMf7P1lRi_4XFOGjU\tJoão pedro \tJp.criatividade@gmail.com\t2026-02-28 15:04:55\tpending\tNULL\tNULL\tNULL\nNlivAcBEfzkDxc6F\tJoão pedro \tjp.criatividade@gmail.com\t2026-02-28 14:50:40\tpending\tNULL\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 370
+}

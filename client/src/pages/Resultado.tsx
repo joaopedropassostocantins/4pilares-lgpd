@@ -251,7 +251,20 @@ export default function Resultado() {
           </CardContent>
         </Card>
 
-        {/* ── PAYMENT SECTION (PROMINENT & VISIBLE) ── */}
+        {/* -- URGENCY BADGE -- */}
+        {!isPaid && (
+          <div className="mb-6 p-4 bg-destructive/15 border-2 border-destructive/50 rounded-lg text-center">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <span className="text-lg">⏰</span>
+              <span className="font-bold text-destructive">OFERTA COM PRAZO LIMITADO</span>
+            </div>
+            <p className="text-sm text-destructive/90">
+              Promocao valida apenas ate <strong>01/marco as 23:59</strong> — depois o valor volta ao normal (R$ 29,99)
+            </p>
+          </div>
+        )}
+
+        {/* -- PAYMENT SECTION (PROMINENT & VISIBLE) -- */}
         {!isPaid && (
           <Card className="bg-gradient-to-br from-primary/20 to-primary/10 border-primary/50 mb-8 shadow-lg">
             <CardHeader className="text-center">
@@ -337,17 +350,30 @@ export default function Resultado() {
               {!createPreference.data?.preferenceId && (
                 <div className="text-center space-y-3">
                   <p className="text-sm text-muted-foreground">
-                    Após realizar o Pix, clique no botão abaixo para liberar sua análise:
+                    Apos realizar o Pix, clique no botao abaixo para liberar sua analise:
                   </p>
                   <Button
                     className="w-full py-5 bg-primary text-primary-foreground rounded-full text-lg"
                     onClick={handleConfirmPayment}
                   >
                     <Check className="mr-2 h-5 w-5" />
-                    Já Paguei — Liberar Análise
+                    Ja Paguei — Liberar Analise
                   </Button>
                 </div>
               )}
+
+              {/* GUARANTEE SECTION */}
+              <div className="mt-6 p-4 bg-green-50 border-2 border-green-200 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">✓</span>
+                  <div>
+                    <p className="font-bold text-green-900 mb-1">Garantia de 30 Dias</p>
+                    <p className="text-sm text-green-800">
+                      Se a analise nao corresponder as suas expectativas, devolvemos 100% do seu dinheiro. Sem perguntas.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
         )}

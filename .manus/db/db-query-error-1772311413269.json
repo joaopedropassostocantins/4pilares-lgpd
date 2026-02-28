@@ -1,0 +1,8 @@
+{
+  "query": "SELECT \n  d.id,\n  d.public_id,\n  d.name,\n  d.email,\n  d.created_at,\n  d.is_paid,\n  d.payment_status,\n  d.selected_plan,\n  COUNT(CASE WHEN d.is_paid = true THEN 1 END) as pagos,\n  COUNT(CASE WHEN d.is_paid = false THEN 1 END) as nao_pagos\nFROM diagnostics d\nGROUP BY d.id, d.public_id, d.name, d.email, d.created_at, d.is_paid, d.payment_status, d.selected_plan\nORDER BY d.created_at DESC\nLIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GxbsQmoYM7gXTW.root --database g9GC8npXGtLqRcd8tG3q6A --execute SELECT \n  d.id,\n  d.public_id,\n  d.name,\n  d.email,\n  d.created_at,\n  d.is_paid,\n  d.payment_status,\n  d.selected_plan,\n  COUNT(CASE WHEN d.is_paid = true THEN 1 END) as pagos,\n  COUNT(CASE WHEN d.is_paid = false THEN 1 END) as nao_pagos\nFROM diagnostics d\nGROUP BY d.id, d.public_id, d.name, d.email, d.created_at, d.is_paid, d.payment_status, d.selected_plan\nORDER BY d.created_at DESC\nLIMIT 20;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'd.public_id' in 'group statement'"
+  ]
+}
