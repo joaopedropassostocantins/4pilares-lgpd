@@ -223,15 +223,15 @@ export default function Resultado() {
           <CardContent>
             <div className={`prose-mystic ${!isPaid ? "relative" : ""}`}>
               {!isPaid && (
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/60 to-background/95 z-10 pointer-events-none rounded-b-lg" />
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/40 to-white/80 z-10 pointer-events-none rounded-b-lg" />
               )}
               <div 
-                className="text-foreground whitespace-pre-wrap text-base leading-relaxed font-semibold"
+                className="text-black whitespace-pre-wrap text-base leading-relaxed font-bold"
                 dangerouslySetInnerHTML={{
                   __html: (isPaid
                     ? (diagnostic.basicAnalysis || diagnostic.tastingAnalysis || "Análise em processamento...")
                     : (diagnostic.tastingAnalysis || "Análise em processamento..."))
-                    .replace(/\*\*<u>([^<]+)<\/u>\*\*/g, '<strong><u>$1</u></strong>')
+                    .replace(/\*\*<u>([^<]+)<\/u>\*\*/g, '<strong style="color: #000; text-decoration: underline;">$1</strong>')
                 }}
               />
             </div>
