@@ -98,3 +98,11 @@
 - [x] Adicionar tabela "feedbacks" para armazenar respostas
 - [x] Criar endpoint tRPC para salvar feedback
 - [x] Testar fluxo completo de A/B Testing e feedback
+
+## Correção de Erro Mercado Pago (CPT01-E6GKMEQHS7GO)
+
+- [x] Debugar erro de validacao da preferencia de pagamento
+- [x] Verificar campos obrigatorios na criacao da preferencia
+- [x] Corrigir formato de dados (email, valor, ID do produto)
+- [x] Validar credenciais do Mercado Pago
+- [x] Testar fluxo completo de pagamento

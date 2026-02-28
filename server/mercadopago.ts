@@ -56,10 +56,11 @@ export async function createPaymentPreference(input: {
         items: [
           {
             id: input.diagnosticId,
-            title: "FUSION-SAJO - Análise Completa dos 4 Pilares",
-            description: "Análise profunda: saúde, finanças, relacionamentos e guia xamânico",
+            title: "FUSION-SAJO - Analise Completa dos 4 Pilares",
+            description: "Analise profunda: saude, financas, relacionamentos",
             quantity: 1,
             unit_price: input.amount,
+            currency_id: "BRL",
           },
         ],
         payer: {
@@ -67,17 +68,17 @@ export async function createPaymentPreference(input: {
           name: input.userName,
         },
         payment_methods: {
-          // Accept Pix and credit card
-          excluded_payment_methods: [],
+          default_payment_method_id: "pix",
+          default_installments: 1,
           installments: 1,
         },
         back_urls: {
-          success: `${input.returnUrl}?status=success`,
-          failure: `${input.returnUrl}?status=failure`,
-          pending: `${input.returnUrl}?status=pending`,
+          success: input.returnUrl,
+          failure: input.returnUrl,
+          pending: input.returnUrl,
         },
         auto_return: "approved",
-        notification_url: `${process.env.VITE_FRONTEND_FORGE_API_URL || "https://api.manus.im"}/api/webhook/mercadopago`,
+        external_reference: input.diagnosticId,
         statement_descriptor: "FUSION-SAJO",
         expires: false,
       },
