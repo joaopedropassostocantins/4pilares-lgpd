@@ -136,6 +136,7 @@ export default function Resultado() {
       createPreference.mutate({
         diagnosticPublicId: publicId,
         amount: plans[selectedPlan].price,
+        returnUrl: window.location.origin,
       });
     }
   }, [showPayment, selectedPlan, diagnostic, publicId, createPreference]);
@@ -250,6 +251,14 @@ export default function Resultado() {
                       onClick={() => {
                         setSelectedPlan(planKey);
                         createPreference.reset();
+                        // Trigger new preference creation with updated plan
+                        if (showPayment) {
+                          createPreference.mutate({
+                            diagnosticPublicId: publicId,
+                            amount: plans[planKey].price,
+                            returnUrl: window.location.origin,
+                          });
+                        }
                       }}
                     >
                       <div className="text-lg font-bold text-primary mb-1">{plan.label}</div>

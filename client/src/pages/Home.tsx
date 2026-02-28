@@ -161,7 +161,7 @@ export default function Home() {
       birthDate,
       birthTime: birthTime || undefined,
       birthPlace: birthPlace || undefined,
-      hasDst: hasDst ? 1 : 0 as any,
+      hasDst: hasDst,
       gender: (gender || undefined) as "male" | "female" | "other" | undefined,
       archetype: selectedArchetype || undefined,
     });

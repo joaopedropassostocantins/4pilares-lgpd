@@ -205,7 +205,7 @@ Não deixe essa dor decidir mais um dia do seu futuro. Clique em 'Desbloquear tu
         birthDate: input.birthDate,
         birthTime: input.birthTime || null,
         birthPlace: input.birthPlace || null,
-        hasDst: input.hasDst ? 1 : 0,
+        hasDst: input.hasDst ? 1 : 0 as any,
         pillarsData: pillarsData as any,
         tastingAnalysis,
         paymentStatus: "pending",
@@ -292,6 +292,7 @@ const paymentRouter = router({
       z.object({
         diagnosticPublicId: z.string(),
         amount: z.number().default(9.99),
+        returnUrl: z.string(), // Frontend passes window.location.origin
       })
     )
     .mutation(async ({ input }) => {
@@ -305,7 +306,7 @@ const paymentRouter = router({
         userEmail: diagnostic.email || `user-${input.diagnosticPublicId}@fusion-sajo.com`,
         userName: diagnostic.consultantName || "Viajante",
         amount: input.amount,
-        returnUrl: `${process.env.VITE_FRONTEND_URL || "http://localhost:3000"}/resultado/${input.diagnosticPublicId}`,
+        returnUrl: `${input.returnUrl}/resultado/${input.diagnosticPublicId}`,
       });
 
       if (preference.preferenceId) {
@@ -313,6 +314,11 @@ const paymentRouter = router({
           paymentId: preference.preferenceId,
         });
       }
+
+      console.log("[Mercado Pago] Preference created:", {
+        preferenceId: preference.preferenceId,
+        returnUrl: `${input.returnUrl}/resultado/${input.diagnosticPublicId}`,
+      });
 
       return preference;
     }),
