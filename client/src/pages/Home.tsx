@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { trackDiagnosticCreated, trackPageView } from "@/lib/tracking";
@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Search, MapPin, Sparkles, Star, Moon, Sun, ChevronDown, TrendingUp, Heart, Zap, MessageCircle, ChevronUp } from "lucide-react";
+import { Loader2, Search, MapPin, Sparkles, Star, Moon, Sun, ChevronDown, TrendingUp, Heart, Zap, MessageCircle, ChevronUp, AlertCircle, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 
 // ─── FAQ Item Component ───────────────────────────────────────────────────
@@ -52,6 +52,25 @@ async function fetchAddressByCep(cep: string): Promise<string | null> {
   } catch {
     return null;
   }
+}
+
+// ─── WhatsApp validation ───────────────────────────────────────────────────
+function validateWhatsApp(phone: string): boolean {
+  if (!phone) return true; // Optional field
+  // Accept formats: +55 11 99999-9999, +55 (11) 99999-9999, +5511999999999, 11 99999-9999, etc.
+  const cleaned = phone.replace(/\D/g, "");
+  // Must have at least 10 digits (area code + number) or 12 (with country code)
+  return cleaned.length >= 10;
+}
+
+// ─── Format WhatsApp for display ───────────────────────────────────────────
+function formatWhatsAppStatus(phone: string): string {
+  if (!phone) return "";
+  const cleaned = phone.replace(/\D/g, "");
+  if (cleaned.length >= 10) {
+    return `✓ Você receberá a análise completa por WhatsApp`;
+  }
+  return "";
 }
 
 /// ─── 10 Archetypes (Xamanismo Coreano) ──────────────────────────────────────────────────────
@@ -140,6 +159,10 @@ export default function Home() {
   const [selectedArchetype, setSelectedArchetype] = useState<string>("");
   const [headlineVariant] = useState<"a" | "b">(() => (Math.random() > 0.5 ? "a" : "b") as "a" | "b");
 
+  // ─── Validation State ─────────────────────────────────────────────────────
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // Track page view on mount
   useEffect(() => {
     trackPageView("Home", headlineVariant === "a" ? "A" : "B");
@@ -169,6 +192,7 @@ export default function Home() {
       toast.error("Erro ao criar diagnóstico", {
         description: err.message || "Tente novamente em alguns momentos",
       });
+      setIsSubmitting(false);
     },
   });
 
@@ -194,43 +218,60 @@ export default function Home() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Prevent double submission
+    if (isSubmitting || createDiagnostic.isPending) {
+      return;
+    }
+
+    const newErrors: Record<string, string> = {};
+
     // Validation: Name
     if (!name.trim()) {
-      toast.error("Campo obrigatório", {
-        description: "Por favor, preencha seu nome",
-      });
-      return;
+      newErrors.name = "Nome é obrigatório";
     }
     
     // Validation: Birth Date
     if (!birthDate) {
-      toast.error("Campo obrigatório", {
-        description: "Por favor, preencha sua data de nascimento",
-      });
-      return;
+      newErrors.birthDate = "Data de nascimento é obrigatória";
+    } else {
+      // Validation: Date cannot be in the future
+      const selectedDate = new Date(birthDate);
+      const today = new Date();
+      if (selectedDate > today) {
+        newErrors.birthDate = "A data de nascimento não pode ser no futuro";
+      } else {
+        // Validation: Age must be at least 13 years old
+        const age = today.getFullYear() - selectedDate.getFullYear();
+        const monthDiff = today.getMonth() - selectedDate.getMonth();
+        const actualAge = monthDiff < 0 || (monthDiff === 0 && today.getDate() < selectedDate.getDate()) ? age - 1 : age;
+        if (actualAge < 13) {
+          newErrors.birthDate = "Você deve ter pelo menos 13 anos";
+        }
+      }
     }
-    
-    // Validation: Date cannot be in the future
-    const selectedDate = new Date(birthDate);
-    const today = new Date();
-    if (selectedDate > today) {
-      toast.error("Data inválida", {
-        description: "A data de nascimento não pode ser no futuro",
-      });
-      return;
+
+    // Validation: WhatsApp format (if provided)
+    if (whatsapp && !validateWhatsApp(whatsapp)) {
+      newErrors.whatsapp = "WhatsApp inválido. Use formato: +55 11 99999-9999";
     }
-    
-    // Validation: Age must be at least 13 years old
-    const age = today.getFullYear() - selectedDate.getFullYear();
-    const monthDiff = today.getMonth() - selectedDate.getMonth();
-    const actualAge = monthDiff < 0 || (monthDiff === 0 && today.getDate() < selectedDate.getDate()) ? age - 1 : age;
-    if (actualAge < 13) {
-      toast.error("Idade mínima", {
-        description: "Você deve ter pelo menos 13 anos",
+
+    // If there are errors, display them
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      
+      // Show toast with first error
+      const firstError = Object.values(newErrors)[0];
+      toast.error("Formulário inválido", {
+        description: firstError,
       });
       return;
     }
 
+    // Clear errors if validation passed
+    setErrors({});
+    setIsSubmitting(true);
+    
+    // Submit the form
     createDiagnostic.mutate({
       consultantName: name,
       email: email || undefined,
@@ -337,9 +378,21 @@ export default function Home() {
                   type="text"
                   placeholder="Ex: Marina Silva"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="mt-2 bg-background/50 border-primary/30"
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    if (errors.name) {
+                      setErrors({ ...errors, name: "" });
+                    }
+                  }}
+                  className={`mt-2 bg-background/50 border-primary/30 ${errors.name ? "border-red-500 focus:border-red-500" : ""}`}
+                  required
                   />
+                {errors.name && (
+                  <div className="flex items-center gap-2 mt-2 text-red-500 text-sm">
+                    <AlertCircle className="h-4 w-4" />
+                    {errors.name}
+                  </div>
+                )}
               </div>
 
               {/* Email */}
@@ -364,12 +417,24 @@ export default function Home() {
                   type="tel"
                   placeholder="+55 11 99999-9999"
                   value={whatsapp}
-                  onChange={(e) => setWhatsapp(e.target.value)}
-                  className="mt-2 bg-background/50 border-primary/30"
+                  onChange={(e) => {
+                    setWhatsapp(e.target.value);
+                    if (errors.whatsapp) {
+                      setErrors({ ...errors, whatsapp: "" });
+                    }
+                  }}
+                  className={`mt-2 bg-background/50 border-primary/30 ${errors.whatsapp ? "border-red-500 focus:border-red-500" : ""}`}
                 />
-                {whatsapp && (
+                {errors.whatsapp && (
+                  <div className="flex items-center gap-2 mt-2 text-red-500 text-sm">
+                    <AlertCircle className="h-4 w-4" />
+                    {errors.whatsapp}
+                  </div>
+                )}
+                {whatsapp && !errors.whatsapp && validateWhatsApp(whatsapp) && (
                   <p className="text-xs text-green-600 mt-2 flex items-center gap-1">
-                    ✓ Você receberá a análise completa por WhatsApp
+                    <CheckCircle2 className="h-4 w-4" />
+                    {formatWhatsAppStatus(whatsapp)}
                   </p>
                 )}
               </div>
@@ -380,9 +445,26 @@ export default function Home() {
                 <Input
                   type="date"
                   value={birthDate}
-                  onChange={(e) => setBirthDate(e.target.value)}
-                  className="mt-2 bg-background/50 border-primary/30"
+                  onChange={(e) => {
+                    setBirthDate(e.target.value);
+                    if (errors.birthDate) {
+                      setErrors({ ...errors, birthDate: "" });
+                    }
+                  }}
+                  onBlur={() => {
+                    if (birthDate && errors.birthDate) {
+                      setErrors({ ...errors, birthDate: "" });
+                    }
+                  }}
+                  className={`mt-2 bg-background/50 border-primary/30 ${errors.birthDate ? "border-red-500 focus:border-red-500" : ""}`}
+                  required
                   />
+                {errors.birthDate && (
+                  <div className="flex items-center gap-2 mt-2 text-red-500 text-sm">
+                    <AlertCircle className="h-4 w-4" />
+                    {errors.birthDate}
+                  </div>
+                )}
               </div>
 
               {/* Gender */}
@@ -493,13 +575,13 @@ export default function Home() {
               {/* Submit Button */}
               <Button
                 type="submit"
-                disabled={createDiagnostic.isPending}
-                className="w-full py-6 bg-primary text-primary-foreground rounded-full text-lg font-bold hover:bg-primary/90"
+                disabled={createDiagnostic.isPending || isSubmitting}
+                className="w-full py-6 bg-primary text-primary-foreground rounded-full text-lg font-bold hover:bg-primary/90 disabled:opacity-50"
               >
-                {createDiagnostic.isPending ? (
+                {createDiagnostic.isPending || isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Gerando Análise...
+                    Processando...
                   </>
                 ) : (
                   <>

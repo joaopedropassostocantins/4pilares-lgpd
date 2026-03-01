@@ -86,24 +86,23 @@ export function PaymentMethodSelector({
           </div>
         </Card>
 
-        {/* Stripe Option */}
+        {/* Stripe Option - Temporarily Disabled */}
         <Card
-          className={`p-4 cursor-pointer border-2 transition-all ${
-            selectedMethod === 'stripe'
-              ? 'border-blue-500 bg-blue-50'
-              : 'border-primary/30 hover:border-blue-400'
-          }`}
-          onClick={() => setSelectedMethod('stripe')}
+          className={`p-4 border-2 transition-all opacity-60 cursor-not-allowed border-gray-300 bg-gray-50`}
+          title="Stripe está temporariamente indisponível"
         >
           <div className="flex items-center gap-3 mb-2">
-            <CreditCard className="h-6 w-6 text-blue-600" />
+            <CreditCard className="h-6 w-6 text-gray-400" />
             <div>
-              <div className="font-bold text-blue-900">Stripe</div>
-              <div className="text-xs text-blue-700">Internacional</div>
+              <div className="font-bold text-gray-600">Stripe</div>
+              <div className="text-xs text-gray-500">Internacional</div>
             </div>
           </div>
-          <div className="text-sm text-muted-foreground">
+          <div className="text-sm text-gray-500">
             Visa, Mastercard, Amex
+          </div>
+          <div className="mt-2 inline-block px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded">
+            Em Manutenção
           </div>
         </Card>
       </div>
@@ -168,6 +167,11 @@ export function PaymentMethodSelector({
         )}
       </div>
 
+      {/* Stripe Suspension Warning */}
+      <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg text-xs text-orange-900">
+        <strong>⚠️ Aviso:</strong> Stripe está temporariamente indisponível devido a manutenção na conta. Use Pix (Brasil) ou Mercado Pago (América Latina) por enquanto. Stripe será reativado em breve!
+      </div>
+
       {/* Info */}
       <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900">
         <strong>Seguranca:</strong> Todos os metodos sao criptografados e seguros. Escolha o que preferir!
@@ -219,9 +223,9 @@ export function MercadoLibreCountriesFooter() {
           <p className="text-xs mt-1">18 paises da America Latina</p>
         </div>
         
-        <div className="p-2 bg-blue-50 border border-blue-200 rounded">
-          <strong className="text-blue-900">Stripe</strong>
-          <p className="text-xs mt-1">195+ paises</p>
+        <div className="p-2 bg-gray-50 border border-gray-200 rounded opacity-60">
+          <strong className="text-gray-600">Stripe</strong>
+          <p className="text-xs mt-1">195+ paises (em manutenção)</p>
         </div>
       </div>
 

@@ -3,6 +3,7 @@ import { getDiagnosticByPublicId, updateDiagnostic, getDb } from "./db";
 import { invokeLLM } from "./_core/llm";
 import { notifyOwner } from "./_core/notification";
 import { sendEmailWithAnalysis } from "./_core/email";
+import { sendPaymentConfirmationWhatsApp, formatPhoneForWhatsApp } from "./whatsappBaileys";
 import { diagnostics } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 
@@ -73,6 +74,28 @@ export async function processMercadoPagoWebhook(event: {
       await updateDiagnostic(diagnosticRecord.publicId, {
         emailSentAt: new Date(),
       });
+    }
+
+    // Send analysis via WhatsApp if phone is available
+    if (diagnosticRecord.whatsappPhone) {
+      try {
+        const formattedPhone = formatPhoneForWhatsApp(diagnosticRecord.whatsappPhone);
+        const success = await sendPaymentConfirmationWhatsApp(
+          formattedPhone,
+          diagnosticRecord.consultantName || "Viajante",
+          diagnosticRecord.publicId
+        );
+        if (success) {
+          console.log(`[Webhook] WhatsApp sent to ${formattedPhone}`);
+          await updateDiagnostic(diagnosticRecord.publicId, {
+            whatsappSentAt: new Date(),
+          });
+        } else {
+          console.warn(`[Webhook] Failed to send WhatsApp to ${formattedPhone}`);
+        }
+      } catch (error) {
+        console.error(`[Webhook] Error sending WhatsApp:`, error);
+      }
     }
 
     // Update payment status
