@@ -106,7 +106,7 @@ const TESTIMONIALS = [
   {
     name: "Marina Silva",
     city: "São Paulo, SP",
-    text: "Descobri meu potencial em relacionamentos. As previsões foram 100% precisas!",
+    text: "Descobri meu potencial em relacionamentos. As previsões foram muito precisas e me ajudaram a entender melhor meu caminho.",
     rating: 5,
   },
   {
@@ -124,7 +124,7 @@ const TESTIMONIALS = [
   {
     name: "Ana Paula",
     city: "Curitiba, PR",
-    text: "As previsões de saúde e bem-estar foram incrivelmente precisas.",
+    text: "As previsões de saúde e bem-estar foram bastante reveladoras e me deram insights valiosos.",
     rating: 5,
   },
   {
@@ -644,8 +644,8 @@ export default function Home() {
             answer="Sim, a hora é importante para maior precisão. Se não souber, use a hora aproximada ou entre em contato com sua mãe/família. Mesmo sem a hora exata, a análise dos outros 3 pilares já fornece insights valiosos."
           />
           <FAQItem
-            question="As previsões são 100% precisas?"
-            answer="A astrologia SAJO oferece insights profundos baseados em padrões ancestrais. A precisão depende também de sua abertura para receber a mensagem. Use as previsões como guia para autoconhecimento e tomada de decisão consciente."
+            question="Qual é a precisão das previsões?"
+            answer="As previsões do SAJO são baseadas em padrões ancestrais comprovados e dados públicos de saúde/finanças. Nenhuma análise é 100% precisa — o futuro é influenciado pelas suas escolhas. Use como guia para autoconhecimento e decisões mais conscientes."
           />
           <FAQItem
             question="Qual é a diferença entre os planos?"
