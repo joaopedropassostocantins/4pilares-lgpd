@@ -175,6 +175,12 @@ export default function Resultado() {
     });
   };
 
+  const handleShareCopy = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url);
+    toast.success('Link copiado para a área de transferência!');
+  };
+
   const handleConfirmPayment = async () => {
     toast.info("Verificando pagamento...", {
       description: "Atualizando página em 3 segundos.",
@@ -391,19 +397,55 @@ export default function Resultado() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <Button variant="outline" size="sm" className="gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-2"
+                onClick={() => {
+                  const url = window.location.href;
+                  navigator.clipboard.writeText(url);
+                  toast.success('Link copiado!');
+                }}
+              >
                 <Share2 className="h-4 w-4" />
                 Copiar Link
               </Button>
-              <Button variant="outline" size="sm" className="gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-2"
+                onClick={() => {
+                  const url = window.location.href;
+                  const text = encodeURIComponent(`Descobri meu destino com SAJO! Veja meus 4 Pilares: ${url}`);
+                  window.open(`https://wa.me/?text=${text}`, '_blank');
+                }}
+              >
                 <MessageCircle className="h-4 w-4" />
                 WhatsApp
               </Button>
-              <Button variant="outline" size="sm" className="gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-2"
+                onClick={() => {
+                  const url = window.location.href;
+                  const text = encodeURIComponent('Descobri meu destino com SAJO!');
+                  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${text}`, '_blank');
+                }}
+              >
                 <Facebook className="h-4 w-4" />
                 Facebook
               </Button>
-              <Button variant="outline" size="sm" className="gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-2"
+                onClick={() => {
+                  const url = window.location.href;
+                  const text = encodeURIComponent('Descobri meu destino com SAJO!');
+                  window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${text}`, '_blank');
+                }}
+              >
                 <Twitter className="h-4 w-4" />
                 Twitter
               </Button>

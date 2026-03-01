@@ -242,3 +242,9 @@
 - [ ] Testar fluxo Cartão (Stripe)
 - [ ] Validar conversão em ambos os métodos
 - [ ] Documentar instruções de pagamento para usuários
+
+## Bugs Encontrados em Testes
+
+- [ ] Corrigir erro Mercado Pago Pix (CPT01-Z7TYKCCPI5BV)
+- [ ] Implementar links de compartilhamento funcionais (WhatsApp, Facebook, Twitter)
+- [ ] Testar todos os 3 métodos de pagamento (Pix, Mercado Pago, Stripe)

@@ -68,9 +68,10 @@ export async function createPaymentPreference(input: {
           name: input.userName,
         },
         payment_methods: {
-          default_payment_method_id: "pix",
-          default_installments: 1,
+          excluded_payment_types: [],
+          excluded_payment_methods: [],
           installments: 1,
+          default_installments: 1,
         },
         back_urls: {
           success: input.returnUrl,
