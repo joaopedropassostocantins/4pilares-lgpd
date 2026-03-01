@@ -51,6 +51,24 @@ export async function createPaymentPreference(input: {
     const client = getMercadoPagoClient();
     const preference = new Preference(client);
 
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const validEmail = emailRegex.test(input.userEmail) 
+      ? input.userEmail 
+      : `user-${input.diagnosticId}@fusion-sajo.com`;
+
+    // Validate userName (max 256 chars, no special chars)
+    const validName = input.userName
+      .substring(0, 256)
+      .replace(/[^a-zA-Z0-9\s\-\.]/g, '');
+
+    console.log("[Mercado Pago] Creating preference with:", {
+      email: validEmail,
+      name: validName,
+      amount: input.amount,
+      diagnosticId: input.diagnosticId,
+    });
+
     const response = await preference.create({
       body: {
         items: [
@@ -64,8 +82,8 @@ export async function createPaymentPreference(input: {
           },
         ],
         payer: {
-          email: input.userEmail,
-          name: input.userName,
+          email: validEmail,
+          name: validName,
         },
         payment_methods: {
           excluded_payment_types: [],
@@ -85,13 +103,19 @@ export async function createPaymentPreference(input: {
       },
     });
 
+    console.log("[Mercado Pago] Preference created successfully:", response.id);
+
     return {
       preferenceId: response.id,
       initPoint: response.init_point,
       sandboxInitPoint: response.sandbox_init_point,
     };
-  } catch (error) {
-    console.error("[Mercado Pago] Failed to create preference:", error);
+  } catch (error: any) {
+    console.error("[Mercado Pago] Failed to create preference:", {
+      message: error?.message,
+      status: error?.status,
+      response: error?.response?.data,
+    });
     throw error;
   }
 }

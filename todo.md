@@ -245,9 +245,11 @@
 
 ## Bugs Encontrados em Testes
 
-- [ ] Corrigir erro Mercado Pago Pix (CPT01-Z7TYKCCPI5BV)
-- [ ] Implementar links de compartilhamento funcionais (WhatsApp, Facebook, Twitter)
-- [ ] Testar todos os 3 métodos de pagamento (Pix, Mercado Pago, Stripe)
+- [x] Corrigir erro Mercado Pago Pix (CPT01-S5JIOWVQJ4MP) - CORRIGIDO: Validação de email e nome
+- [x] Remover asteriscos (**) do texto de análise - CORRIGIDO: Regex para converter **texto** em <strong>
+- [x] Adicionar frase destacada "Sei que me procurou por..." - CORRIGIDO: Box vermelho no cabeçalho
+- [x] Implementar links de compartilhamento funcionais (WhatsApp, Facebook, Twitter)
+- [x] Testar todos os 3 métodos de pagamento (Pix, Mercado Pago, Stripe)
 
 
 ## Integração Razorpay (Índia)

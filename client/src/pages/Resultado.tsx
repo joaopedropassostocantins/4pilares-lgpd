@@ -242,6 +242,13 @@ export default function Resultado() {
           <CardHeader>
             <CardTitle className="text-xl text-primary">Análise de Degustação</CardTitle>
             <p className="text-sm text-muted-foreground mt-2">Revelação gratuita do seu destino</p>
+            {diagnostic.tastingAnalysis && (
+              <div className="mt-4 p-3 bg-red-50 border-l-4 border-red-500 rounded">
+                <p className="text-sm font-semibold text-red-900">
+                  Sei que me procurou por...
+                </p>
+              </div>
+            )}
           </CardHeader>
           <CardContent>
             <div className={`prose-mystic`}>
@@ -251,7 +258,8 @@ export default function Resultado() {
                   __html: (isPaid
                     ? (diagnostic.basicAnalysis || diagnostic.tastingAnalysis || "Análise em processamento...")
                     : (diagnostic.tastingAnalysis || "Análise em processamento..."))
-                    .replace(/\*\*<u>([^<]+)<\/u>\*\*/g, '<strong style="color: #000; text-decoration: underline;">$1</strong>')
+                    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*([^*]+)\*/g, '<em>$1</em>')
                 }}
               />
             </div>
