@@ -243,6 +243,38 @@ export default function Resultado() {
           <p className="text-muted-foreground">Revelação ancestral para {diagnostic.consultantName}</p>
         </div>
 
+        {/* ── DETECTED PATTERNS (HOOKS) SECTION ── */}
+        {diagnostic?.selectedHooks && Array.isArray(diagnostic.selectedHooks) && diagnostic.selectedHooks.length > 0 && !isPaid && (
+          <Card className="bg-card/60 border-primary/30">
+            <CardHeader>
+              <CardTitle className="text-lg text-primary">Padrões Detectados nos Seus Pilares</CardTitle>
+              <p className="text-sm text-muted-foreground mt-2">Insights específicos que podem estar afetando sua vida</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {(diagnostic.selectedHooks as Hook[]).map((hook: Hook) => {
+                const variantKey = (diagnostic.selectedVariants as Record<string, string>)?.[hook.id] || 'a';
+                const selectedText = hook.variants[variantKey as keyof typeof hook.variants];
+                return (
+                  <div key={hook.id} className="p-3 bg-primary/5 border border-primary/20 rounded-lg">
+                    <div className="flex items-start gap-3">
+                      <div className="text-2xl">⚡</div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-primary mb-1">{hook.title}</h4>
+                        <p className="text-sm text-foreground mb-2">{hook.pain}</p>
+                        <p className="text-xs text-muted-foreground italic mb-2">"{selectedText}"</p>
+                        <p className="text-xs text-primary/70 font-medium">{hook.data}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+              <p className="text-xs text-muted-foreground text-center mt-4 pt-3 border-t border-primary/20">
+                Desbloqueie a análise completa para entender como cada padrão afeta seu destino
+              </p>
+            </CardContent>
+          </Card>
+        )}
+
         {/* ── 4 PILLARS GRID ── */}
         {pillarsData && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -283,38 +315,6 @@ export default function Resultado() {
             </div>
           </CardContent>
         </Card>
-
-        {/* ── DETECTED PATTERNS (HOOKS) SECTION ── */}
-        {diagnostic?.selectedHooks && Array.isArray(diagnostic.selectedHooks) && diagnostic.selectedHooks.length > 0 && !isPaid && (
-          <Card className="bg-card/60 border-primary/30">
-            <CardHeader>
-              <CardTitle className="text-lg text-primary">Padrões Detectados nos Seus Pilares</CardTitle>
-              <p className="text-sm text-muted-foreground mt-2">Insights específicos que podem estar afetando sua vida</p>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {(diagnostic.selectedHooks as Hook[]).map((hook: Hook) => {
-                const variantKey = (diagnostic.selectedVariants as Record<string, string>)?.[hook.id] || 'a';
-                const selectedText = hook.variants[variantKey as keyof typeof hook.variants];
-                return (
-                  <div key={hook.id} className="p-3 bg-primary/5 border border-primary/20 rounded-lg">
-                    <div className="flex items-start gap-3">
-                      <div className="text-2xl">⚡</div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-primary mb-1">{hook.title}</h4>
-                        <p className="text-sm text-foreground mb-2">{hook.pain}</p>
-                        <p className="text-xs text-muted-foreground italic mb-2">"{selectedText}"</p>
-                        <p className="text-xs text-primary/70 font-medium">{hook.data}</p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-              <p className="text-xs text-muted-foreground text-center mt-4 pt-3 border-t border-primary/20">
-                Desbloqueie a análise completa para entender como cada padrão afeta seu destino
-              </p>
-            </CardContent>
-          </Card>
-        )}
 
         {/* -- URGENCY BADGE -- */}
         {!isPaid && (
