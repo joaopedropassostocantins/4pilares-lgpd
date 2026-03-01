@@ -8,6 +8,7 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { processMercadoPagoWebhook, generateFullAnalysisOnPayment } from "../webhook";
+import stripeWebhookRouter from "../webhooks/stripe";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -48,6 +49,9 @@ async function startServer() {
       res.status(500).json({ error: "Internal server error" });
     }
   });
+
+  // Stripe webhook
+  app.use("/api/webhooks", stripeWebhookRouter);
 
   // tRPC API
   app.use(

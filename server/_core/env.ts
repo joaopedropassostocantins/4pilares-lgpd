@@ -13,4 +13,5 @@ export const ENV = {
   mercadoPagoClientSecret: process.env.MERCADO_PAGO_CLIENT_SECRET ?? "",
   stripeSecretKey: process.env.STRIPE_SECRET_KEY ?? "",
   stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY ?? "",
+  stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET ?? "",
 };
