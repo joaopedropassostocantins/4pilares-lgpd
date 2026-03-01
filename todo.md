@@ -197,3 +197,37 @@
 - [x] Teste A/B de headlines: 2 versões implementadas ("Descubra seu destino" vs "Saiba seu futuro")
 - [x] Adicionar 10 arquétipos de personalidade: Big Tree, Flower, Sun, Candle, Land, Fertile Soil, Rock, Gemstone, Ocean, Stream
 - [x] Testar fluxo completo de WhatsApp + A/B + Arquétipos
+
+
+## Expansão Internacional com Stripe (15+ Países)
+
+- [ ] Registrar conta Stripe e obter credenciais (API Key, Publishable Key)
+- [ ] Integrar Stripe no backend (tRPC procedures para criar payment intent)
+- [ ] Criar componente Stripe Checkout no frontend
+- [ ] Implementar suporte multi-moeda (BRL, USD, INR, KRW, PHP, THB, VND, IDR, MYR, MXN, ARS, EUR)
+- [ ] Implementar geolocalização automática (detectar país do usuário)
+- [ ] Implementar roteamento de pagamento por país (Stripe para todos)
+- [ ] Testar pagamento com cartão em 3-4 países
+- [ ] Implementar webhook do Stripe para confirmação automática
+- [ ] Criar landing pages localizadas para cada país
+- [ ] Traduzir conteúdo para inglês (Índia), coreano (Coreia), espanhol (América Latina)
+- [ ] Lançar em 15+ países com suporte a cartão de crédito
+- [ ] Monitorar conversão por país
+- [ ] Adicionar métodos locais conforme necessário (Razorpay, Naver Pay, etc)
+
+## Expansão Internacional com Stripe (15+ Países) - IMPLEMENTADO
+
+- [x] Registrar conta Stripe e obter credenciais (API Key, Publishable Key)
+- [x] Integrar Stripe no backend (tRPC procedures para criar payment intent)
+- [x] Criar componente Stripe Checkout no frontend
+- [x] Implementar suporte multi-moeda (BRL, USD, INR, KRW, PHP, THB, VND, IDR, MYR, MXN, ARS, EUR)
+- [x] Implementar geolocalização automática (detectar país do usuário)
+- [x] Implementar roteamento de pagamento por país (Stripe para todos)
+- [x] Escrever testes Vitest para configuração Stripe (16 testes passando)
+- [ ] Testar pagamento com cartão em 3-4 países
+- [ ] Implementar webhook do Stripe para confirmação automática
+- [ ] Criar landing pages localizadas para cada país
+- [ ] Traduzir conteúdo para inglês (Índia), coreano (Coreia), espanhol (América Latina)
+- [ ] Lançar em 15+ países com suporte a cartão de crédito
+- [ ] Monitorar conversão por país
+- [ ] Adicionar métodos locais conforme necessário (Razorpay, Naver Pay, etc)

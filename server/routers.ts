@@ -22,6 +22,7 @@ import {
 import { calculatePillars } from "./sajo";
 import { createPaymentPreference, initMercadoPago } from "./mercadopago";
 import { authRouter } from "./_core/systemRouter";
+import { createPaymentIntent, getCurrencyCode, getPrice } from "./stripe";
 
 // ============================================================================
 // DORES ALEATÓRIAS PARA FECHAMENTO PERSUASIVO - DIRETO E ESPECÍFICO
@@ -387,6 +388,108 @@ const paymentRouter = router({
       });
 
       return preference;
+    }),
+
+  // ========================================================================
+  // STRIPE PAYMENT PROCEDURES (International)
+  // ========================================================================
+  createStripePayment: publicProcedure
+    .input(
+      z.object({
+        diagnosticPublicId: z.string(),
+        plan: z.enum(["promotional", "normal", "lifetime"]),
+        countryCode: z.string().default("BR"),
+        userEmail: z.string().email().optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      try {
+        const diagnostic = await getDiagnosticByPublicId(input.diagnosticPublicId);
+        if (!diagnostic) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Diagnostic not found" });
+        }
+
+        // Get price for the plan and country
+        const amount = getPrice(input.countryCode, input.plan);
+        const currency = getCurrencyCode(input.countryCode);
+
+        // Create Stripe payment intent
+        const paymentIntent = await createPaymentIntent(
+          amount,
+          currency,
+          input.countryCode,
+          diagnostic.publicId,
+          input.userEmail || diagnostic.email || undefined
+        );
+
+        // Store payment intent ID in diagnostic
+        await updateDiagnostic(diagnostic.publicId, {
+          paymentId: paymentIntent.id,
+          paymentStatus: "pending",
+        });
+
+        console.log("[Stripe] Payment intent created:", {
+          paymentIntentId: paymentIntent.id,
+          amount,
+          currency,
+          country: input.countryCode,
+          plan: input.plan,
+        });
+
+        return {
+          clientSecret: paymentIntent.client_secret,
+          paymentIntentId: paymentIntent.id,
+          amount,
+          currency,
+        };
+      } catch (error) {
+        console.error("[Stripe] Error creating payment intent:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create payment intent",
+        });
+      }
+    }),
+
+  // Confirm Stripe payment (called after successful card payment)
+  confirmStripePayment: publicProcedure
+    .input(
+      z.object({
+        diagnosticPublicId: z.string(),
+        paymentIntentId: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      try {
+        const diagnostic = await getDiagnosticByPublicId(input.diagnosticPublicId);
+        if (!diagnostic) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Diagnostic not found" });
+        }
+
+        // Mark diagnostic as paid
+        await updateDiagnostic(diagnostic.publicId, {
+          paymentStatus: "paid",
+        });
+
+        // Notify owner
+        await notifyOwner({
+          title: "💳 Novo Pagamento Stripe",
+          content: `Pagamento confirmado para ${diagnostic.consultantName}\nID: ${input.paymentIntentId}`,
+        });
+
+        console.log("[Stripe] Payment confirmed:", {
+          diagnosticId: diagnostic.publicId,
+          paymentIntentId: input.paymentIntentId,
+        });
+
+        return { success: true, diagnosticId: diagnostic.publicId };
+      } catch (error) {
+        console.error("[Stripe] Error confirming payment:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to confirm payment",
+        });
+      }
     }),
 });
 
