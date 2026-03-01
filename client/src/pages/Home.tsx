@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { VideoPreview } from "@/components/VideoPreview";
 import { Loader2, Search, MapPin, Sparkles, Star, Moon, Sun, ChevronDown, TrendingUp, Heart, Zap, MessageCircle, ChevronUp, AlertCircle, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -629,19 +628,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* VIDEO PREVIEW SECTION */}
-      <section className="py-16 max-w-6xl mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-2 text-foreground">Veja a Analise em Acao</h2>
-        <p className="text-center text-muted-foreground mb-12">Disponivel em Portugues e Espanol</p>
-        
-        <div className="flex justify-center gap-8 flex-wrap">
-          <VideoPreview language="PT" />
-          <VideoPreview language="ES" />
-        </div>
-      </section>
-
-      {/* FAQ SECTION */}
-      <section className="py-16 max-w-4xl mx-auto px-4">
+      {/* ── FAQ SECTION ── */}
+      <section id="faq" className="max-w-4xl mx-auto px-4 py-16">
         <h2 className="text-3xl font-bold text-center text-primary mb-12" style={{ fontFamily: "'Cinzel', serif" }}>
           Perguntas Frequentes
         </h2>
