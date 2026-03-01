@@ -97,48 +97,48 @@ const ELEMENTS = [
 ];
 
 const HOW_IT_WORKS = [
-  { step: "01", title: "Informe sua data", desc: "Apenas sua data de nascimento revela seus 4 Pilares." },
-  { step: "02", title: "Análise instantânea", desc: "Receba sua análise de degustação em 30 segundos." },
-  { step: "03", title: "Desbloqueie tudo", desc: "Acesse previsões completas sobre amor, carreira e saúde." },
+  { step: "01", title: "Informe sua data", desc: "Seu nascimento contém padrões que não mudam. Precisamos só dos dados certos." },
+  { step: "02", title: "Análise em 30s", desc: "Veja o padrão do seu momento atual — sem enrolação." },
+  { step: "03", title: "Desbloqueie a análise completa", desc: "Acesso a padrões específicos em amor, finanças, saúde e carreira. Pronto para agir." },
 ];
 
 const TESTIMONIALS = [
   {
     name: "Marina Silva",
     city: "São Paulo, SP",
-    text: "Descobri meu potencial em relacionamentos. As previsões foram muito precisas e me ajudaram a entender melhor meu caminho.",
+    text: "Entendi por que meus relacionamentos seguem o mesmo padrão. Agora sei o que mudar.",
     rating: 5,
   },
   {
     name: "Carlos Mendes",
     city: "Rio de Janeiro, RJ",
-    text: "A análise me ajudou a entender meu tipo de personalidade. Recomendo!",
+    text: "Descobri que meu problema com dinheiro não é acaso — tem padrão. Já estou mudando.",
     rating: 5,
   },
   {
     name: "Juliana Costa",
     city: "Belo Horizonte, MG",
-    text: "Finalmente entendi por que tenho dificuldades em finanças. Muito revelador!",
+    text: "Finalmente entendi por que tenho dificuldades em finanças. Agora tenho um plano.",
     rating: 5,
   },
   {
     name: "Ana Paula",
     city: "Curitiba, PR",
-    text: "As previsões de saúde e bem-estar foram bastante reveladoras e me deram insights valiosos.",
+    text: "Saúde ruim não era só cansaço — era um padrão que eu ignorava. Mudei e melhorou.",
     rating: 5,
   },
   {
     name: "Roberto Santos",
     city: "Salvador, BA",
-    text: "Melhor investimento em autoconhecimento que já fiz. Vale cada centavo!",
+    text: "Paguei R$ 30 e evitei uma decisão que custaria R$ 10 mil. Melhor investimento que fiz.",
     rating: 5,
   },
 ];
 
 // ─── A/B Test Headlines ──────────────────────────────────────────────────────
 const HEADLINES = {
-  a: "DESCUBRA SEU DESTINO EM AMOR, CARREIRA E SAÚDE",
-  b: "SAIBA SEU FUTURO SEGUNDO A ASTROLOGIA COREANA ANCESTRAL",
+  a: "Há um padrão no seu momento atual que muita gente ignora até custar caro",
+  b: "Você está deixando passar sinais que outras pessoas já veem claramente",
 };
 
 export default function Home() {
@@ -171,7 +171,7 @@ export default function Home() {
   const createDiagnostic = trpc.diagnostic.create.useMutation({
     onSuccess: (data) => {
       // Show success message
-      toast.success("☯ Diagnóstico criado! Os ancestrais revelam seu destino...", {
+      toast.success("☯ Análise pronta! Veja os padrões do seu momento atual.", {
         description: "Análise de degustação pronta. Desbloqueie a análise completa.",
       });
       
@@ -324,7 +324,7 @@ export default function Home() {
             <span className="text-xs text-muted-foreground ml-2">(Variant {headlineVariant.toUpperCase()})</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-            Seus 4 Pilares SAJO revelam quem você realmente é. Saiba seu potencial em relacionamentos, finanças, saúde e bem-estar.
+            Muita gente nessa fase acumula 2–3 pontos de pressão ao mesmo tempo sem perceber. Quer ver qual é o seu?
           </p>
           <div className="flex gap-4 justify-center">
             <Button
@@ -333,7 +333,7 @@ export default function Home() {
               onClick={() => formRef.current?.scrollIntoView({ behavior: "smooth" })}
             >
               <Sparkles className="mr-2 h-5 w-5" />
-              Descobrir GRÁTIS em 30 Segundos
+              Ver Meu Padrão Agora
             </Button>
           </div>
         </div>
@@ -342,10 +342,10 @@ export default function Home() {
       {/* ── HOW IT WORKS ── */}
       <section id="como-funciona" className="max-w-6xl mx-auto px-4 py-16">
         <h2 className="text-3xl font-bold text-center text-primary mb-12" style={{ fontFamily: "'Cinzel', serif" }}>
-          Como Funciona a Astrologia SAJO
+          Como Funciona
         </h2>
         <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
-          Entenda como a análise dos 4 Pilares SAJO (Ano, Mês, Dia e Hora) revela seu destino através da tradição milenar coreana
+          3 passos. Sem enrolação. Resultado em 30 segundos.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {HOW_IT_WORKS.map((item) => (
@@ -365,9 +365,9 @@ export default function Home() {
         <Card className="bg-card/80 border-primary/30">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl text-primary" style={{ fontFamily: "'Cinzel', serif" }}>
-              Revele Seus 4 Pilares
+              Veja Seu Padrão
             </CardTitle>
-            <p className="text-sm text-muted-foreground mt-2">Apenas nome e data de nascimento</p>
+            <p className="text-sm text-muted-foreground mt-2">30 segundos. Sem spam. Sem cadastro obrigatório.</p>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -637,7 +637,7 @@ export default function Home() {
           />
           <FAQItem
             question="Como funciona a análise dos 4 Pilares?"
-            answer="Cada pilar representa uma dimensão diferente do seu destino. O Ano revela sua missão de vida, o Mês sua natureza emocional, o Dia sua essência verdadeira, e a Hora seu potencial oculto. Juntos, formam um mapa completo do seu ser."
+            answer="Cada pilar representa uma dimensão diferente. O Ano mostra padrões de longo prazo, o Mês sua natureza emocional, o Dia suas características principais, e a Hora fatores de timing. Juntos, formam um mapa de padrões pessoais."
           />
           <FAQItem
             question="Preciso saber a hora exata do meu nascimento?"
@@ -645,7 +645,7 @@ export default function Home() {
           />
           <FAQItem
             question="Qual é a precisão das previsões?"
-            answer="As previsões do SAJO são baseadas em padrões ancestrais comprovados e dados públicos de saúde/finanças. Nenhuma análise é 100% precisa — o futuro é influenciado pelas suas escolhas. Use como guia para autoconhecimento e decisões mais conscientes."
+            answer="O SAJO mapeia padrões baseados em tradição coreana e dados públicos. Não é diagnóstico nem previsão do futuro — é um guia para entender tendências e tomar decisões mais conscientes. Suas escolhas sempre importam mais."
           />
           <FAQItem
             question="Qual é a diferença entre os planos?"
