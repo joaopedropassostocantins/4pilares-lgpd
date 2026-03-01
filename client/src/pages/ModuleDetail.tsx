@@ -1,8 +1,7 @@
-import { useRoute } from "wouter";
+import { Link, useRoute } from "wouter";
 import { modules } from "@/data/modules";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link } from "wouter";
 
 export default function ModuleDetail() {
   const [, params] = useRoute("/modulo-:slug");
@@ -24,6 +23,13 @@ export default function ModuleDetail() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-primary/5">
+      {/* Hero Image */}
+      {module.heroImage && (
+        <div className="w-full h-96 overflow-hidden">
+          <img src={module.heroImage} alt={module.title} className="w-full h-full object-cover" />
+        </div>
+      )}
+
       {/* Header */}
       <div className="bg-gradient-to-r from-primary/20 to-primary/10 border-b border-primary/30 py-12">
         <div className="container mx-auto px-4">
@@ -48,23 +54,6 @@ export default function ModuleDetail() {
           </CardHeader>
           <CardContent className="text-foreground leading-relaxed">
             <p>{module.shortDescription}</p>
-          </CardContent>
-        </Card>
-
-        {/* Para quem é */}
-        <Card className="bg-card/60 border-primary/30 mb-8">
-          <CardHeader>
-            <CardTitle className="text-xl text-primary">Para quem é</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2">
-              {module.targetAudience.map((audience, idx) => (
-                <li key={idx} className="flex gap-3">
-                  <span className="text-primary">•</span>
-                  <span className="text-foreground">{audience}</span>
-                </li>
-              ))}
-            </ul>
           </CardContent>
         </Card>
 

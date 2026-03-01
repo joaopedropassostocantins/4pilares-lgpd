@@ -1,9 +1,11 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Module } from "@/data/modules";
+import { modules } from "@/data/modules";
+
+type Module = typeof modules[0];
 
 interface ModuleCardProps {
-  module: Module;
+  module: typeof modules[0];
 }
 
 export default function ModuleCard({ module }: ModuleCardProps) {

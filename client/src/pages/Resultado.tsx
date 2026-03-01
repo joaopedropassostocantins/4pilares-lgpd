@@ -278,8 +278,8 @@ export default function Resultado() {
         {pillarsData && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {PILLAR_TITLES.map(({ key, title }) => {
-              const pillarValue = pillarsData[key as keyof PillarsData] as Pillar;
-              return <PillarCard key={key} title={title} pillar={pillarValue} />;
+              const pillarValue = (pillarsData as unknown as PillarsData)[key as keyof PillarsData] as Pillar;
+              return pillarValue ? <PillarCard key={key} title={title} pillar={pillarValue} /> : null;
             })}
           </div>
         )}
