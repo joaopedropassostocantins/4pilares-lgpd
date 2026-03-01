@@ -248,3 +248,20 @@
 - [ ] Corrigir erro Mercado Pago Pix (CPT01-Z7TYKCCPI5BV)
 - [ ] Implementar links de compartilhamento funcionais (WhatsApp, Facebook, Twitter)
 - [ ] Testar todos os 3 métodos de pagamento (Pix, Mercado Pago, Stripe)
+
+
+## Integração Razorpay (Índia)
+
+- [ ] Registrar conta Razorpay e obter credenciais (Key ID, Key Secret)
+- [ ] Instalar dependência razorpay
+- [ ] Implementar módulo razorpay.ts com funções de integração
+- [ ] Implementar endpoint tRPC para criar order Razorpay
+- [ ] Criar componente RazorpayCheckout.tsx
+- [ ] Integrar Razorpay no PaymentMethodSelector
+- [ ] Implementar webhook POST /api/webhooks/razorpay para confirmação automática
+- [ ] Adicionar suporte a moedas: INR (Índia), BRL (Brasil), USD (EUA)
+- [ ] Implementar geolocalização para roteamento automático (Razorpay para Índia)
+- [ ] Criar testes Vitest para Razorpay (mínimo 10 testes)
+- [ ] Testar fluxo completo de pagamento Razorpay
+- [ ] Adicionar Razorpay ao PaymentMethodSelector com flag de país
+- [ ] Testar responsividade mobile do checkout Razorpay

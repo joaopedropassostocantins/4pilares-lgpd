@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { CreditCard, QrCode, Loader2 } from 'lucide-react';
 import { StripeCheckout } from './StripeCheckout';
+import { RazorpayCheckout } from './RazorpayCheckout';
 
 interface PaymentMethodSelectorProps {
   diagnosticPublicId: string;
@@ -25,7 +26,9 @@ export function PaymentMethodSelector({
   mercadoPagoLoading = false,
   mercadoPagoReady = false,
 }: PaymentMethodSelectorProps) {
-  const [selectedMethod, setSelectedMethod] = useState<'pix' | 'mercadopago' | 'stripe' | null>(null);
+  const [selectedMethod, setSelectedMethod] = useState<'pix' | 'mercadopago' | 'stripe' | 'razorpay' | null>(null);
+  const [razorpayOrderId, setRazorpayOrderId] = useState<string | null>(null);
+  const [razorpayLoading, setRazorpayLoading] = useState(false);
 
   const planMap = {
     promo: 'promotional',
@@ -34,6 +37,7 @@ export function PaymentMethodSelector({
   } as const;
 
   const isBrazil = countryCode === 'BR';
+  const isIndia = countryCode === 'IN';
 
   return (
     <div className="space-y-4">
@@ -86,10 +90,36 @@ export function PaymentMethodSelector({
           </div>
         </Card>
 
+        {/* Razorpay Option - Only for India */}
+        {isIndia && (
+          <Card
+            className={`p-4 cursor-pointer border-2 transition-all ${
+              selectedMethod === 'razorpay'
+                ? 'border-blue-500 bg-blue-50'
+                : 'border-primary/30 hover:border-blue-400'
+            }`}
+            onClick={() => setSelectedMethod('razorpay')}
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <CreditCard className="h-6 w-6 text-blue-600" />
+              <div>
+                <div className="font-bold text-blue-900">Razorpay</div>
+                <div className="text-xs text-blue-700">India</div>
+              </div>
+            </div>
+            <div className="text-sm text-muted-foreground">
+              Card, UPI, Net Banking
+            </div>
+            <div className="mt-2 inline-block px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">
+              Recomendado
+            </div>
+          </Card>
+        )}
+
         {/* Stripe Option - Temporarily Disabled */}
         <Card
           className={`p-4 border-2 transition-all opacity-60 cursor-not-allowed border-gray-300 bg-gray-50`}
-          title="Stripe está temporariamente indisponível"
+          title="Stripe esta temporariamente indisponivel"
         >
           <div className="flex items-center gap-3 mb-2">
             <CreditCard className="h-6 w-6 text-gray-400" />
@@ -102,7 +132,7 @@ export function PaymentMethodSelector({
             Visa, Mastercard, Amex
           </div>
           <div className="mt-2 inline-block px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded">
-            Em Manutenção
+            Em Manutencao
           </div>
         </Card>
       </div>
@@ -149,6 +179,23 @@ export function PaymentMethodSelector({
           </Button>
         )}
 
+        {selectedMethod === 'razorpay' && (
+          <RazorpayCheckout
+            orderId={razorpayOrderId || ''}
+            amount={Math.round(price * 100)}
+            currency="INR"
+            email={userEmail || ''}
+            phone=""
+            name=""
+            onSuccess={(paymentId) => {
+              // Handle success
+            }}
+            onError={(error) => {
+              // Handle error
+            }}
+          />
+        )}
+
         {selectedMethod === 'stripe' && (
           <StripeCheckout
             diagnosticPublicId={diagnosticPublicId}
@@ -169,7 +216,7 @@ export function PaymentMethodSelector({
 
       {/* Stripe Suspension Warning */}
       <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg text-xs text-orange-900">
-        <strong>⚠️ Aviso:</strong> Stripe está temporariamente indisponível devido a manutenção na conta. Use Pix (Brasil) ou Mercado Pago (América Latina) por enquanto. Stripe será reativado em breve!
+        <strong>Aviso:</strong> Stripe esta temporariamente indisponivel devido a manutencao na conta. Use Pix (Brasil), Razorpay (India) ou Mercado Pago (America Latina) por enquanto. Stripe sera reativado em breve!
       </div>
 
       {/* Info */}
@@ -198,49 +245,11 @@ export function MercadoLibreCountriesFooter() {
     'Panama',
     'Peru',
     'Uruguai',
-    'Venezuela',
-    'Paraguai',
-    'Bolivia',
-    'Guatemala',
-    'Honduras',
-    'Nicaragua',
-    'El Salvador',
-    'Republica Dominicana',
   ];
 
   return (
-    <div className="mt-8 pt-6 border-t border-border/40 text-xs text-muted-foreground">
-      <p className="font-semibold mb-3 text-foreground">Opcoes de Pagamento por Pais:</p>
-      
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
-        <div className="p-2 bg-green-50 border border-green-200 rounded">
-          <strong className="text-green-900">Pix (Brasil)</strong>
-          <p className="text-xs mt-1">Disponivel apenas no Brasil</p>
-        </div>
-        
-        <div className="p-2 bg-yellow-50 border border-yellow-200 rounded">
-          <strong className="text-yellow-900">Mercado Pago</strong>
-          <p className="text-xs mt-1">18 paises da America Latina</p>
-        </div>
-        
-        <div className="p-2 bg-gray-50 border border-gray-200 rounded opacity-60">
-          <strong className="text-gray-600">Stripe</strong>
-          <p className="text-xs mt-1">195+ paises (em manutenção)</p>
-        </div>
-      </div>
-
-      <p className="font-semibold mb-2 text-foreground">Paises com Mercado Pago:</p>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 p-3 bg-muted/30 rounded">
-        {countries.map((country) => (
-          <div key={country} className="text-center text-xs">
-            {country}
-          </div>
-        ))}
-      </div>
-      
-      <p className="mt-3 text-xs text-muted-foreground/70 italic">
-        Stripe esta disponivel em 195+ paises. Mercado Pago em 18 paises da America Latina. Pix apenas no Brasil.
-      </p>
+    <div className="p-3 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-600">
+      <strong>Mercado Pago disponivel em:</strong> {countries.join(', ')}
     </div>
   );
 }
