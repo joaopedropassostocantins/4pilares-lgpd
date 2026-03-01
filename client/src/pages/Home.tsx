@@ -147,6 +147,11 @@ export default function Home() {
 
   const createDiagnostic = trpc.diagnostic.create.useMutation({
     onSuccess: (data) => {
+      // Show success message
+      toast.success("☯ Diagnóstico criado! Os ancestrais revelam seu destino...", {
+        description: "Análise de degustação pronta. Desbloqueie a análise completa.",
+      });
+      
       // Track diagnostic creation
       trackDiagnosticCreated({
         publicId: data.publicId,
@@ -154,14 +159,15 @@ export default function Home() {
         archetype: selectedArchetype,
       });
       
-      toast.success("☯ Diagnóstico criado! Os ancestrais revelam seu destino...", {
-        description: "Análise de degustação pronta. Desbloqueie a análise completa.",
-      });
-      navigate(`/resultado/${data.publicId}`);
+      // Navigate to result page
+      setTimeout(() => {
+        navigate(`/resultado/${data.publicId}`);
+      }, 500);
     },
     onError: (err) => {
+      console.error("Diagnostic creation error:", err);
       toast.error("Erro ao criar diagnóstico", {
-        description: err.message || "Tente novamente",
+        description: err.message || "Tente novamente em alguns momentos",
       });
     },
   });
@@ -187,8 +193,41 @@ export default function Home() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !birthDate) {
-      toast.error("Preencha nome e data de nascimento");
+    
+    // Validation: Name
+    if (!name.trim()) {
+      toast.error("Campo obrigatório", {
+        description: "Por favor, preencha seu nome",
+      });
+      return;
+    }
+    
+    // Validation: Birth Date
+    if (!birthDate) {
+      toast.error("Campo obrigatório", {
+        description: "Por favor, preencha sua data de nascimento",
+      });
+      return;
+    }
+    
+    // Validation: Date cannot be in the future
+    const selectedDate = new Date(birthDate);
+    const today = new Date();
+    if (selectedDate > today) {
+      toast.error("Data inválida", {
+        description: "A data de nascimento não pode ser no futuro",
+      });
+      return;
+    }
+    
+    // Validation: Age must be at least 13 years old
+    const age = today.getFullYear() - selectedDate.getFullYear();
+    const monthDiff = today.getMonth() - selectedDate.getMonth();
+    const actualAge = monthDiff < 0 || (monthDiff === 0 && today.getDate() < selectedDate.getDate()) ? age - 1 : age;
+    if (actualAge < 13) {
+      toast.error("Idade mínima", {
+        description: "Você deve ter pelo menos 13 anos",
+      });
       return;
     }
 
@@ -300,8 +339,7 @@ export default function Home() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="mt-2 bg-background/50 border-primary/30"
-                  required
-                />
+                  />
               </div>
 
               {/* Email */}
@@ -329,6 +367,11 @@ export default function Home() {
                   onChange={(e) => setWhatsapp(e.target.value)}
                   className="mt-2 bg-background/50 border-primary/30"
                 />
+                {whatsapp && (
+                  <p className="text-xs text-green-600 mt-2 flex items-center gap-1">
+                    ✓ Você receberá a análise completa por WhatsApp
+                  </p>
+                )}
               </div>
 
               {/* Birth Date */}
@@ -339,8 +382,7 @@ export default function Home() {
                   value={birthDate}
                   onChange={(e) => setBirthDate(e.target.value)}
                   className="mt-2 bg-background/50 border-primary/30"
-                  required
-                />
+                  />
               </div>
 
               {/* Gender */}
