@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export default function ModuleDetail() {
   const [, params] = useRoute("/modulo-:slug");
   const slug = params?.slug;
-  const module = modules.find((m) => m.slug === slug);
+  const module = modules.find((m) => m.slug === `modulo-${slug}`);
 
   if (!module) {
     return (
