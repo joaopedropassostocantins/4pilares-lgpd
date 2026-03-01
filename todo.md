@@ -231,3 +231,14 @@
 - [ ] Lançar em 15+ países com suporte a cartão de crédito
 - [ ] Monitorar conversão por país
 - [ ] Adicionar métodos locais conforme necessário (Razorpay, Naver Pay, etc)
+
+## Estratégia Híbrida de Pagamento no Brasil (Mercado Pago + Stripe)
+
+- [x] Criar componente PaymentMethodSelector.tsx
+- [x] Integrar seletor na página Resultado.tsx
+- [x] Manter Mercado Pago (Pix) como opção padrão
+- [x] Adicionar Stripe (Cartão) como alternativa
+- [ ] Testar fluxo Pix (Mercado Pago)
+- [ ] Testar fluxo Cartão (Stripe)
+- [ ] Validar conversão em ambos os métodos
+- [ ] Documentar instruções de pagamento para usuários

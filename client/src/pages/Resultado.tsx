@@ -5,6 +5,7 @@ import { Loader2, Lock, Copy, Check, CreditCard, MessageCircle, ChevronDown, Che
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { useRoute } from "wouter";
+import { PaymentMethodSelector } from "@/components/PaymentMethodSelector";
 
 // ─── Type definitions ─────────────────────────────────────────────────────────
 interface StemInfo {
@@ -315,25 +316,29 @@ export default function Resultado() {
               </div>
 
               {/* Mercado Pago Button - Prominent */}
-              {createPreference.data?.preferenceId ? (
-                <div className="text-center space-y-4">
-                  <p className="text-sm text-muted-foreground font-medium">Escolha seu método de pagamento:</p>
-                  <a
-                    href={`https://mercadopago.com.br/checkout/v1/redirect?pref_id=${createPreference.data.preferenceId}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-pagamento"
-                  >
-                    <CreditCard className="inline h-6 w-6 mr-2" />
-                    Pagar com Pix ou Cartão
-                  </a>
-                  <p className="text-xs text-muted-foreground">Ambas as opções disponíveis no checkout</p>
-                </div>
-              ) : createPreference.isPending ? (
-                <div className="text-center space-y-3">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
-                  <p className="text-sm text-muted-foreground">Preparando opções de pagamento...</p>
-                </div>
+              {showPayment ? (
+                <PaymentMethodSelector
+                  diagnosticPublicId={publicId}
+                  plan={selectedPlan}
+                  price={plans[selectedPlan].price}
+                  userEmail={diagnostic?.email || undefined}
+                  onMercadoPagoClick={() => {
+                    if (createPreference.data?.preferenceId) {
+                      window.open(
+                        `https://mercadopago.com.br/checkout/v1/redirect?pref_id=${createPreference.data.preferenceId}`,
+                        '_blank'
+                      );
+                    } else {
+                      createPreference.mutate({
+                        diagnosticPublicId: publicId,
+                        amount: plans[selectedPlan].price,
+                        returnUrl: window.location.origin,
+                      });
+                    }
+                  }}
+                  mercadoPagoLoading={createPreference.isPending}
+                  mercadoPagoReady={!!createPreference.data?.preferenceId}
+                />
               ) : (
                 <div className="text-center space-y-4">
                   <Button
@@ -341,7 +346,7 @@ export default function Resultado() {
                     onClick={handleUnlock}
                   >
                     <CreditCard className="mr-3 h-6 w-6" />
-                    Gerar Opções de Pagamento
+                    Desbloquear Análise Completa
                   </Button>
                 </div>
               )}
