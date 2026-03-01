@@ -321,6 +321,7 @@ export default function Resultado() {
                   diagnosticPublicId={publicId}
                   plan={selectedPlan}
                   price={plans[selectedPlan].price}
+                  countryCode="BR"
                   userEmail={diagnostic?.email || undefined}
                   onMercadoPagoClick={() => {
                     if (createPreference.data?.preferenceId) {
