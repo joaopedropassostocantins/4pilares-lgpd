@@ -652,7 +652,7 @@ export default function Home() {
           />
           <FAQItem
             question="Qual é a diferença entre os planos?"
-            answer="Promoção (R$ 14,99): Acesso único à análise completa. Normal (R$ 29,99): Acesso único com suporte. Vitalício (R$ 299,90): Acesso ilimitado, atualizações perpétuas e suporte prioritário."
+            answer="Normal (R$ 29,99): Acesso único à análise completa. Vitalicio (R$ 299,90): Acesso ilimitado, atualizações perpétuas e suporte prioritario."
           />
           <FAQItem
             question="Posso compartilhar meu link de referral?"

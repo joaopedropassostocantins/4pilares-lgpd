@@ -281,3 +281,39 @@
 - [x] Expandir seleção de hooks por categoria (Finanças, Caráter, Família) - IMPLEMENTADO: selectHooksByCategory integrado
 - [x] Implementar envio de email com análise completa após pagamento - IMPLEMENTADO: sendEmailWithAnalysis em ambos Mercado Pago e Stripe
 - [x] Testar fluxo completo de Pix em produção com pagamento real - PRONTO: 69/81 testes passando
+
+
+## Atualização Pré-Lançamento (Rodada 5 - Amanhã)
+
+### Fase 1: Remover Promoção
+- [x] Remover promoção de R$ 14,99 do site - COMPLETO
+- [x] Atualizar pricing para R$ 29,99 (preço normal) - COMPLETO
+- [x] Remover badge "OFERTA COM PRAZO LIMITADO" - COMPLETO
+- [x] Remover contador de dias da promoção - COMPLETO
+
+### Fase 2: Implementar 6 Módulos
+- [x] Criar estrutura de 6 módulos (A-F) - COMPLETO: /client/src/data/modules.ts
+- [x] Módulo A: Oráculo dos Investimentos - COMPLETO
+- [x] Módulo B: Conselheiro Judicial - COMPLETO
+- [x] Módulo C: Navegador de Conflitos - COMPLETO
+- [x] Módulo D: Oráculo do Amor - COMPLETO
+- [x] Módulo E: Caminho de Saída - COMPLETO
+- [x] Módulo F: Conexão com Quem Partiu - COMPLETO
+
+### Fase 3: Páginas "Saiba Mais"
+- [x] Criar template reutilizável para páginas de módulos - COMPLETO: ModuleDetail.tsx
+- [x] Implementar 6 páginas /modulo-a até /modulo-f - COMPLETO: Rotas dinâmicas
+- [x] Adicionar copy pronta para cada módulo - COMPLETO: Em modules.ts
+- [x] Adicionar FAQ e disclaimers - COMPLETO: Em cada módulo
+
+### Fase 4: Cadastro Beta
+- [x] Criar página /cadastro com formulário - COMPLETO: BetaSignup.tsx
+- [x] Implementar seleção de módulo preferido - COMPLETO
+- [x] Adicionar checkbox de LGPD - COMPLETO
+- [x] Criar página /obrigado com confirmação - COMPLETO: BetaSignupThankYou.tsx
+
+### Fase 5: Validação
+- [x] Testar fluxo completo de navegação - COMPLETO
+- [x] Verificar responsividade em mobile - COMPLETO
+- [x] Validar formulários - COMPLETO
+- [x] Salvar checkpoint final - PRONTO

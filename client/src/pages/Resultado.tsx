@@ -124,7 +124,7 @@ export default function Resultado() {
   const publicId = params?.publicId || "";
 
   const [showPayment, setShowPayment] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<"promo" | "normal" | "lifetime">("promo");
+  const [selectedPlan, setSelectedPlan] = useState<"normal" | "lifetime">("normal");
   const [copied, setCopied] = useState(false);
 
   const { data: diagnostic, isLoading, error, refetch } = trpc.diagnostic.getByPublicId.useQuery(
@@ -139,9 +139,8 @@ export default function Resultado() {
 
   // Plan prices
   const plans = {
-    promo: { price: 14.99, label: "Promoção", description: "Acesso 1x à análise completa" },
     normal: { price: 29.99, label: "Normal", description: "Acesso 1x à análise completa" },
-    lifetime: { price: 299.90, label: "Vitalício", description: "Acesso ilimitado + atualizações" },
+    lifetime: { price: 299.90, label: "Vitalicio", description: "Acesso ilimitado + atualizações" },
   };
 
   // Track conversion when payment is completed and redirect to thank you page
@@ -316,18 +315,7 @@ export default function Resultado() {
           </CardContent>
         </Card>
 
-        {/* -- URGENCY BADGE -- */}
-        {!isPaid && (
-          <div className="mb-6 p-4 bg-destructive/15 border-2 border-destructive/50 rounded-lg text-center">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <span className="text-lg">⏰</span>
-              <span className="font-bold text-destructive">OFERTA COM PRAZO LIMITADO</span>
-            </div>
-            <p className="text-sm text-destructive/90">
-              Promocao valida apenas ate <strong>01/marco as 23:59</strong> — depois o valor volta ao normal (R$ 29,99)
-            </p>
-          </div>
-        )}
+
 
         {/* -- PAYMENT SECTION (PROMINENT & VISIBLE) -- */}
         {!isPaid && (
@@ -369,11 +357,6 @@ export default function Resultado() {
                       <div className="text-lg font-bold text-primary mb-1">{plan.label}</div>
                       <div className="text-2xl font-bold text-primary mb-2">R$ {plan.price.toFixed(2)}</div>
                       <div className="text-xs text-muted-foreground">{plan.description}</div>
-                      {planKey === "promo" && (
-                        <div className="mt-2 inline-block px-2 py-1 bg-destructive/20 text-destructive text-xs rounded">
-                          Promoção Limitada
-                        </div>
-                      )}
                     </div>
                   )
                 )}
