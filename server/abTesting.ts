@@ -186,31 +186,21 @@ export const abTestingRouter = router({
     
     const variantA = allDiagnostics.filter((d: Diagnostic) => d.abTestVariant === "A");
     const variantB = allDiagnostics.filter((d: Diagnostic) => d.abTestVariant === "B");
-    const variantC = allDiagnostics.filter((d: Diagnostic) => d.abTestVariant === "C");
-    const variantD = allDiagnostics.filter((d: Diagnostic) => d.abTestVariant === "D");
     
     const variantAConversions = variantA.filter((d: Diagnostic) => d.paymentStatus === "paid").length;
     const variantBConversions = variantB.filter((d: Diagnostic) => d.paymentStatus === "paid").length;
-    const variantCConversions = variantC.filter((d: Diagnostic) => d.paymentStatus === "paid").length;
-    const variantDConversions = variantD.filter((d: Diagnostic) => d.paymentStatus === "paid").length;
     
     const variantARate = variantA.length > 0 ? (variantAConversions / variantA.length) * 100 : 0;
     const variantBRate = variantB.length > 0 ? (variantBConversions / variantB.length) * 100 : 0;
-    const variantCRate = variantC.length > 0 ? (variantCConversions / variantC.length) * 100 : 0;
-    const variantDRate = variantD.length > 0 ? (variantDConversions / variantD.length) * 100 : 0;
     
-    const rates = [variantARate, variantBRate, variantCRate, variantDRate];
+    const rates = [variantARate, variantBRate];
     const maxRate = Math.max(...rates);
     let winner: ABTestVariant = "A";
     if (maxRate === variantBRate) winner = "B";
-    else if (maxRate === variantCRate) winner = "C";
-    else if (maxRate === variantDRate) winner = "D";
     
     return {
       variantA: { total: variantA.length, conversions: variantAConversions, conversionRate: parseFloat(variantARate.toFixed(2)) },
       variantB: { total: variantB.length, conversions: variantBConversions, conversionRate: parseFloat(variantBRate.toFixed(2)) },
-      variantC: { total: variantC.length, conversions: variantCConversions, conversionRate: parseFloat(variantCRate.toFixed(2)) },
-      variantD: { total: variantD.length, conversions: variantDConversions, conversionRate: parseFloat(variantDRate.toFixed(2)) },
       winner,
     };
   }),

@@ -98,33 +98,33 @@ const ELEMENTS = [
 
 const HOW_IT_WORKS = [
   { step: "01", title: "Informe sua data", desc: "Seu nascimento contém padrões que não mudam. Precisamos só dos dados certos." },
-  { step: "02", title: "Análise em 30s", desc: "Veja o padrão do seu momento atual — sem enrolação." },
-  { step: "03", title: "Desbloqueie a análise completa", desc: "Acesso a padrões específicos em amor, finanças, saúde e carreira. Pronto para agir." },
+  { step: "02", title: "Análise em 30s", desc: "Vejo o padrão do seu momento atual — sem enrolação, sem mistério." },
+  { step: "03", title: "Desbloqueie a análise completa", desc: "Acesso a padrões específicos que explicam por que você repete os mesmos erros em dinheiro, relacionamentos e decisões de carreira." },
 ];
 
 const TESTIMONIALS = [
   {
     name: "Marina Silva",
     city: "São Paulo, SP",
-    text: "Entendi por que meus relacionamentos seguem o mesmo padrão. Agora sei o que mudar.",
+    text: "Meus relacionamentos sempre terminavam do mesmo jeito. Depois que vi o padrão, consegui sair do ciclo.",
     rating: 5,
   },
   {
     name: "Carlos Mendes",
     city: "Rio de Janeiro, RJ",
-    text: "Descobri que meu problema com dinheiro não é acaso — tem padrão. Já estou mudando.",
+    text: "Descobri que meu problema com dinheiro não é acaso — tem padrão. Já evitei 2 decisões erradas que custaria R$ 15 mil.",
     rating: 5,
   },
   {
     name: "Juliana Costa",
     city: "Belo Horizonte, MG",
-    text: "Finalmente entendi por que tenho dificuldades em finanças. Agora tenho um plano.",
+    text: "Finalmente entendi por que sempre caio na mesma armadilha financeira. Agora tenho um plano que funciona.",
     rating: 5,
   },
   {
     name: "Ana Paula",
     city: "Curitiba, PR",
-    text: "Saúde ruim não era só cansaço — era um padrão que eu ignorava. Mudei e melhorou.",
+    text: "Meu cansaço crônico não era só falta de sono — era um padrão de como eu lidava com pressão. Mudei e melhorou.",
     rating: 5,
   },
   {
@@ -137,8 +137,8 @@ const TESTIMONIALS = [
 
 // ─── A/B Test Headlines ──────────────────────────────────────────────────────
 const HEADLINES = {
-  a: "Há um padrão no seu momento atual que muita gente ignora até custar caro",
-  b: "Você está deixando passar sinais que outras pessoas já veem claramente",
+  a: "Vou dar um palpite certeiro sobre você — e se eu errar, não paga nada.",
+  b: "Você está endividado por erros que insiste em repetir. Quer ver o padrão?",
 };
 
 export default function Home() {
@@ -240,12 +240,15 @@ export default function Home() {
       if (selectedDate > today) {
         newErrors.birthDate = "A data de nascimento não pode ser no futuro";
       } else {
-        // Validation: Age must be at least 13 years old
+        // Validation: Age must be at least 16 years old (CRITICAL BLOCKER)
         const age = today.getFullYear() - selectedDate.getFullYear();
         const monthDiff = today.getMonth() - selectedDate.getMonth();
         const actualAge = monthDiff < 0 || (monthDiff === 0 && today.getDate() < selectedDate.getDate()) ? age - 1 : age;
-        if (actualAge < 13) {
-          newErrors.birthDate = "Você deve ter pelo menos 13 anos";
+        if (actualAge < 16) {
+          newErrors.birthDate = "Este conteúdo é para maiores de 16 anos.";
+        }
+        if (actualAge > 120) {
+          newErrors.birthDate = "Data de nascimento inválida";
         }
       }
     }
@@ -586,7 +589,7 @@ export default function Home() {
                 ) : (
                   <>
                     <Sparkles className="mr-2 h-5 w-5" />
-                    Revelar Meus 4 Pilares
+                    Quero o Palpite (Risco Zero)
                   </>
                 )}
               </Button>
@@ -633,7 +636,7 @@ export default function Home() {
         <div className="space-y-4">
           <FAQItem
             question="O que é SAJO?"
-            answer="SAJO é um sistema ancestral coreano de astrologia que analisa os 4 Pilares do Destino (Ano, Mês, Dia e Hora de nascimento) para revelar sua personalidade, potencial e desafios em amor, carreira, saúde e bem-estar."
+            answer="SAJO é um sistema ancestral coreano de astrologia que mapeia padrões recorrentes em sua vida. Não é diagnóstico nem previsão do futuro — é um guia para entender tendências e tomar decisões mais conscientes."
           />
           <FAQItem
             question="Como funciona a análise dos 4 Pilares?"
@@ -645,7 +648,7 @@ export default function Home() {
           />
           <FAQItem
             question="Qual é a precisão das previsões?"
-            answer="O SAJO mapeia padrões baseados em tradição coreana e dados públicos. Não é diagnóstico nem previsão do futuro — é um guia para entender tendências e tomar decisões mais conscientes. Suas escolhas sempre importam mais."
+            answer="Nenhuma análise é infalível. Baseado em padrões observados, não em certezas. Se eu errar, não paga. Se você não reconhecer nenhum dos padrões que identifiquei, reembolso total em 7 dias."
           />
           <FAQItem
             question="Qual é a diferença entre os planos?"
@@ -661,7 +664,7 @@ export default function Home() {
           />
           <FAQItem
             question="Há garantia de satisfação?"
-            answer="Sim! Se não estiver satisfeito com a análise nos primeiros 7 dias, oferecemos reembolso total. Entre em contato conosco via WhatsApp ou email."
+            answer="Se você não reconhecer nenhum dos 3 padrões que identifiquei, não paga. Simples assim. Reembolso total em 7 dias, sem perguntas."
           />
           <FAQItem
             question="Meus dados são seguros?"
