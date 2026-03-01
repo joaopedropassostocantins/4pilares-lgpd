@@ -1,15 +1,34 @@
 import Stripe from 'stripe';
-
-// Initialize Stripe with secret key from environment
 import { ENV } from './_core/env';
 
-const stripeSecretKey = ENV.stripeSecretKey || 'sk_test_placeholder';
+// Lazy initialization of Stripe to prevent startup errors
+let stripeInstance: Stripe | null = null;
 
-if (!ENV.stripeSecretKey) {
-  console.warn('STRIPE_SECRET_KEY is not configured - Stripe payments will not work');
+function getStripe(): Stripe {
+  if (!stripeInstance) {
+    const stripeSecretKey = ENV.stripeSecretKey;
+    
+    if (!stripeSecretKey) {
+      throw new Error('STRIPE_SECRET_KEY is not configured - Stripe payments will not work');
+    }
+    
+    stripeInstance = new Stripe(stripeSecretKey);
+  }
+  
+  return stripeInstance;
 }
 
-export const stripe = new Stripe(stripeSecretKey);
+export function getStripeInstance(): Stripe {
+  return getStripe();
+}
+
+// For backward compatibility, create a lazy proxy
+export const stripe = new Proxy({} as Stripe, {
+  get: (target, prop) => {
+    const instance = getStripe();
+    return (instance as any)[prop];
+  },
+});
 
 /**
  * Currency configuration for different countries
@@ -135,12 +154,15 @@ export async function createPaymentIntent(
   diagnosticId: string,
   userEmail?: string
 ) {
-  if (!process.env.STRIPE_SECRET_KEY) {
+  const stripeSecretKey = ENV.stripeSecretKey;
+  
+  if (!stripeSecretKey) {
     throw new Error('STRIPE_SECRET_KEY is not configured');
   }
 
   try {
-    const paymentIntent = await stripe.paymentIntents.create({
+    const stripeClient = getStripe();
+    const paymentIntent = await stripeClient.paymentIntents.create({
       amount: Math.round(amount),
       currency: currency.toLowerCase(),
       payment_method_types: ['card'],
@@ -168,7 +190,8 @@ export function verifyWebhookSignature(
   secret: string
 ): any {
   try {
-    return stripe.webhooks.constructEvent(body, signature, secret);
+    const stripeClient = getStripe();
+    return stripeClient.webhooks.constructEvent(body, signature, secret);
   } catch (error) {
     console.error('Webhook signature verification failed:', error);
     throw error;
@@ -180,7 +203,8 @@ export function verifyWebhookSignature(
  */
 export async function getPaymentIntent(paymentIntentId: string) {
   try {
-    return await stripe.paymentIntents.retrieve(paymentIntentId);
+    const stripeClient = getStripe();
+    return await stripeClient.paymentIntents.retrieve(paymentIntentId);
   } catch (error) {
     console.error('Error retrieving payment intent:', error);
     throw error;
