@@ -7,10 +7,24 @@ import { eq } from "drizzle-orm";
 
 const router = Router();
 
-// Initialize Stripe
-const stripe = new Stripe(ENV.stripeSecretKey || "", {
-  apiVersion: "2026-02-25.clover",
-});
+// Lazy initialization of Stripe
+let stripeInstance: Stripe | null = null;
+
+function getStripe(): Stripe {
+  if (!stripeInstance) {
+    const stripeSecretKey = ENV.stripeSecretKey;
+    
+    if (!stripeSecretKey) {
+      throw new Error('STRIPE_SECRET_KEY is not configured');
+    }
+    
+    stripeInstance = new Stripe(stripeSecretKey, {
+      apiVersion: "2026-02-25.clover",
+    });
+  }
+  
+  return stripeInstance;
+}
 
 /**
  * Stripe Webhook Handler
@@ -29,6 +43,7 @@ router.post("/stripe", async (req, res) => {
 
   try {
     // Verify webhook signature
+    const stripe = getStripe();
     event = stripe.webhooks.constructEvent(
       req.body,
       sig,
