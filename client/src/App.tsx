@@ -9,6 +9,12 @@ import Ads from "./pages/Ads";
 import Resultado from "./pages/Resultado";
 import Obrigado from "./pages/Obrigado";
 import ModuleDetail from "./pages/ModuleDetail";
+import ModuloA from "./pages/ModuloA";
+import ModuloB from "./pages/ModuloB";
+import ModuloC from "./pages/ModuloC";
+import ModuloD from "./pages/ModuloD";
+import ModuloE from "./pages/ModuloE";
+import ModuloF from "./pages/ModuloF";
 import BetaSignup from "./pages/BetaSignup";
 import BetaSignupThankYou from "./pages/BetaSignupThankYou";
 import AdminLayout from "./components/AdminLayout";
@@ -20,6 +26,12 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/ads" component={Ads} />
+      <Route path="/modulo-a" component={ModuloA} />
+      <Route path="/modulo-b" component={ModuloB} />
+      <Route path="/modulo-c" component={ModuloC} />
+      <Route path="/modulo-d" component={ModuloD} />
+      <Route path="/modulo-e" component={ModuloE} />
+      <Route path="/modulo-f" component={ModuloF} />
       <Route path="/modulo-:slug" component={ModuleDetail} />
       <Route path="/cadastro" component={BetaSignup} />
       <Route path="/obrigado-cadastro" component={BetaSignupThankYou} />
