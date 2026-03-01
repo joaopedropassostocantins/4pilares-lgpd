@@ -38,6 +38,8 @@ export const diagnostics = mysqlTable("diagnostics", {
   emailSentAt: timestamp("emailSentAt"),
   abTestVariant: mysqlEnum("abTestVariant", ["A", "B"]).default("A").notNull(),
   selectedPlan: mysqlEnum("selectedPlan", ["promo", "normal", "lifetime"]),
+  selectedHooks: json("selectedHooks"),
+  selectedVariants: json("selectedVariants"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 

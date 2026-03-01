@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Lock, Copy, Check, CreditCard, MessageCircle, ChevronDown, ChevronUp, Share2, Facebook, Twitter, Gift } from "lucide-react";
 import { toast } from "sonner";
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import { useRoute } from "wouter";
 import { PaymentMethodSelector } from "@/components/PaymentMethodSelector";
 
@@ -29,6 +29,19 @@ interface Pillar {
   stem: StemInfo;
   branch: BranchInfo;
   label: string;
+}
+
+interface Hook {
+  id: string;
+  category: string;
+  title: string;
+  pain: string;
+  data: string;
+  question: string;
+  variants: { a: string; b: string };
+  compatibility: { gender: string[]; ageMin: number; ageMax: number };
+  disclaimer: string;
+  tags: string[];
 }
 
 interface PillarsData {
@@ -122,7 +135,7 @@ export default function Resultado() {
   const createPreference = trpc.payment.createPreference.useMutation();
 
   const isPaid = diagnostic?.paymentStatus === "paid";
-  const pillarsData = diagnostic?.pillarsData as PillarsData | null | undefined;
+  const pillarsData: PillarsData | null | undefined = diagnostic?.pillarsData as unknown as PillarsData | null | undefined;
 
   // Plan prices
   const plans = {
@@ -231,11 +244,14 @@ export default function Resultado() {
         </div>
 
         {/* ── 4 PILLARS GRID ── */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {PILLAR_TITLES.map(({ key, title }) => (
-            <PillarCard key={key} title={title} pillar={pillarsData?.[key] as Pillar} />
-          ))}
-        </div>
+        {pillarsData && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {PILLAR_TITLES.map(({ key, title }) => {
+              const pillarValue = pillarsData[key as keyof PillarsData] as Pillar;
+              return <PillarCard key={key} title={title} pillar={pillarValue} />;
+            })}
+          </div>
+        )}
 
         {/* ── ANALYSIS SECTION ── */}
         <Card className="bg-card/60 border-primary/30">
@@ -245,7 +261,9 @@ export default function Resultado() {
             {diagnostic.tastingAnalysis && (
               <div className="mt-4 p-3 bg-red-50 border-l-4 border-red-500 rounded">
                 <p className="text-sm font-semibold text-red-900">
-                  Sei que me procurou por...
+                  {diagnostic.abTestVariant === "B" 
+                    ? "Descobri que você..." 
+                    : "Sei que me procurou por..."}
                 </p>
               </div>
             )}
@@ -265,6 +283,38 @@ export default function Resultado() {
             </div>
           </CardContent>
         </Card>
+
+        {/* ── DETECTED PATTERNS (HOOKS) SECTION ── */}
+        {diagnostic?.selectedHooks && Array.isArray(diagnostic.selectedHooks) && diagnostic.selectedHooks.length > 0 && !isPaid && (
+          <Card className="bg-card/60 border-primary/30">
+            <CardHeader>
+              <CardTitle className="text-lg text-primary">Padrões Detectados nos Seus Pilares</CardTitle>
+              <p className="text-sm text-muted-foreground mt-2">Insights específicos que podem estar afetando sua vida</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {(diagnostic.selectedHooks as Hook[]).map((hook: Hook) => {
+                const variantKey = (diagnostic.selectedVariants as Record<string, string>)?.[hook.id] || 'a';
+                const selectedText = hook.variants[variantKey as keyof typeof hook.variants];
+                return (
+                  <div key={hook.id} className="p-3 bg-primary/5 border border-primary/20 rounded-lg">
+                    <div className="flex items-start gap-3">
+                      <div className="text-2xl">⚡</div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-primary mb-1">{hook.title}</h4>
+                        <p className="text-sm text-foreground mb-2">{hook.pain}</p>
+                        <p className="text-xs text-muted-foreground italic mb-2">"{selectedText}"</p>
+                        <p className="text-xs text-primary/70 font-medium">{hook.data}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+              <p className="text-xs text-muted-foreground text-center mt-4 pt-3 border-t border-primary/20">
+                Desbloqueie a análise completa para entender como cada padrão afeta seu destino
+              </p>
+            </CardContent>
+          </Card>
+        )}
 
         {/* -- URGENCY BADGE -- */}
         {!isPaid && (

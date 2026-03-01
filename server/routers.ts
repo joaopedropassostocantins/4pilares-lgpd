@@ -23,6 +23,8 @@ import { calculatePillars } from "./sajo";
 import { createPaymentPreference, initMercadoPago } from "./mercadopago";
 import { authRouter } from "./_core/systemRouter";
 import { createPaymentIntent, getCurrencyCode, getPrice } from "./stripe";
+import { selectHooks } from "./hooksEngine_turbinado";
+import type { Hook } from "./hooksEngine_turbinado";
 
 // ============================================================================
 // DORES ALEATORIAS PARA FECHAMENTO PERSUASIVO - DIRETO E POPULAR
@@ -251,6 +253,13 @@ Não deixe essa dor decidir mais um dia do seu futuro. Clique em 'Desbloquear tu
           ? response.choices[0].message.content
           : "";
 
+      // Select hooks for this diagnostic
+      const selectedHooksData = selectHooks(
+        input.gender || "",
+        input.birthDate,
+        4 // Select 4 hooks
+      );
+
       // Create diagnostic record
       const diagnostic = await createDiagnostic({
         publicId,
@@ -268,6 +277,8 @@ Não deixe essa dor decidir mais um dia do seu futuro. Clique em 'Desbloquear tu
         paymentStatus: "pending",
         abTestVariant: input.abTestVariant || "A",
         selectedPlan: input.selectedPlan || null,
+        selectedHooks: selectedHooksData.hooks as any,
+        selectedVariants: selectedHooksData.selectedVariants as any,
       });
 
       // Notify owner
@@ -284,7 +295,13 @@ Não deixe essa dor decidir mais um dia do seu futuro. Clique em 'Desbloquear tu
         timestamp: new Date().toISOString(),
       });
 
-      return { publicId, diagnostic, abTestVariant: input.abTestVariant || "A" };
+      return { 
+        publicId, 
+        diagnostic, 
+        abTestVariant: input.abTestVariant || "A",
+        selectedHooks: selectedHooksData.hooks,
+        selectedVariants: selectedHooksData.selectedVariants,
+      };
     }),
 
   getByPublicId: publicProcedure

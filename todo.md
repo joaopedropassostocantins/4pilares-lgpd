@@ -267,3 +267,10 @@
 - [ ] Testar fluxo completo de pagamento Razorpay
 - [ ] Adicionar Razorpay ao PaymentMethodSelector com flag de país
 - [ ] Testar responsividade mobile do checkout Razorpay
+
+
+## Melhorias Pós-Correção de Bugs (Nova Rodada)
+
+- [x] Integrar 3-5 hooks na análise de degustação para aumentar engajamento pré-pagamento - IMPLEMENTADO: Seção "Padrões Detectados" com 4 hooks
+- [x] Implementar A/B test da frase destacada ("Sei que me procurou por..." vs "Descobri que você...") - IMPLEMENTADO: Variante B ativa
+- [ ] Testar fluxo completo de Pix em produção com pagamento real
