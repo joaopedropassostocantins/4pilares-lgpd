@@ -11,4 +11,6 @@ export const ENV = {
   mercadoPagoPublicKey: process.env.MERCADO_PAGO_PUBLIC_KEY ?? "",
   mercadoPagoClientId: process.env.MERCADO_PAGO_CLIENT_ID ?? "",
   mercadoPagoClientSecret: process.env.MERCADO_PAGO_CLIENT_SECRET ?? "",
+  stripeSecretKey: process.env.STRIPE_SECRET_KEY ?? "",
+  stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY ?? "",
 };

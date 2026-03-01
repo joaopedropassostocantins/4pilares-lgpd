@@ -25,62 +25,62 @@ import { authRouter } from "./_core/systemRouter";
 import { createPaymentIntent, getCurrencyCode, getPrice } from "./stripe";
 
 // ============================================================================
-// DORES ALEATÓRIAS PARA FECHAMENTO PERSUASIVO - DIRETO E ESPECÍFICO
+// DORES ALEATORIAS PARA FECHAMENTO PERSUASIVO - DIRETO E POPULAR
 // ============================================================================
 const SPECIFIC_PAINS = [
-  // SAÚDE MENTAL
+  // CANSACO E ESGOTAMENTO
   {
-    category: "Saúde Mental",
+    category: "Cansaco",
     pains: [
-      "a ansiedade que não deixa você respirar fundo, aquela que acorda você no meio da noite com o coração acelerado",
-      "a depressão silenciosa que você esconde de todos, aquela que tira sua vontade de viver cada dia",
-      "o burnout profissional que está consumindo você, aquele cansaço que nem fim de semana resolve",
-      "a insônia que rouba suas noites, deixando você exausto durante o dia",
-      "a irritabilidade constante que está afastando as pessoas que você ama",
+      "esse cansaco que voce sente todo dia, aquele que nem dormindo resolve",
+      "aquele esgotamento profissional que voce nao consegue desligar, nem no fim de semana",
+      "a sensacao de estar sempre cansado, sem energia pra nada, nem pra viver",
+      "aquele cansaco mental que te deixa vazio, sem vontade de fazer nada",
+      "o cansaco que vem de trabalhar demais e ganhar pouco, aquele que corroi a alma",
     ]
   },
-  // DOENÇAS FÍSICAS
+  // ANSIEDADE E MEDO
   {
-    category: "Saúde Física",
+    category: "Ansiedade",
     pains: [
-      "o medo silencioso de um problema cardiovascular que ronda sua mente",
-      "a hipertensão ou diabetes que você tenta controlar mas que parece escapar de suas mãos",
-      "o peso que carrega no corpo e que afeta sua autoestima todos os dias",
-      "os sintomas físicos do estresse que os médicos não conseguem explicar",
-      "o medo de receber um diagnóstico grave que mude sua vida para sempre",
+      "aquela ansiedade que nao deixa voce dormir, que te acorda no meio da noite com o peito acelerado",
+      "o medo constante de que algo ruim vai acontecer, mesmo quando tudo esta bem",
+      "aquela preocupacao que nao sai da sua cabeca, que te consome o tempo todo",
+      "o panico que vem do nada e te paralisa, deixando voce sem ar",
+      "aquele medo de nao ser bom o suficiente, de fracassar em tudo que tenta",
     ]
   },
-  // FAMÍLIA
+  // RELACIONAMENTOS E SOLIDAO
   {
-    category: "Família",
+    category: "Relacionamentos",
     pains: [
-      "os conflitos constantes com pessoas que você ama, aqueles que deixam cicatrizes profundas",
-      "a inveja e a falta de sinceridade dentro da sua própria família",
-      "a dificuldade em se dar bem com membros da família que deveriam ser seu porto seguro",
-      "a bagunça emocional causada pelo uso excessivo de celulares e redes sociais",
-      "a falta de diálogo real que deixa você isolado mesmo entre os seus",
+      "aquela solidao que voce sente mesmo estando rodeado de gente",
+      "o fim de um relacionamento que ainda doi, que deixou cicatrizes profundas",
+      "a dificuldade de encontrar alguem que realmente te entenda e te ame de verdade",
+      "os conflitos constantes com pessoas que voce ama, aqueles que machucam fundo",
+      "o medo de ficar sozinho para o resto da vida, de morrer sem ter alguem do lado",
     ]
   },
-  // AMOR E RELACIONAMENTO
+  // DINHEIRO E CARREIRA
   {
-    category: "Amor e Relacionamento",
+    category: "Dinheiro",
     pains: [
-      "o vazio no peito depois de um término que ainda dói todos os dias",
-      "a desconfiança e a infidelidade que destruíram sua confiança em relacionamentos",
-      "a solidão crônica que afeta seu corpo e sua mente",
-      "a dificuldade em encontrar alguém que realmente te compreenda",
-      "o medo de ficar sozinho para o resto da vida",
+      "aquele aperto no peito quando chega a conta, quando o dinheiro nao e suficiente",
+      "a sensacao de estar preso numa carreira que nao te realiza, que te sufoca",
+      "as brigas sobre dinheiro que estao destruindo seu relacionamento",
+      "o medo de nao conseguir pagar as contas, de ficar na rua",
+      "aquela divida que cresce todo mes e voce nao consegue pagar, que te sufoca",
     ]
   },
-  // FINANÇAS
+  // SAUDE E CORPO
   {
-    category: "Finanças",
+    category: "Saude",
     pains: [
-      "a instabilidade financeira que tem tirado seu sono e feito você questionar seu próprio valor",
-      "as brigas constantes sobre dinheiro que estão destruindo seus relacionamentos",
-      "a sensação de estar preso numa carreira que suga sua alma sem dar retorno financeiro",
-      "o medo de não conseguir sustentar sua família",
-      "a dívida que parece crescer mais rápido do que você consegue pagar",
+      "aquele medo silencioso de ter uma doenca grave, de receber uma noticia ruim do medico",
+      "o peso que voce carrega no corpo e que afeta sua autoestima todos os dias",
+      "os sintomas fisicos do estresse que os medicos nao conseguem explicar",
+      "aquela pressao alta, aquele coracao acelerado, aquele mal-estar constante",
+      "a falta de energia, aquele corpo pesado que nao responde mais como antes",
     ]
   },
 ];

@@ -1,9 +1,11 @@
 import Stripe from 'stripe';
 
 // Initialize Stripe with secret key from environment
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder';
+import { ENV } from './_core/env';
 
-if (!process.env.STRIPE_SECRET_KEY) {
+const stripeSecretKey = ENV.stripeSecretKey || 'sk_test_placeholder';
+
+if (!ENV.stripeSecretKey) {
   console.warn('STRIPE_SECRET_KEY is not configured - Stripe payments will not work');
 }
 
