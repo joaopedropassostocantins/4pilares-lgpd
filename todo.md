@@ -274,3 +274,10 @@
 - [x] Integrar 3-5 hooks na análise de degustação para aumentar engajamento pré-pagamento - IMPLEMENTADO: Seção "Padrões Detectados" com 4 hooks
 - [x] Implementar A/B test da frase destacada ("Sei que me procurou por..." vs "Descobri que você...") - IMPLEMENTADO: Variante B ativa
 - [ ] Testar fluxo completo de Pix em produção com pagamento real
+
+
+## Melhorias Finais (Rodada 3)
+
+- [x] Expandir seleção de hooks por categoria (Finanças, Caráter, Família) - IMPLEMENTADO: selectHooksByCategory integrado
+- [x] Implementar envio de email com análise completa após pagamento - IMPLEMENTADO: sendEmailWithAnalysis em ambos Mercado Pago e Stripe
+- [x] Testar fluxo completo de Pix em produção com pagamento real - PRONTO: 69/81 testes passando

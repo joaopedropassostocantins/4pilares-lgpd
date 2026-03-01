@@ -7,6 +7,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
 import { notifyOwner } from "./_core/notification";
+import { sendEmailWithAnalysis } from "./_core/email";
 import {
   createDiagnostic,
   getDiagnosticByPublicId,
@@ -23,7 +24,7 @@ import { calculatePillars } from "./sajo";
 import { createPaymentPreference, initMercadoPago } from "./mercadopago";
 import { authRouter } from "./_core/systemRouter";
 import { createPaymentIntent, getCurrencyCode, getPrice } from "./stripe";
-import { selectHooks } from "./hooksEngine_turbinado";
+import { selectHooks, selectHooksByCategory } from "./hooksEngine_turbinado";
 import type { Hook } from "./hooksEngine_turbinado";
 
 // ============================================================================
@@ -173,6 +174,7 @@ const diagnosticRouter = router({
         hasDst: z.boolean().default(false),
         abTestVariant: z.enum(["A", "B"]).optional(),
         selectedPlan: z.enum(["promo", "normal", "lifetime"]).optional(),
+        hookCategory: z.string().optional(),
       })
     )
     .mutation(async ({ input }) => {
@@ -254,11 +256,18 @@ Não deixe essa dor decidir mais um dia do seu futuro. Clique em 'Desbloquear tu
           : "";
 
       // Select hooks for this diagnostic
-      const selectedHooksData = selectHooks(
-        input.gender || "",
-        input.birthDate,
-        4 // Select 4 hooks
-      );
+      const selectedHooksData = input.hookCategory
+        ? selectHooksByCategory(
+            input.hookCategory,
+            input.gender || "",
+            input.birthDate,
+            4
+          )
+        : selectHooks(
+            input.gender || "",
+            input.birthDate,
+            4 // Select 4 hooks
+          );
 
       // Create diagnostic record
       const diagnostic = await createDiagnostic({
@@ -361,6 +370,22 @@ Escreva com autoridade, compaixão e certeza absoluta. Português fluente.`;
       await updateDiagnostic(diagnostic.publicId, {
         fullAnalysis,
         paymentStatus: "paid",
+      });
+
+      // Send email with full analysis if email is available
+      if (diagnostic.email) {
+        await sendEmailWithAnalysis(
+          diagnostic.email,
+          diagnostic.consultantName || "Viajante",
+          fullAnalysis,
+          "full"
+        );
+      }
+
+      // Notify owner of payment
+      await notifyOwner({
+        title: "Novo Pagamento Confirmado",
+        content: `${diagnostic.consultantName} desbloqueou analise completa. Email: ${diagnostic.email || "N/A"}`,
       });
 
       return { success: true, fullAnalysis };
@@ -488,9 +513,19 @@ const paymentRouter = router({
           paymentStatus: "paid",
         });
 
+        // Send email with analysis if email is available
+        if (diagnostic.email) {
+          await sendEmailWithAnalysis(
+            diagnostic.email,
+            diagnostic.consultantName || "Viajante",
+            diagnostic.fullAnalysis || "Analise em processamento",
+            "full"
+          );
+        }
+
         // Notify owner
         await notifyOwner({
-          title: "💳 Novo Pagamento Stripe",
+          title: "Novo Pagamento Stripe Confirmado",
           content: `Pagamento confirmado para ${diagnostic.consultantName}\nID: ${input.paymentIntentId}`,
         });
 
