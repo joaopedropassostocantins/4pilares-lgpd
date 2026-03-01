@@ -7,6 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ModuleCard from "@/components/ModuleCard";
+import ComingSoonBanner from "@/components/ComingSoonBanner";
+import { modules } from "@/data/modules";
 import { Loader2, Search, MapPin, Sparkles, Star, Moon, Sun, ChevronDown, TrendingUp, Heart, Zap, MessageCircle, ChevronUp, AlertCircle, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -596,6 +599,26 @@ export default function Home() {
             </form>
           </CardContent>
         </Card>
+      </section>
+
+      {/* ── COMING SOON BANNER ── */}
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <ComingSoonBanner />
+      </div>
+
+      {/* ── MODULES SECTION ── */}
+      <section className="max-w-6xl mx-auto px-4 py-16 bg-gradient-to-b from-primary/5 to-transparent rounded-2xl">
+        <h2 className="text-3xl font-bold text-center text-primary mb-4" style={{ fontFamily: "'Cinzel', serif" }}>
+          Novos Módulos em Pré-Lançamento
+        </h2>
+        <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+          Além da análise dos 4 Pilares SAJO, estamos desenvolvendo 6 módulos especializados para diferentes áreas da sua vida. Garanta sua vaga na fila de espera.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {modules.map((module) => (
+            <ModuleCard key={module.id} module={module} />
+          ))}
+        </div>
       </section>
 
       {/* ── TESTIMONIALS ── */}
