@@ -38,6 +38,9 @@ export async function processMercadoPagoWebhook(event: {
       return;
     }
 
+    // Log payment method for debugging
+    console.log(`[Webhook] Payment method: ${paymentDetails.paymentMethod}, type: ${paymentDetails.paymentType}`);
+
     // Find diagnostic by payment ID
     const db = await getDb();
     if (!db) {
@@ -106,9 +109,10 @@ export async function processMercadoPagoWebhook(event: {
     console.log(`[Webhook] Payment confirmed and analysis generated for: ${diagnosticRecord.publicId}`);
 
     // Notify owner of successful payment
+    const paymentMethodLabel = paymentDetails.paymentType === "pix" ? "PIX" : "Cartao";
     await notifyOwner({
       title: "✦ Pagamento Confirmado!",
-      content: `Pagamento de R$ ${paymentDetails.amount} foi confirmado. Análise desbloqueada para ${diagnosticRecord.consultantName || "Viajante"}. ID: ${paymentId}`,
+      content: `Pagamento de R$ ${paymentDetails.amount} via ${paymentMethodLabel} foi confirmado. Analise desbloqueada para ${diagnosticRecord.consultantName || "Viajante"}. ID: ${paymentId}`,
     });
   } catch (error) {
     console.error("[Webhook] Error processing Mercado Pago event:", error);

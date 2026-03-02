@@ -21,7 +21,7 @@ import {
   getAccuracyStats,
 } from "./db";
 import { calculatePillars } from "./sajo";
-import { createPaymentPreference, initMercadoPago } from "./mercadopago";
+import { createPaymentPreference, initMercadoPago, createPixPayment } from "./mercadopago";
 import { authRouter } from "./_core/systemRouter";
 import { createPaymentIntent, getCurrencyCode, getPrice } from "./stripe";
 import { selectHooks, selectHooksByCategory } from "./hooksEngine_turbinado";
@@ -445,6 +445,42 @@ const paymentRouter = router({
       });
 
       return preference;
+    }),
+
+  // Create PIX payment and return QR code
+  createPixPayment: publicProcedure
+    .input(
+      z.object({
+        diagnosticPublicId: z.string(),
+        amount: z.number().default(29.99),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const diagnostic = await getDiagnosticByPublicId(input.diagnosticPublicId);
+      if (!diagnostic) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Diagnostic not found" });
+      }
+
+      const pixPayment = await createPixPayment({
+        diagnosticId: diagnostic.publicId,
+        userEmail: diagnostic.email || `user-${input.diagnosticPublicId}@fusion-sajo.com`,
+        userName: diagnostic.consultantName || "Viajante",
+        amount: input.amount,
+      });
+
+      if (pixPayment.paymentId) {
+        await updateDiagnostic(diagnostic.publicId, {
+          paymentId: String(pixPayment.paymentId),
+        });
+      }
+
+      console.log("[Mercado Pago PIX] Payment created:", {
+        paymentId: pixPayment.paymentId,
+        qrCode: pixPayment.qrCode ? "present" : "missing",
+        copyAndPaste: pixPayment.copyAndPaste ? "present" : "missing",
+      });
+
+      return pixPayment;
     }),
 
   // ========================================================================

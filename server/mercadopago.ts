@@ -182,6 +182,74 @@ export async function processWebhook(webhookData: any) {
 }
 
 /**
+ * Create a PIX payment and return QR code
+ * Returns QR code image URL and copy-paste code
+ */
+export async function createPixPayment(input: {
+  diagnosticId: string;
+  userEmail: string;
+  userName: string;
+  amount: number;
+}) {
+  try {
+    const client = getMercadoPagoClient();
+    const payment = new Payment(client);
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const validEmail = emailRegex.test(input.userEmail)
+      ? input.userEmail
+      : `user-${input.diagnosticId}@fusion-sajo.com`;
+
+    // Validate userName (max 256 chars, no special chars)
+    const validName = input.userName
+      .substring(0, 256)
+      .replace(/[^a-zA-Z0-9\s\-\.]/g, '');
+
+    console.log("[Mercado Pago] Creating PIX payment with:", {
+      email: validEmail,
+      name: validName,
+      amount: input.amount,
+      diagnosticId: input.diagnosticId,
+    });
+
+    const response = await payment.create({
+      body: {
+        transaction_amount: input.amount,
+        description: "FUSION-SAJO - Analise Completa dos 4 Pilares",
+        payment_method_id: "pix",
+        payer: {
+          email: validEmail,
+          first_name: validName.split(" ")[0],
+          last_name: validName.split(" ").slice(1).join(" ") || "User",
+        },
+        external_reference: input.diagnosticId,
+      },
+    });
+
+    console.log("[Mercado Pago] PIX payment created successfully:", response.id);
+
+    const pixData = response.point_of_interaction?.transaction_data as any;
+    
+    return {
+      paymentId: response.id,
+      qrCode: pixData?.qr_code,
+      qrCodeUrl: pixData?.qr_code_url,
+      copyAndPaste: pixData?.copy_and_paste,
+      status: response.status,
+      amount: response.transaction_amount,
+    };
+  } catch (error: any) {
+    console.error("[Mercado Pago] Failed to create PIX payment:", {
+      message: error?.message,
+      status: error?.status,
+      response: error?.response?.data,
+    });
+    throw error;
+  }
+}
+
+/**
  * Verify webhook signature (optional but recommended)
  */
 export function verifyWebhookSignature(
