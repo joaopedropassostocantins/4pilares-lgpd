@@ -384,3 +384,26 @@
 - [x] Insistir que os 3 ocultos são graves e importantes
 - [x] Reduzir degustação pela metade com cadeado/blur para pagamento
 - [x] Testar fluxo completo de degustação reduzida
+
+## Imagens dos Módulos (Mar 2026)
+
+- [ ] Gerar imagem Módulo A - Oráculo dos Investimentos
+- [ ] Gerar imagem Módulo B - Conselheiro Judicial
+- [ ] Gerar imagem Módulo C - Navegador de Conflitos
+- [ ] Gerar imagem Módulo D - Oráculo do Amor
+- [ ] Gerar imagem Módulo E - Caminho de Saída
+- [ ] Gerar imagem Módulo F - Conexão com Quem Partiu
+- [ ] Upload imagens para CDN
+- [ ] Integrar imagens nos cards de módulos
+- [ ] Melhorar visual dos cards com ícones chamativos
+
+
+## PIX Direto + UX de Pagamento (Mar 2026)
+
+- [x] Implementar PIX direto com QR code (dados reais: João Pedro P Passos)
+- [x] Adicionar botão WhatsApp para enviar comprovante
+- [x] Implementar cadeado funcional logo abaixo do texto visível
+- [x] Smooth scroll ao clicar no cadeado/desbloqueio para #payment-options
+- [x] Remover PIX do Mercado Pago, manter apenas cartão
+- [x] Aplicar CSS de travamento (gradiente, dashed border, hover effects)
+- [x] Testar fluxo completo mobile e desktop

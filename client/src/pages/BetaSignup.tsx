@@ -181,7 +181,7 @@ export default function BetaSignup() {
                   onCheckedChange={(checked) =>
                     setFormData((prev) => ({ ...prev, lgpdConsent: checked as boolean }))
                   }
-                  className="mt-1"
+                  className="mt-1" style={{borderColor: '#f9f9f9'}}
                 />
                 <label htmlFor="lgpd" className="text-sm text-muted-foreground cursor-pointer">
                   Concordo que meus dados sejam tratados conforme a LGPD. Posso solicitar exclusão a qualquer momento em privacidade@fusionsajo.com.br *

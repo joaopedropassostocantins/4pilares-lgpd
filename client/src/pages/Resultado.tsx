@@ -283,9 +283,33 @@ export default function Resultado() {
                   </div>
                 );
               })}
-              <p className="text-xs text-muted-foreground text-center mt-4 pt-3 border-t border-primary/20">
-                Desbloqueie a análise completa para entender como cada padrão afeta seu destino
-              </p>
+              {/* Lock Button Section */}
+              <div id="lock-container" className="mt-8 pt-6 border-t-2 border-dashed border-[#d4af37]">
+                <div className="text-center space-y-4">
+                  <div className="inline-flex items-center justify-center p-4 rounded-full bg-[#d4af37]/20">
+                    <Lock className="h-8 w-8 text-[#d4af37]" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-[#d4af37]" style={{ fontFamily: "'Playfair Display', serif" }}>
+                    3 Padrões Graves Detectados
+                  </h3>
+                  <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                    Seus Pilares revelaram padrões urgentes que precisam de atenção imediata. Desbloqueie agora para ver o que está escondido.
+                  </p>
+                  <button
+                    id="btn-unlock"
+                    className="btn-unlock w-full py-4 px-6 rounded-full text-lg font-bold bg-gradient-to-r from-[#d4af37] to-[#e68c0f] text-black shadow-lg hover:shadow-xl transition-all"
+                    onClick={() => {
+                      const paymentSection = document.getElementById('payment-options');
+                      if (paymentSection) {
+                        paymentSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }}
+                  >
+                    <Lock className="inline mr-2 h-5 w-5" />
+                    DESBLOQUEIE A ANÁLISE COMPLETA AGORA
+                  </button>
+                </div>
+              </div>
             </CardContent>
           </Card>
         )}
@@ -378,7 +402,7 @@ export default function Resultado() {
 
         {/* -- PAYMENT SECTION (PROMINENT & VISIBLE) -- */}
         {!isPaid && (
-          <Card className="bg-gradient-to-br from-primary/20 to-primary/10 border-primary/50 mb-8 shadow-lg">
+          <Card id="payment-options" className="bg-gradient-to-br from-primary/20 to-primary/10 border-primary/50 mb-8 shadow-lg scroll-mt-8">
             <CardHeader className="text-center">
               <CardTitle
                 className="text-2xl mystic-glow"
