@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { CreditCard, QrCode, Loader2 } from 'lucide-react';
 import { StripeCheckout } from './StripeCheckout';
 import { RazorpayCheckout } from './RazorpayCheckout';
+import { PixDirecto } from './PixDirecto';
 
 interface PaymentMethodSelectorProps {
   diagnosticPublicId: string;
@@ -26,7 +27,7 @@ export function PaymentMethodSelector({
   mercadoPagoLoading = false,
   mercadoPagoReady = false,
 }: PaymentMethodSelectorProps) {
-  const [selectedMethod, setSelectedMethod] = useState<'pix' | 'mercadopago' | 'stripe' | 'razorpay' | null>(null);
+  const [selectedMethod, setSelectedMethod] = useState<'pixdireto' | 'mercadopago' | 'stripe' | 'razorpay' | null>(null);
   const [razorpayOrderId, setRazorpayOrderId] = useState<string | null>(null);
   const [razorpayLoading, setRazorpayLoading] = useState(false);
 
@@ -41,8 +42,29 @@ export function PaymentMethodSelector({
 
   return (
     <div className="space-y-4">
-      {/* Payment Method Selection - Mercado Pago Card Only */}
+      {/* Payment Method Selection - PIX Direto & Mercado Pago */}
       <div className="grid grid-cols-1 gap-3">
+
+        {/* PIX Direto Option */}
+        <Card
+          className={`p-4 cursor-pointer border-2 transition-all ${
+            selectedMethod === 'pixdireto'
+              ? 'border-[#d4af37] bg-[rgba(212,175,55,0.1)]'
+              : 'border-primary/30 hover:border-[#d4af37]'
+          }`}
+          onClick={() => setSelectedMethod('pixdireto')}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <QrCode className="h-6 w-6 text-[#d4af37]" />
+            <div>
+              <div className="font-bold text-[#d4af37]">⚡ PIX Direto</div>
+              <div className="text-xs text-muted-foreground">Sem cadastro</div>
+            </div>
+          </div>
+          <div className="text-sm text-muted-foreground">
+            Liberação imediata via QR code
+          </div>
+        </Card>
 
         {/* Mercado Pago Cartao Option */}
         <Card
@@ -115,6 +137,12 @@ export function PaymentMethodSelector({
       {/* Action Buttons */}
       <div className="space-y-3">
 
+        {selectedMethod === 'pixdireto' && (
+          <PixDirecto
+            price={price}
+            diagnosticPublicId={diagnosticPublicId}
+          />
+        )}
 
         {selectedMethod === 'mercadopago' && (
           <Button
@@ -172,9 +200,11 @@ export function PaymentMethodSelector({
       </div>
 
       {/* Info Message */}
-      <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900">
-        <strong>PIX Direto:</strong> Para pagamento via PIX sem cadastro, use a opcao PIX Direto acima. Para cartao, use Mercado Pago.
-      </div>
+      {!selectedMethod && (
+        <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900">
+          <strong>PIX Direto:</strong> Liberação imediata sem cadastro. <strong>Cartão:</strong> Processamento via Mercado Pago.
+        </div>
+      )}
 
       {/* Info */}
       <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900">
