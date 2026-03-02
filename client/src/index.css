@@ -40,47 +40,59 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  /* Custom colors */
+  --color-gold: oklch(0.75 0.14 85);
+  --color-gold-dark: oklch(0.60 0.14 85);
+  --color-purple: oklch(0.45 0.18 300);
+  --color-purple-light: oklch(0.55 0.18 300);
 }
 
 :root {
-  /* FUSION-SAJO — Xamanismo Coreano Theme */
   --radius: 0.65rem;
-  /* Paleta: Azul Profundo (Yin), Vermelho Vivo (Yang), Amarelo Ouro (Equilíbrio), Branco Puro */
-  --background: oklch(0.95 0.02 60);  /* Branco quase puro para legibilidade */
-  --foreground: oklch(0.15 0.04 240); /* Azul profundo para texto */
-  --card: oklch(0.98 0.01 60);        /* Branco com leve tom quente */
-  --card-foreground: oklch(0.15 0.04 240); /* Azul profundo */
-  --popover: oklch(0.98 0.01 60);
-  --popover-foreground: oklch(0.15 0.04 240);
-  --primary: oklch(0.60 0.20 25);     /* Vermelho vivo (Yang) */
-  --primary-foreground: oklch(0.98 0.01 60); /* Branco */
-  --secondary: oklch(0.35 0.15 240);  /* Azul profundo (Yin) */
-  --secondary-foreground: oklch(0.98 0.01 60);
-  --muted: oklch(0.80 0.05 60);
-  --muted-foreground: oklch(0.40 0.08 240); /* Azul mais claro */
-  --accent: oklch(0.75 0.18 80);      /* Amarelo ouro (Equilíbrio) */
-  --accent-foreground: oklch(0.15 0.04 240); /* Azul profundo */
-  --destructive: oklch(0.60 0.20 25); /* Vermelho */
+  /* FUSION-SAJO — Tema Escuro Místico */
+  /* Fundo: #0D0B1A → oklch ~0.10 */
+  --background: oklch(0.10 0.03 280);
+  --foreground: oklch(0.93 0.02 300);
+  /* Cards: roxo escuro sutil */
+  --card: oklch(0.15 0.04 280);
+  --card-foreground: oklch(0.93 0.02 300);
+  --popover: oklch(0.15 0.04 280);
+  --popover-foreground: oklch(0.93 0.02 300);
+  /* Primary: dourado #C9A84C */
+  --primary: oklch(0.75 0.14 85);
+  --primary-foreground: oklch(0.10 0.03 280);
+  /* Secondary: roxo #6B2FA0 */
+  --secondary: oklch(0.45 0.18 300);
+  --secondary-foreground: oklch(0.93 0.02 300);
+  /* Muted */
+  --muted: oklch(0.20 0.04 280);
+  --muted-foreground: oklch(0.65 0.04 300);
+  /* Accent: roxo claro */
+  --accent: oklch(0.30 0.10 300);
+  --accent-foreground: oklch(0.93 0.02 300);
+  /* Destructive */
+  --destructive: oklch(0.55 0.22 25);
   --destructive-foreground: oklch(0.98 0.01 60);
-  --border: oklch(0.85 0.05 240);     /* Azul muito claro */
-  --input: oklch(0.98 0.01 60);
-  --ring: oklch(0.60 0.20 25);        /* Vermelho */
-  --chart-1: oklch(0.60 0.20 25);     /* Vermelho */
-  --chart-2: oklch(0.35 0.15 240);    /* Azul */
-  --chart-3: oklch(0.75 0.18 80);     /* Amarelo */
-  --chart-4: oklch(0.50 0.12 10);     /* Marrom escuro */
-  --chart-5: oklch(0.70 0.12 240);    /* Azul claro */
-  --sidebar: oklch(0.98 0.01 60);
-  --sidebar-foreground: oklch(0.15 0.04 240);
-  --sidebar-primary: oklch(0.60 0.20 25);
-  --sidebar-primary-foreground: oklch(0.98 0.01 60);
-  --sidebar-accent: oklch(0.35 0.15 240);
-  --sidebar-accent-foreground: oklch(0.98 0.01 60);
-  --sidebar-border: oklch(0.85 0.05 240);
-  --sidebar-ring: oklch(0.60 0.20 25);
+  /* Borders */
+  --border: oklch(0.25 0.06 280);
+  --input: oklch(0.18 0.04 280);
+  --ring: oklch(0.75 0.14 85);
+  /* Charts */
+  --chart-1: oklch(0.75 0.14 85);
+  --chart-2: oklch(0.45 0.18 300);
+  --chart-3: oklch(0.55 0.22 25);
+  --chart-4: oklch(0.60 0.12 145);
+  --chart-5: oklch(0.65 0.10 240);
+  /* Sidebar */
+  --sidebar: oklch(0.12 0.04 280);
+  --sidebar-foreground: oklch(0.93 0.02 300);
+  --sidebar-primary: oklch(0.75 0.14 85);
+  --sidebar-primary-foreground: oklch(0.10 0.03 280);
+  --sidebar-accent: oklch(0.30 0.10 300);
+  --sidebar-accent-foreground: oklch(0.93 0.02 300);
+  --sidebar-border: oklch(0.25 0.06 280);
+  --sidebar-ring: oklch(0.75 0.14 85);
 }
-
-/* Dark mode inherits same mystic theme */
 
 @layer base {
   * {
@@ -88,7 +100,12 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Noto Serif', serif;
+    font-family: 'Lato', sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+    color: oklch(0.93 0.02 300);
+    font-weight: 700;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
@@ -103,15 +120,49 @@
   }
 }
 
-/* ===================== MYSTIC STYLES ===================== */
+/* ===================== GOLD CTA BUTTON ===================== */
 
-.mystic-gradient {
-  background: linear-gradient(135deg, oklch(0.95 0.02 60) 0%, oklch(0.92 0.03 240) 50%, oklch(0.90 0.04 80) 100%);
-  min-height: 100vh;
+.btn-gold {
+  background: linear-gradient(135deg, #C9A84C, #E8C95A, #C9A84C);
+  color: #0D0B1A;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  padding: 16px 36px;
+  border: none;
+  border-radius: 50px;
+  box-shadow: 0 0 20px rgba(201, 168, 76, 0.4), 0 0 40px rgba(201, 168, 76, 0.15);
+  display: inline-block;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 52px;
+  text-align: center;
+  letter-spacing: 0.5px;
 }
 
-.shimmer-text {
-  background: linear-gradient(90deg, oklch(0.60 0.20 25), oklch(0.75 0.18 80), oklch(0.60 0.20 25));
+.btn-gold:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(201, 168, 76, 0.6), 0 0 60px rgba(201, 168, 76, 0.25);
+}
+
+.btn-gold:active {
+  transform: translateY(0);
+}
+
+/* Pulse animation for CTA */
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 20px rgba(201, 168, 76, 0.4); }
+  50% { box-shadow: 0 0 35px rgba(201, 168, 76, 0.7), 0 0 60px rgba(201, 168, 76, 0.3); }
+}
+
+.btn-gold-pulse {
+  animation: pulse-gold 2s ease-in-out infinite;
+}
+
+/* ===================== SHIMMER TEXT ===================== */
+
+.shimmer-gold {
+  background: linear-gradient(90deg, #C9A84C, #E8C95A, #C9A84C);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -124,9 +175,77 @@
   100% { background-position: 200% center; }
 }
 
-.mystic-glow {
-  text-shadow: 0 0 20px oklch(0.60 0.20 25 / 0.6), 0 0 40px oklch(0.60 0.20 25 / 0.3);
+/* ===================== GLOW EFFECTS ===================== */
+
+.glow-purple {
+  text-shadow: 0 0 20px rgba(107, 47, 160, 0.6), 0 0 40px rgba(107, 47, 160, 0.3);
 }
+
+.glow-gold {
+  text-shadow: 0 0 20px rgba(201, 168, 76, 0.6), 0 0 40px rgba(201, 168, 76, 0.3);
+}
+
+/* ===================== PARTICLES ===================== */
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); opacity: 0.3; }
+  50% { transform: translateY(-30px); opacity: 0.8; }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.2; }
+  33% { transform: translateY(-20px) translateX(10px); opacity: 0.5; }
+  66% { transform: translateY(-10px) translateX(-10px); opacity: 0.3; }
+}
+
+.particle {
+  animation: float 5s ease-in-out infinite;
+  pointer-events: none;
+}
+.particle:nth-child(2) { animation-delay: 1.2s; animation-duration: 6s; }
+.particle:nth-child(3) { animation-delay: 2.4s; animation-duration: 7s; }
+.particle:nth-child(4) { animation-delay: 0.8s; animation-duration: 5.5s; }
+.particle:nth-child(5) { animation-delay: 3s; animation-duration: 8s; }
+
+.particle-slow {
+  animation: float-slow 10s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ===================== BLUR PREVIEW ===================== */
+
+.blur-preview {
+  filter: blur(6px);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ===================== PROGRESS BAR ===================== */
+
+.progress-step {
+  transition: all 0.4s ease;
+}
+
+.progress-step.active {
+  background: linear-gradient(135deg, #C9A84C, #E8C95A);
+  color: #0D0B1A;
+}
+
+.progress-step.completed {
+  background: #6B2FA0;
+  color: white;
+}
+
+/* ===================== COUNTDOWN ===================== */
+
+.countdown-digit {
+  font-family: 'Playfair Display', serif;
+  font-variant-numeric: tabular-nums;
+  min-width: 2.5ch;
+  text-align: center;
+}
+
+/* ===================== ORNAMENTAL DIVIDER ===================== */
 
 .ornamental-divider {
   display: flex;
@@ -139,8 +258,10 @@
   content: '';
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, transparent, oklch(0.60 0.20 25 / 0.5), transparent);
+  background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.5), transparent);
 }
+
+/* ===================== ELEMENT BADGES ===================== */
 
 .element-badge {
   display: inline-flex;
@@ -152,67 +273,87 @@
   font-weight: 600;
 }
 
-.element-Madeira { background: oklch(0.70 0.12 145 / 0.2); color: oklch(0.30 0.12 145); border: 1.5px solid oklch(0.30 0.12 145); }
-.element-Fogo    { background: oklch(0.70 0.15 25 / 0.2);  color: oklch(0.40 0.18 25);  border: 1.5px solid oklch(0.40 0.18 25); }
-.element-Terra   { background: oklch(0.75 0.10 80 / 0.2);  color: oklch(0.35 0.12 80);  border: 1.5px solid oklch(0.35 0.12 80); }
-.element-Metal   { background: oklch(0.80 0.03 60 / 0.2);  color: oklch(0.25 0.03 60);  border: 1.5px solid oklch(0.25 0.03 60); }
-.element-Água    { background: oklch(0.65 0.10 240 / 0.2); color: oklch(0.25 0.12 240); border: 1.5px solid oklch(0.25 0.12 240); }
+.element-Madeira { background: rgba(76, 175, 80, 0.15); color: #81C784; border: 1.5px solid #4CAF50; }
+.element-Fogo    { background: rgba(244, 67, 54, 0.15); color: #E57373; border: 1.5px solid #F44336; }
+.element-Terra   { background: rgba(201, 168, 76, 0.15); color: #C9A84C; border: 1.5px solid #C9A84C; }
+.element-Metal   { background: rgba(189, 189, 189, 0.15); color: #BDBDBD; border: 1.5px solid #9E9E9E; }
+.element-Água    { background: rgba(33, 150, 243, 0.15); color: #64B5F6; border: 1.5px solid #2196F3; }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.6; }
-  50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
-}
-.particle {
-  animation: float 4s ease-in-out infinite;
-}
-.particle:nth-child(2) { animation-delay: 1s; }
-.particle:nth-child(3) { animation-delay: 2s; }
-.particle:nth-child(4) { animation-delay: 3s; }
+/* ===================== FORM INPUTS ===================== */
 
-.btn-pagamento {
-  background: linear-gradient(135deg, #ff4d4d, #ff8c00);
+input, textarea, select {
+  background: oklch(0.15 0.04 280) !important;
+  color: oklch(0.93 0.02 300) !important;
+  border: 1.5px solid oklch(0.30 0.06 280) !important;
+  font-family: 'Lato', sans-serif;
+  font-size: 16px;
+  min-height: 48px;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: oklch(0.75 0.14 85) !important;
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.15) !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: oklch(0.50 0.04 280) !important;
+}
+
+/* ===================== STAR RATING ===================== */
+
+.star-rating {
+  color: #C9A84C;
+  letter-spacing: 2px;
+}
+
+/* ===================== SCROLL SMOOTH ===================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ===================== STICKY BANNER ===================== */
+
+.sticky-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: linear-gradient(90deg, #6B2FA0, #4A1D70);
   color: white;
-  font-weight: bold;
-  font-size: 1.3rem;
-  padding: 18px 36px;
-  border: none;
-  border-radius: 50px;
-  box-shadow: 0 8px 25px rgba(255, 77, 77, 0.4);
-  margin: 30px auto 0;
-  display: block;
-  cursor: pointer;
+  padding: 8px 16px;
+  text-align: center;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* ===================== MODULE CARDS ===================== */
+
+.module-card {
+  background: oklch(0.15 0.04 280);
+  border: 1px solid oklch(0.25 0.08 300);
+  border-radius: 12px;
+  padding: 24px;
   transition: all 0.3s ease;
 }
 
-.btn-pagamento:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 35px rgba(255, 77, 77, 0.6);
+.module-card:hover {
+  border-color: oklch(0.75 0.14 85);
+  box-shadow: 0 0 20px rgba(107, 47, 160, 0.3), 0 0 40px rgba(201, 168, 76, 0.1);
+  transform: translateY(-4px);
 }
 
-.btn-pagamento:active {
-  transform: translateY(0);
-  box-shadow: 0 6px 20px rgba(255, 77, 77, 0.4);
-}
+/* ===================== CONTAINER ===================== */
 
 @layer components {
-  /**
-   * Custom container utility that centers content and adds responsive padding.
-   *
-   * This overrides Tailwind's default container behavior to:
-   * - Auto-center content (mx-auto)
-   * - Add responsive horizontal padding
-   * - Set max-width for large screens
-   *
-   * Usage: <div className="container">...</div>
-   *
-   * For custom widths, use max-w-* utilities directly:
-   * <div className="max-w-6xl mx-auto px-4">...</div>
-   */
   .container {
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1rem; /* 16px - mobile padding */
+    padding-left: 1rem;
     padding-right: 1rem;
   }
 
@@ -223,100 +364,80 @@
 
   @media (min-width: 640px) {
     .container {
-      padding-left: 1.5rem; /* 24px - tablet padding */
+      padding-left: 1.5rem;
       padding-right: 1.5rem;
     }
   }
 
   @media (min-width: 1024px) {
     .container {
-      padding-left: 2rem; /* 32px - desktop padding */
+      padding-left: 2rem;
       padding-right: 2rem;
-      max-width: 1280px; /* Standard content width */
+      max-width: 1280px;
     }
   }
 }
 
-/* ===================== IMPROVED CONTRAST STYLES ===================== */
+/* ===================== PAYMENT BUTTON (legacy) ===================== */
 
-/* Card com melhor contraste */
-.prose-mystic {
-  color: oklch(0.15 0.04 240); /* Azul profundo para melhor legibilidade */
-  line-height: 1.8;
-  font-size: 1rem;
+.btn-pagamento {
+  background: linear-gradient(135deg, #C9A84C, #E8C95A, #C9A84C);
+  color: #0D0B1A;
+  font-weight: bold;
+  font-size: 1.3rem;
+  padding: 18px 36px;
+  border: none;
+  border-radius: 50px;
+  box-shadow: 0 0 25px rgba(201, 168, 76, 0.4);
+  margin: 30px auto 0;
+  display: block;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-/* Headings com contraste máximo */
-h1, h2, h3, h4, h5, h6 {
-  color: oklch(0.15 0.04 240); /* Azul profundo */
-  font-weight: 700;
+.btn-pagamento:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 35px rgba(201, 168, 76, 0.6);
 }
 
-/* Links com cor vibrante */
-a {
-  color: oklch(0.60 0.20 25); /* Vermelho vivo */
-  text-decoration: underline;
-}
+/* ===================== ARCHETYPE CARDS ===================== */
 
-a:hover {
-  color: oklch(0.35 0.15 240); /* Azul mais escuro */
-}
-
-/* Buttons com melhor contraste */
-button {
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-/* Muted text com melhor legibilidade */
-.text-muted-foreground {
-  color: oklch(0.40 0.08 240) !important; /* Azul mais claro mas legível */
-}
-
-/* Cards com sombra para profundidade */
-.bg-card {
-  background-color: oklch(0.98 0.01 60);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-/* Borders mais visíveis */
-.border {
-  border-color: oklch(0.70 0.08 240) !important;
-}
-
-/* Archetype selection cards */
 .archetype-card {
-  background: oklch(0.98 0.01 60);
-  border: 2px solid oklch(0.80 0.05 240);
-  color: oklch(0.15 0.04 240);
+  background: oklch(0.15 0.04 280);
+  border: 2px solid oklch(0.30 0.08 300);
+  color: oklch(0.93 0.02 300);
   transition: all 0.3s ease;
   cursor: pointer;
 }
 
 .archetype-card:hover {
-  border-color: oklch(0.60 0.20 25);
-  box-shadow: 0 4px 12px rgba(153, 51, 51, 0.15);
+  border-color: oklch(0.75 0.14 85);
+  box-shadow: 0 0 15px rgba(201, 168, 76, 0.2);
 }
 
 .archetype-card.selected {
-  background: oklch(0.75 0.18 80 / 0.1);
-  border-color: oklch(0.60 0.20 25);
-  box-shadow: 0 4px 12px rgba(153, 51, 51, 0.25);
+  background: oklch(0.20 0.08 300);
+  border-color: oklch(0.75 0.14 85);
+  box-shadow: 0 0 20px rgba(201, 168, 76, 0.3);
 }
 
-/* Form inputs com melhor contraste */
-input, textarea, select {
-  background: oklch(0.98 0.01 60) !important;
-  color: oklch(0.15 0.04 240) !important;
-  border: 1.5px solid oklch(0.80 0.05 240) !important;
+/* ===================== MYSTIC GRADIENT (legacy) ===================== */
+
+.mystic-gradient {
+  background: linear-gradient(135deg, #0D0B1A 0%, #1A1035 50%, #0D0B1A 100%);
+  min-height: 100vh;
 }
 
-input:focus, textarea:focus, select:focus {
-  border-color: oklch(0.60 0.20 25) !important;
-  box-shadow: 0 0 0 3px oklch(0.60 0.20 25 / 0.1) !important;
+.mystic-glow {
+  text-shadow: 0 0 20px rgba(201, 168, 76, 0.6), 0 0 40px rgba(201, 168, 76, 0.3);
 }
 
-/* Placeholder text */
-input::placeholder, textarea::placeholder {
-  color: oklch(0.50 0.06 240) !important;
+/* ===================== RESPONSIVE ===================== */
+
+@media (max-width: 640px) {
+  .btn-gold {
+    font-size: 1rem;
+    padding: 14px 28px;
+    width: 100%;
+  }
 }

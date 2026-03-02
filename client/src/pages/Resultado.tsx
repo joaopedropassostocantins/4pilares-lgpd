@@ -127,10 +127,26 @@ export default function Resultado() {
   const [selectedPlan, setSelectedPlan] = useState<"normal" | "lifetime">("normal");
   const [copied, setCopied] = useState(false);
 
-  const { data: diagnostic, isLoading, error, refetch } = trpc.diagnostic.getByPublicId.useQuery(
+  const { data: diagnosticRaw, isLoading, error, refetch } = trpc.diagnostic.getByPublicId.useQuery(
     { publicId },
     { enabled: !!publicId }
   );
+
+  // Cast to typed diagnostic to fix TS2322
+  const diagnostic = diagnosticRaw as (typeof diagnosticRaw & {
+    consultantName: string | null;
+    selectedHooks: Hook[] | null;
+    selectedVariants: Record<string, string> | null;
+    pillarsData: PillarsData | null;
+    tastingAnalysis: string | null;
+    basicAnalysis: string | null;
+    fullAnalysis: string | null;
+    email: string | null;
+    publicId: string;
+    paymentStatus: string;
+    abTestVariant: string;
+    selectedPlan: string | null;
+  }) | undefined;
 
   const createPreference = trpc.payment.createPreference.useMutation();
 
@@ -287,31 +303,74 @@ export default function Resultado() {
         {/* ── ANALYSIS SECTION ── */}
         <Card className="bg-card/60 border-primary/30">
           <CardHeader>
-            <CardTitle className="text-xl text-primary">Análise de Degustação</CardTitle>
-            <p className="text-sm text-muted-foreground mt-2">Revelação gratuita do seu destino</p>
-            {diagnostic.tastingAnalysis && (
-              <div className="mt-4 p-3 bg-red-50 border-l-4 border-red-500 rounded">
-                <p className="text-sm font-semibold text-red-900">
-                  {diagnostic.abTestVariant === "B" 
-                    ? "Descobri que você..." 
-                    : "Sei que me procurou por..."}
-                </p>
-              </div>
-            )}
+            <CardTitle className="text-xl text-primary" style={{ fontFamily: "'Playfair Display', serif" }}>Análise de Degustação</CardTitle>
+            <p className="text-sm text-muted-foreground mt-2">Revelação ancestral dos seus Pilares</p>
           </CardHeader>
           <CardContent>
-            <div className={`prose-mystic`}>
-              <div 
-                className="text-black whitespace-pre-wrap text-base leading-relaxed font-bold"
-                dangerouslySetInnerHTML={{
-                  __html: (isPaid
-                    ? (diagnostic.basicAnalysis || diagnostic.tastingAnalysis || "Análise em processamento...")
-                    : (diagnostic.tastingAnalysis || "Análise em processamento..."))
-                    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-                    .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-                }}
-              />
-            </div>
+            {(() => {
+              const fullText = isPaid
+                ? (diagnostic.basicAnalysis || diagnostic.tastingAnalysis || "Análise em processamento...")
+                : (diagnostic.tastingAnalysis || "Análise em processamento...");
+              
+              const formatHtml = (text: string) => text
+                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+              // Split at the ===CORTE_AQUI=== marker
+              const parts = fullText.split('===CORTE_AQUI===');
+              const visiblePart = parts[0] || fullText;
+              const hiddenPart = parts.length > 1 ? parts[1] : '';
+
+              return (
+                <div className="prose-mystic">
+                  {/* VISIBLE PART - always shown */}
+                  <div 
+                    className="text-foreground whitespace-pre-wrap text-base leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: formatHtml(visiblePart) }}
+                  />
+
+                  {/* HIDDEN PART - blur/lock if not paid */}
+                  {hiddenPart && !isPaid && (
+                    <div className="relative mt-6">
+                      {/* Blurred content */}
+                      <div 
+                        className="text-foreground whitespace-pre-wrap text-base leading-relaxed select-none"
+                        style={{ filter: 'blur(8px)', WebkitFilter: 'blur(8px)', userSelect: 'none', pointerEvents: 'none' }}
+                        dangerouslySetInnerHTML={{ __html: formatHtml(hiddenPart) }}
+                      />
+                      {/* Lock overlay */}
+                      <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/70 backdrop-blur-sm rounded-lg">
+                        <div className="text-center p-6 max-w-md">
+                          <Lock className="h-12 w-12 text-primary mx-auto mb-4 animate-pulse" />
+                          <h3 className="text-xl font-bold text-primary mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+                            3 Padrões Graves Detectados
+                          </h3>
+                          <p className="text-sm text-muted-foreground mb-4">
+                            Seus Pilares revelaram padrões urgentes que precisam de atenção imediata. 
+                            Desbloqueie agora para ver o que está escondido.
+                          </p>
+                          <Button
+                            className="w-full py-4 text-lg font-bold rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-black shadow-lg"
+                            onClick={handleUnlock}
+                          >
+                            <Lock className="mr-2 h-5 w-5" />
+                            Desbloquear Análise Completa
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* HIDDEN PART - shown if paid */}
+                  {hiddenPart && isPaid && (
+                    <div 
+                      className="text-foreground whitespace-pre-wrap text-base leading-relaxed mt-6 pt-6 border-t border-primary/30"
+                      dangerouslySetInnerHTML={{ __html: formatHtml(hiddenPart) }}
+                    />
+                  )}
+                </div>
+              );
+            })()}
           </CardContent>
         </Card>
 

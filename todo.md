@@ -317,3 +317,70 @@
 - [x] Verificar responsividade em mobile - COMPLETO
 - [x] Validar formulários - COMPLETO
 - [x] Salvar checkpoint final - PRONTO
+
+
+## Refatoração CRO + Copy Hipnótica (Mar 2026)
+
+- [ ] Novo tema escuro (#0D0B1A) com roxo (#6B2FA0) e dourado (#C9A84C)
+- [ ] Tipografia: Playfair Display (títulos) + Lato (corpo) via Google Fonts
+- [ ] Hero simplificado: headline emocional + apenas campo data nascimento + CTA
+- [ ] Prova social inline abaixo do CTA hero
+- [ ] Formulário multi-step (3 passos com barra de progresso)
+- [ ] Seção Preview da Análise com blur CSS
+- [ ] Reordenar seções: Hero → Como Funciona → Preview → Depoimentos → Form Completo → FAQ → Módulos
+- [ ] Banner urgência sticky top com countdown 24h (localStorage)
+- [ ] Depoimentos melhorados: avatares, estrelas, cidade, data relativa
+- [ ] Motor de ganchos (HOOKS JSON + JS) com 5 hooks hipnóticos
+- [ ] Reescrever TODOS os textos com tom hipnótico (diretriz seção 0)
+- [ ] Eliminar microcopy perigoso ("100%", diagnósticos, promessas)
+- [ ] Mobile first: botões 52px, font 16px, padding 20px
+- [x] Micro-interações: pulso CTA, hover cards, scroll suave
+- [ ] Corrigir bugs: âncoras, formulário, pós-envio, links módulos
+
+
+## Refatoração CRO + Copy Hipnótica + Módulos Funcionais (Março 2026)
+
+### Tema e Design
+- [x] Tema escuro: fundo #0D0B1A, roxo #6B2FA0, dourado #C9A84C, branco #F0EAF8
+- [x] Tipografia: Playfair Display (headlines) + Lato (body)
+- [x] Botões com gradiente dourado + glow
+- [x] Mobile first: botões min-height 52px, font-size 16px
+- [x] Micro-interações: pulso CTA, hover cards, scroll suave
+
+### Home — Layout CRO
+- [ ] Hero section: headline emocional + campo data nascimento + CTA grande + prova social
+- [ ] Formulário multi-step com barra de progresso
+- [ ] Preview da análise com blur CSS + overlay + botão "Desbloquear"
+- [ ] Seção depoimentos: avatar iniciais coloridas, 5 estrelas, cidade, data relativa
+- [ ] Reordenar seções: Hero → Como Funciona → Preview → Depoimentos → Form → FAQ → Módulos
+- [ ] Banner urgência sticky: countdown 24h (localStorage)
+
+### Copy Hipnótica (Diretriz Inegociável)
+- [ ] Reescrever TODOS os textos com tom hipnótico
+- [ ] Motor de ganchos: 5 HOOKS JSON + JS com seleção por idade/sexo/categoria
+
+### Páginas de Módulos (Saiba Mais) — Conteúdo Completo dos Documentos
+- [ ] Módulo A — Oráculo dos Investimentos
+- [ ] Módulo B — Conselheiro Judicial
+- [ ] Módulo C — Navegador de Conflitos
+- [ ] Módulo D — Oráculo do Amor
+- [ ] Módulo E — Caminho de Saída
+- [ ] Módulo F — Conexão com Quem Partiu
+
+### Cadastro e Funil
+- [ ] Formulário de cadastro beta: Nome + WhatsApp/Email + Módulo + LGPD
+- [ ] Página de confirmação pós-cadastro
+
+### Tracking e Correções
+- [ ] Tracking GA4/Meta Pixel com anti-duplicação
+- [ ] Corrigir bugs de navegação e 404
+
+
+## Modificação da Degustação (Mar 2026 - Nova Rodada)
+
+- [x] Aumentar elementos obrigatórios de 3 para 5 por bloco de copy
+- [x] Revelar apenas 2 elementos na degustação (1 SEMPRE sobre maldição/doença)
+- [x] Mencionar 3 elementos graves ocultos que só serão revelados na análise completa
+- [x] Insistir que os 3 ocultos são graves e importantes
+- [x] Reduzir degustação pela metade com cadeado/blur para pagamento
+- [x] Testar fluxo completo de degustação reduzida
