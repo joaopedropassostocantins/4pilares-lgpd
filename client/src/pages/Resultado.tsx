@@ -126,6 +126,9 @@ export default function Resultado() {
   const [showPayment, setShowPayment] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<"normal" | "lifetime">("normal");
   const [copied, setCopied] = useState(false);
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; finalPrice: number } | null>(null);
+  const [couponError, setCouponError] = useState("");
 
   const { data: diagnosticRaw, isLoading, error, refetch } = trpc.diagnostic.getByPublicId.useQuery(
     { publicId },
@@ -149,6 +152,22 @@ export default function Resultado() {
   }) | undefined;
 
   const createPreference = trpc.payment.createPreference.useMutation();
+  const applyCouponMutation = trpc.payment.applyCoupon.useMutation({
+    onSuccess: (result) => {
+      if (result.valid && result.finalPrice) {
+        setAppliedCoupon({ code: couponCode, finalPrice: result.finalPrice });
+        setCouponError("");
+        toast.success(`Cupom ${couponCode} aplicado! Novo preco: R$ ${result.finalPrice.toFixed(2)}`);
+      } else {
+        setCouponError(result.reason || "Cupom invalido");
+        setAppliedCoupon(null);
+      }
+    },
+    onError: () => {
+      setCouponError("Erro ao aplicar cupom");
+      setAppliedCoupon(null);
+    },
+  });
 
   const isPaid = diagnostic?.paymentStatus === "paid";
   const pillarsData: PillarsData | null | undefined = diagnostic?.pillarsData as unknown as PillarsData | null | undefined;
@@ -157,6 +176,20 @@ export default function Resultado() {
   const plans = {
     normal: { price: 29.99, label: "Normal", description: "Acesso 1x à análise completa" },
     lifetime: { price: 299.90, label: "Vitalicio", description: "Acesso ilimitado + atualizações" },
+  };
+
+  const currentPrice = appliedCoupon ? appliedCoupon.finalPrice : plans[selectedPlan].price;
+
+  const handleApplyCoupon = () => {
+    if (!couponCode.trim()) {
+      setCouponError("Digite um cupom");
+      return;
+    }
+    setCouponError("");
+    applyCouponMutation.mutate({
+      diagnosticPublicId: publicId,
+      couponCode: couponCode.toUpperCase(),
+    });
   };
 
   // Track conversion when payment is completed and redirect to thank you page
@@ -451,12 +484,62 @@ export default function Resultado() {
                 )}
               </div>
 
+              {/* Coupon Code Input */}
+              <div className="space-y-2 p-4 bg-amber-50/10 border border-amber-500/20 rounded-lg">
+                <label className="text-sm font-semibold text-amber-100">Tem um cupom? Aplique aqui:</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Ex: PRIMEIRAS100"
+                    value={couponCode}
+                    onChange={(e) => {
+                      setCouponCode(e.target.value);
+                      setCouponError("");
+                    }}
+                    disabled={appliedCoupon !== null}
+                    className="flex-1 px-3 py-2 bg-background border border-amber-500/30 rounded text-sm text-foreground disabled:opacity-50"
+                  />
+                  {!appliedCoupon ? (
+                    <button
+                      onClick={handleApplyCoupon}
+                      disabled={applyCouponMutation.isPending}
+                      className="px-4 py-2 bg-amber-500 text-amber-950 font-semibold rounded hover:bg-amber-600 disabled:opacity-50 transition-colors"
+                    >
+                      {applyCouponMutation.isPending ? "Aplicando..." : "Aplicar"}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setAppliedCoupon(null);
+                        setCouponCode("");
+                        setCouponError("");
+                      }}
+                      className="px-4 py-2 bg-primary/30 text-primary font-semibold rounded hover:bg-primary/50 transition-colors"
+                    >
+                      Remover
+                    </button>
+                  )}
+                </div>
+                {couponError && <p className="text-xs text-red-400">{couponError}</p>}
+                {appliedCoupon && (
+                  <div className="text-xs text-amber-100 font-semibold">
+                    ✓ Cupom {appliedCoupon.code} aplicado! Novo preço: R$ {appliedCoupon.finalPrice.toFixed(2)}
+                  </div>
+                )}
+              </div>
+
+              {/* Current Price Display */}
+              <div className="text-center p-4 bg-primary/10 rounded-lg border border-primary/20">
+                <p className="text-sm text-muted-foreground mb-1">Preço {appliedCoupon ? "com cupom" : "do plano"}</p>
+                <p className="text-3xl font-bold text-primary">R$ {currentPrice.toFixed(2)}</p>
+              </div>
+
               {/* Mercado Pago Button - Prominent */}
               {showPayment ? (
                 <PaymentMethodSelector
                   diagnosticPublicId={publicId}
                   plan={selectedPlan}
-                  price={plans[selectedPlan].price}
+                  price={currentPrice}
                   countryCode="BR"
                   userEmail={diagnostic?.email || undefined}
                   onMercadoPagoClick={() => {
