@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json, decimal, boolean } from "drizzle-orm/mysql-core";
 
 export const users = mysqlTable("users", {
   id: int("id").autoincrement().primaryKey(),
@@ -31,6 +31,11 @@ export const diagnostics = mysqlTable("diagnostics", {
   fullAnalysis: text("fullAnalysis"),
   paymentId: varchar("paymentId", { length: 64 }),
   paymentStatus: mysqlEnum("paymentStatus", ["pending", "paid"]).default("pending").notNull(),
+  paymentMethod: mysqlEnum("paymentMethod", ["pix", "card"]),
+  pixPayload: text("pixPayload"),
+  pixTxid: varchar("pixTxid", { length: 64 }),
+  amountPaid: decimal("amountPaid", { precision: 10, scale: 2 }),
+  couponApplied: varchar("couponApplied", { length: 64 }),
   analysisVariant: mysqlEnum("analysisVariant", ["epic", "predictive"]).default("predictive").notNull(),
   archetype: varchar("archetype", { length: 64 }),
   whatsappPhone: varchar("whatsappPhone", { length: 20 }),
@@ -56,3 +61,41 @@ export const feedbacks = mysqlTable("feedbacks", {
 
 export type Feedback = typeof feedbacks.$inferSelect;
 export type InsertFeedback = typeof feedbacks.$inferInsert;
+
+export const coupons = mysqlTable("coupons", {
+  id: int("id").autoincrement().primaryKey(),
+  code: varchar("code", { length: 64 }).notNull().unique(),
+  fixedPrice: decimal("fixedPrice", { precision: 10, scale: 2 }).notNull(),
+  maxRedemptions: int("maxRedemptions").notNull(),
+  redeemedCount: int("redeemedCount").default(0).notNull(),
+  active: boolean("active").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  expiresAt: timestamp("expiresAt"),
+});
+
+export type Coupon = typeof coupons.$inferSelect;
+export type InsertCoupon = typeof coupons.$inferInsert;
+
+export const couponRedemptions = mysqlTable("coupon_redemptions", {
+  id: int("id").autoincrement().primaryKey(),
+  couponId: int("couponId").notNull(),
+  diagnosticId: int("diagnosticId").notNull(),
+  appliedAt: timestamp("appliedAt").defaultNow().notNull(),
+});
+
+export type CouponRedemption = typeof couponRedemptions.$inferSelect;
+export type InsertCouponRedemption = typeof couponRedemptions.$inferInsert;
+
+export const capabilities = mysqlTable("capabilities", {
+  id: int("id").autoincrement().primaryKey(),
+  key: varchar("key", { length: 128 }).notNull().unique(),
+  name: varchar("name", { length: 256 }).notNull(),
+  status: mysqlEnum("status", ["enabled", "disabled", "beta"]).default("enabled").notNull(),
+  version: varchar("version", { length: 32 }).default("1.0.0").notNull(),
+  metadata: json("metadata"),
+  enabledAt: timestamp("enabledAt").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Capability = typeof capabilities.$inferSelect;
+export type InsertCapability = typeof capabilities.$inferInsert;

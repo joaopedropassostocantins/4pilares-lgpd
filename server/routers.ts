@@ -19,6 +19,7 @@ import {
   createFeedback,
   getFeedbackByDiagnosticId,
   getAccuracyStats,
+  applyCoupon,
 } from "./db";
 import { calculatePillars } from "./sajo";
 import { createPaymentPreference, initMercadoPago, createPixPayment } from "./mercadopago";
@@ -593,6 +594,24 @@ const paymentRouter = router({
           message: "Failed to confirm payment",
         });
       }
+    }),
+
+  // Apply coupon code
+  applyCoupon: publicProcedure
+    .input(
+      z.object({
+        diagnosticPublicId: z.string(),
+        couponCode: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const diagnostic = await getDiagnosticByPublicId(input.diagnosticPublicId);
+      if (!diagnostic) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Diagnostic not found" });
+      }
+
+      const result = await applyCoupon(diagnostic.id, input.couponCode);
+      return result;
     }),
 });
 

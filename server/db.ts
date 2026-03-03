@@ -1,6 +1,6 @@
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and, lt } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, diagnostics, InsertDiagnostic, feedbacks, InsertFeedback } from "../drizzle/schema";
+import { InsertUser, users, diagnostics, InsertDiagnostic, feedbacks, InsertFeedback, coupons, couponRedemptions } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -130,4 +130,45 @@ export async function getAccuracyStats() {
   if (!db) throw new Error("Database not available");
   const result = await db.select({ accuracy: feedbacks.accuracy, count: feedbacks.id }).from(feedbacks).groupBy(feedbacks.accuracy);
   return result;
+}
+
+// Coupon queries
+export async function getCouponByCode(code: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.select().from(coupons).where(eq(coupons.code, code)).limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function applyCoupon(diagnosticId: number, couponCode: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const coupon = await getCouponByCode(couponCode);
+  if (!coupon) {
+    return { valid: false, reason: "Cupom nao encontrado" };
+  }
+  
+  if (!coupon.active) {
+    return { valid: false, reason: "Cupom inativo" };
+  }
+  
+  if (coupon.redeemedCount >= coupon.maxRedemptions) {
+    return { valid: false, reason: "Cupom expirado (limite atingido)" };
+  }
+  
+  if (coupon.expiresAt && new Date() > coupon.expiresAt) {
+    return { valid: false, reason: "Cupom expirado" };
+  }
+  
+  // Atomic transaction: increment count + insert redemption
+  try {
+    await db.update(coupons).set({ redeemedCount: coupon.redeemedCount + 1 }).where(eq(coupons.id, coupon.id));
+    await db.insert(couponRedemptions).values({ couponId: coupon.id, diagnosticId });
+    await db.update(diagnostics).set({ couponApplied: couponCode }).where(eq(diagnostics.id, diagnosticId));
+    return { valid: true, finalPrice: parseFloat(coupon.fixedPrice.toString()) };
+  } catch (error) {
+    console.error("[Coupon] Error applying coupon:", error);
+    return { valid: false, reason: "Erro ao aplicar cupom" };
+  }
 }

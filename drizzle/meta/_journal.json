@@ -64,6 +64,13 @@
       "when": 1772367761809,
       "tag": "0008_previous_purifiers",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1772571936657,
+      "tag": "0009_lovely_shatterstar",
+      "breakpoints": true
     }
   ]
 }

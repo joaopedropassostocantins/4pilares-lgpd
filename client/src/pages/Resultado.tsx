@@ -198,6 +198,12 @@ export default function Resultado() {
 
   const handleUnlock = () => {
     setShowPayment(true);
+    // Immediately trigger preference creation
+    createPreference.mutate({
+      diagnosticPublicId: publicId,
+      amount: plans[selectedPlan].price,
+      returnUrl: window.location.origin,
+    });
     toast.info("✦ Gerando dados de pagamento...", {
       description: "Opções de Pix e Cartão estarão disponíveis em segundos.",
     });
