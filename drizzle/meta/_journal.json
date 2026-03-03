@@ -71,6 +71,20 @@
       "when": 1772571936657,
       "tag": "0009_lovely_shatterstar",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1772575482530,
+      "tag": "0010_overjoyed_wildside",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1772577878777,
+      "tag": "0011_cute_sentinels",
+      "breakpoints": true
     }
   ]
 }
