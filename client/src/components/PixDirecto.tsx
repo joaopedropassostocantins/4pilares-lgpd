@@ -1,36 +1,28 @@
 import { Card } from '@/components/ui/card';
 import { QrCode, Copy, Check, AlertCircle } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import { generatePixPayload } from '@/lib/pixGenerator';
 
 interface PixDirectoProps {
   price: number;
   diagnosticPublicId: string;
 }
 
-/**
- * Generate EMV PIX payload (copia e cola) locally
- * Format: 00020126580014br.gov.bcb.pix...
- */
-function generatePixPayload(amount: number, txid: string): string {
-  // Simplified EMV PIX payload generation
-  // In production, use a proper EMV library
-  const pixKey = "05e5bf85-4484-4b81-9bdf-fc66b6024984"; // Chave PIX do proprietário
-  const merchant = "FUSION SAJO";
-  const city = "SAO PAULO";
-  
-  // Build basic EMV structure (simplified)
-  const payload = `00020126580014br.gov.bcb.pix0136${pixKey}520400005303986540${String(amount).padStart(5, '0')}5802BR5913${merchant}6009${city}62${String(txid).length.toString().padStart(2, '0')}${txid}63041D3D`;
-  return payload;
-}
-
 export function PixDirecto({ price, diagnosticPublicId }: PixDirectoProps) {
   const [copied, setCopied] = useState(false);
-  
-  // Generate PIX payload locally
-  const txid = `${diagnosticPublicId.slice(0, 8)}${Date.now().toString().slice(-8)}`;
-  const pixPayload = generatePixPayload(price, txid);
+
+  // Generate PIX payload dynamically based on price
+  const pixPayload = useMemo(() => {
+    return generatePixPayload({
+      amount: price,
+      pixKey: "05e5bf85-4484-4b81-9bdf-fc66b6024984",
+      merchantName: "JOAO PEDRO P PASSOS",
+      merchantCity: "SAO PAULO",
+      txId: `${diagnosticPublicId.slice(0, 8)}${Date.now().toString().slice(-8)}`,
+    });
+  }, [price, diagnosticPublicId]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(pixPayload);
@@ -60,8 +52,8 @@ export function PixDirecto({ price, diagnosticPublicId }: PixDirectoProps) {
             <span className="font-bold text-primary">R$ {price.toFixed(2)}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">Transação:</span>
-            <span className="font-mono text-xs text-foreground/70">{txid}</span>
+            <span className="text-muted-foreground">Diagnóstico:</span>
+            <span className="font-mono text-xs text-foreground/70">{diagnosticPublicId}</span>
           </div>
         </div>
 
@@ -104,7 +96,7 @@ export function PixDirecto({ price, diagnosticPublicId }: PixDirectoProps) {
 
         {/* Info */}
         <div className="p-2 bg-primary/5 border border-primary/20 rounded text-xs text-muted-foreground">
-          Seu pagamento será confirmado automaticamente. Análise liberada em segundos!
+          ⏱️ Seu pagamento será confirmado em até 5 minutos. Análise liberada automaticamente!
         </div>
       </div>
     </Card>

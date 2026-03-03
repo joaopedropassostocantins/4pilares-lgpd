@@ -562,6 +562,27 @@ export default function Home() {
         </div>
       )}
 
+      {/* ═══════ PIX PAYMENT INFO BANNER ═══════ */}
+      {formStep >= 2 && (
+        <div className="max-w-2xl mx-auto px-5 mb-8">
+          <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 rounded-xl p-5 space-y-3">
+            <div className="flex items-start gap-3">
+              <Clock className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
+              <div className="space-y-2 flex-1">
+                <h4 className="font-bold text-amber-100">⏱️ Pagamento PIX — Confirmação em 5 minutos</h4>
+                <p className="text-sm text-amber-50/80">
+                  Após enviar o PIX, sua análise será liberada automaticamente em até 5 minutos. Se não receber neste período:
+                </p>
+                <ol className="text-sm text-amber-50/80 list-decimal list-inside space-y-1 ml-2">
+                  <li><strong>Envie seu comprovante via WhatsApp</strong> para liberação imediata</li>
+                  <li><strong>Verifique seu email</strong> (spam/promoções) para a análise completa</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ═══════ MULTI-STEP FORM (Steps 2 & 3) ═══════ */}
       {formStep >= 2 && (
         <section id="formulario" ref={formRef} className="max-w-lg mx-auto px-5 pb-16">
