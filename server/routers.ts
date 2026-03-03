@@ -27,8 +27,6 @@ import { authRouter } from "./_core/systemRouter";
 import { createPaymentIntent, getCurrencyCode, getPrice } from "./stripe";
 import { selectHooks, selectHooksByCategory } from "./hooksEngine_turbinado";
 import type { Hook } from "./hooksEngine_turbinado";
-import { coupons } from "../drizzle/schema";
-import { getDb } from "./db";
 
 // ============================================================================
 // DORES ALEATORIAS PARA FECHAMENTO PERSUASIVO - DIRETO E POPULAR
@@ -157,23 +155,6 @@ const adminRouter = router({
       const total = await getDiagnosticsCount();
       return { items, total };
     }),
-
-  coupons: adminProcedure.query(async () => {
-    const db = await getDb();
-    if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
-    const allCoupons = await db.select().from(coupons);
-    return allCoupons.map(c => ({
-      id: c.id,
-      code: c.code,
-      fixedPrice: c.fixedPrice,
-      maxRedemptions: c.maxRedemptions,
-      redeemedCount: c.redeemedCount,
-      remainingRedemptions: c.maxRedemptions - c.redeemedCount,
-      active: c.active,
-      expiresAt: c.expiresAt,
-      createdAt: c.createdAt,
-    }));
-  }),
 });
 
 // ============================================================================
@@ -195,7 +176,6 @@ const diagnosticRouter = router({
         abTestVariant: z.enum(["A", "B"]).optional(),
         selectedPlan: z.enum(["promo", "normal", "lifetime"]).optional(),
         hookCategory: z.string().optional(),
-        referredBy: z.string().optional(),
       })
     )
     .mutation(async ({ input }) => {
@@ -305,9 +285,6 @@ REGRAS ABSOLUTAS:
             4 // Select 4 hooks
           );
 
-      // Generate unique referral code
-      const referralCode = `${name.slice(0, 3).toUpperCase()}${nanoid(8)}`;
-
       // Create diagnostic record
       const diagnostic = await createDiagnostic({
         publicId,
@@ -327,8 +304,6 @@ REGRAS ABSOLUTAS:
         selectedPlan: input.selectedPlan || null,
         selectedHooks: selectedHooksData.hooks as any,
         selectedVariants: selectedHooksData.selectedVariants as any,
-        referralCode,
-        referredBy: input.referredBy || null,
       });
 
       // Notify owner

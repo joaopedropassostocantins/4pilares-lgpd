@@ -45,8 +45,6 @@ export const diagnostics = mysqlTable("diagnostics", {
   selectedPlan: mysqlEnum("selectedPlan", ["promo", "normal", "lifetime"]),
   selectedHooks: json("selectedHooks"),
   selectedVariants: json("selectedVariants"),
-  referralCode: varchar("referralCode", { length: 32 }).unique(),
-  referredBy: varchar("referredBy", { length: 32 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
