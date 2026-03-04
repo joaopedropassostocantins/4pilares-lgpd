@@ -265,7 +265,7 @@ export default function PostTastingQuestionnaire({
                                             onChange={(v) =>
                                                 setAnswers((prev) => ({ ...prev, [q.key]: v }))
                                             }
-                                            hasCVV={(q as any).hasCVWNote}
+                                            hasCVV={(q as any).hasCVVNote}
                                         />
                                     ))}
                                 </div>
@@ -314,8 +314,8 @@ export default function PostTastingQuestionnaire({
                                             type="button"
                                             onClick={() => setSelectedVariant(v)}
                                             className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${selectedVariant === v
-                                                    ? "border-gold bg-gold/20 text-gold"
-                                                    : "border-border/40 text-muted-foreground hover:border-gold/40"
+                                                ? "border-gold bg-gold/20 text-gold"
+                                                : "border-border/40 text-muted-foreground hover:border-gold/40"
                                                 }`}
                                         >
                                             {VARIANT_LABELS[v]}

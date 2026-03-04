@@ -5,10 +5,10 @@ export default function ModuloE() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-primary/5">
       <div className="w-full h-96 overflow-hidden">
-        <img 
-          src="https://d2xsxph8kpxj0f.cloudfront.net/310519663390392783/g9GC8npXGtLqRcd8tG3q6A/modulo-e-saida-v2-KLGDcataadpVdiuHxkPJWG.webp" 
-          alt="Caminho de Saída" 
-          className="w-full h-full object-cover" 
+        <img
+          src="https://d2xsxph8kpxj0f.cloudfront.net/310519663390392783/g9GC8npXGtLqRcd8tG3q6A/modulo-e-saida-v2-KLGDcataadpVdiuHxkPJWG.webp"
+          alt="Caminho de Saída"
+          className="w-full h-full object-cover"
         />
       </div>
 
@@ -63,17 +63,23 @@ export default function ModuloE() {
             </div>
           </div>
 
-          <div className="bg-primary/5 border border-primary/30 rounded-lg p-6 mb-6">
+          <div className="bg-primary/5 border border-primary/30 rounded-lg p-6 mb-4">
             <p className="text-sm text-muted-foreground">
               <strong>Importante:</strong> Este módulo é análise simbólica. Para situações legais complexas, consulte um profissional.
+            </p>
+          </div>
+          <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 mb-6 text-center">
+            <p className="text-sm text-amber-200">
+              🛡️ Se você está em um momento muito pesado:{" "}
+              <a href="tel:188" className="font-bold underline hover:text-amber-100">CVV 188</a>{" "}&mdash; ligação gratuita, 24 horas, confidencial.
             </p>
           </div>
         </div>
 
         <div className="text-center py-8">
-          <Link href="/cadastro">
+          <Link href="/">
             <Button size="lg" className="text-lg px-8 py-6">
-              GARANTIR MINHA VAGA NA LISTA
+              FAZER MINHA ANÁLISE GRATUITA
             </Button>
           </Link>
           <p className="text-sm text-muted-foreground mt-4">

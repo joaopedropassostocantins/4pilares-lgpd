@@ -80,7 +80,7 @@ export async function getAllDiagnostics(limit: number = 50, offset: number = 0) 
 export async function getDiagnosticsCount() {
   const db = await getDb();
   if (!db) { console.warn("[Database] Cannot count diagnostics: database not available"); return 0; }
-  const result = await db.select({ count: eq(diagnostics.id, diagnostics.id) }).from(diagnostics);
+  const result = await db.select().from(diagnostics);
   return result.length;
 }
 
@@ -108,7 +108,10 @@ export async function createFeedback(data: InsertFeedback) {
 export async function getFeedbackByDiagnosticId(diagnosticPublicId: string) {
   const db = await getDb();
   if (!db) { console.warn("[Database] Cannot get feedback: database not available"); return undefined; }
-  const result = await db.select().from(feedbacks).where(eq(feedbacks.diagnosticPublicId, diagnosticPublicId)).limit(1);
+  // feedbacks.diagnosticId is an INT FK; we look up the diagnostic first
+  const diag = await getDiagnosticByPublicId(diagnosticPublicId);
+  if (!diag) return undefined;
+  const result = await db.select().from(feedbacks).where(eq(feedbacks.diagnosticId, diag.id)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
@@ -127,41 +130,44 @@ export async function getCouponByCode(code: string) {
   return result.length > 0 ? result[0] : null;
 }
 
+// Base price constant — single source of truth
+const BASE_PRICE = 29.99;
+
 export async function applyCoupon(diagnosticPublicId: string, couponCode: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  
+
   const coupon = await getCouponByCode(couponCode);
   if (!coupon) {
     return { valid: false, reason: "Cupom nao encontrado" };
   }
-  
+
   if (!coupon.isActive) {
     return { valid: false, reason: "Cupom inativo" };
   }
-  
+
   if (coupon.usedCount >= coupon.maxUses) {
     return { valid: false, reason: "Cupom expirado (limite atingido)" };
   }
-  
+
   if (coupon.expiresAt && new Date() > coupon.expiresAt) {
     return { valid: false, reason: "Cupom expirado" };
   }
-  
+
   // Atomic transaction: increment count + insert redemption
   try {
     await db.update(coupons).set({ usedCount: coupon.usedCount + 1 }).where(eq(coupons.id, coupon.id));
     await db.insert(couponRedemptions).values({ couponId: coupon.id, diagnosticPublicId });
     await db.update(diagnostics).set({ couponApplied: couponCode }).where(eq(diagnostics.publicId, diagnosticPublicId));
-    
+
     // Calculate final price based on discount type
-    let finalPrice = 29.99;
+    let finalPrice = BASE_PRICE;
     if (coupon.discountType === 'fixed') {
-      finalPrice = 29.99 - parseFloat(coupon.discountValue.toString());
+      finalPrice = BASE_PRICE - parseFloat(coupon.discountValue.toString());
     } else if (coupon.discountType === 'percentage') {
-      finalPrice = 29.99 * (1 - parseFloat(coupon.discountValue.toString()) / 100);
+      finalPrice = BASE_PRICE * (1 - parseFloat(coupon.discountValue.toString()) / 100);
     }
-    
+
     return { valid: true, finalPrice };
   } catch (error) {
     console.error("[Coupon] Error applying coupon:", error);

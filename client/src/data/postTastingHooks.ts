@@ -319,7 +319,7 @@ export const QUESTIONNAIRES: Record<ModuleCode, LikertQuestion[]> = {
         { key: "E_q3", text: "Carrego mágoa ou raiva de alguém que me feriu e não consigo soltar." },
         { key: "E_q4", text: "Sinto que decisões passadas criaram um padrão ou consequência que ainda me persegue." },
         { key: "E_q5", text: "Percebo comportamentos de pais ou avós se repetindo em mim, mesmo sem querer." },
-        { key: "E_q6", text: "Tenho pensamentos muito pesados ou sensação de não ter saída.", hasCVWNote: true } as any,
+        { key: "E_q6", text: "Tenho pensamentos muito pesados ou sensação de não ter saída.", hasCVVNote: true },
     ],
     F: [
         { key: "F_q1", text: "Perdi alguém importante recentemente e ainda sinto a dor dessa perda." },
