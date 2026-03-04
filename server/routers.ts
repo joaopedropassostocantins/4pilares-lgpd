@@ -206,7 +206,7 @@ const diagnosticRouter = router({
       // Generate tasting analysis with new prompt
       const name = input.consultantName || "Viajante";
       const genderText = input.gender === "male" ? "masculino" : input.gender === "female" ? "feminino" : "não informado";
-      
+
       // Get random pain and urgency
       const selectedPain = getRandomPain();
       const urgency = getRandomUrgency();
@@ -217,11 +217,11 @@ const diagnosticRouter = router({
       if (urgency.type === "date") {
         urgencyText = `Promoção especial válida apenas ${urgency.value} — depois o valor volta ao normal.`;
       } else {
-         urgencyText = `Esta oferta de R$ 14,99 está disponível somente para os próximos 100 acessos que chegarem hoje — ${urgency.value}`;
+        urgencyText = `Esta oferta de R$ 14,99 está disponível somente para os próximos 100 acessos que chegarem hoje — ${urgency.value}`;
       }
 
       // Build closing with pain variation
-      const closingClosingPain = toneVariation === "soft" 
+      const closingClosingPain = toneVariation === "soft"
         ? `está sentindo um peso profundo relacionado a ${selectedPain}`
         : `está sofrendo profundamente com ${selectedPain}`;
 
@@ -295,19 +295,16 @@ REGRAS ABSOLUTAS:
       // Select hooks for this diagnostic
       const selectedHooksData = input.hookCategory
         ? selectHooksByCategory(
-            input.hookCategory,
-            input.gender || "",
-            input.birthDate,
-            4
-          )
+          input.hookCategory,
+          input.gender || "",
+          input.birthDate,
+          4
+        )
         : selectHooks(
-            input.gender || "",
-            input.birthDate,
-            4 // Select 4 hooks
-          );
-
-      // Generate unique referral code
-      const referralCode = `${name.slice(0, 3).toUpperCase()}${nanoid(8)}`;
+          input.gender || "",
+          input.birthDate,
+          4 // Select 4 hooks
+        );
 
       // Create diagnostic record
       const diagnostic = await createDiagnostic({
@@ -328,8 +325,6 @@ REGRAS ABSOLUTAS:
         selectedPlan: input.selectedPlan || null,
         selectedHooks: selectedHooksData.hooks as any,
         selectedVariants: selectedHooksData.selectedVariants as any,
-        referralCode,
-        referredBy: input.referredBy || null,
       });
 
       // Notify owner
@@ -346,9 +341,9 @@ REGRAS ABSOLUTAS:
         timestamp: new Date().toISOString(),
       });
 
-      return { 
-        publicId, 
-        diagnostic, 
+      return {
+        publicId,
+        diagnostic,
         abTestVariant: input.abTestVariant || "A",
         selectedHooks: selectedHooksData.hooks,
         selectedVariants: selectedHooksData.selectedVariants,
