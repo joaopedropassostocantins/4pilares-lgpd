@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import AnalysisBanner from "@/components/AnalysisBanner";
 
 export default function ModuloD() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-primary/5">
+      <AnalysisBanner />
       <div className="w-full h-96 overflow-hidden">
         <img
           src="https://d2xsxph8kpxj0f.cloudfront.net/310519663390392783/g9GC8npXGtLqRcd8tG3q6A/modulo-d-amor-v2-hLWNJBstbj3bKBkczL3Skg.webp"
@@ -22,7 +24,7 @@ export default function ModuloD() {
             Oráculo do Amor
           </h1>
           <p className="text-xl text-muted-foreground">Será que essa é a pessoa certa para mim?</p>
-          <p className="text-sm text-primary/70 mt-4">Análise disponível agora — vagas limitadas</p>
+          <p className="text-sm text-gold/80 mt-4 font-semibold">✦ Análise disponível — Acesso gratuito</p>
         </div>
       </div>
 

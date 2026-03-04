@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import AnalysisBanner from "@/components/AnalysisBanner";
 
 export default function ModuloF() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-primary/5">
+      <AnalysisBanner />
       <div className="w-full h-96 overflow-hidden">
         <img
           src="https://d2xsxph8kpxj0f.cloudfront.net/310519663390392783/g9GC8npXGtLqRcd8tG3q6A/modulo-f-conexao-v2-7jgaca3Shg3kmj64W4eyBk.webp"
@@ -22,7 +24,7 @@ export default function ModuloF() {
             Conexão com Quem Partiu
           </h1>
           <p className="text-xl text-muted-foreground">Como honrar quem se foi e seguir em frente?</p>
-          <p className="text-sm text-primary/70 mt-4">Análise disponível agora — vagas limitadas</p>
+          <p className="text-sm text-gold/80 mt-4 font-semibold">✦ Análise disponível — Acesso gratuito</p>
         </div>
       </div>
 

@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import AnalysisBanner from "@/components/AnalysisBanner";
 
 export default function ModuloB() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-primary/5">
+      <AnalysisBanner />
       <div className="w-full h-96 overflow-hidden">
         <img
           src="https://d2xsxph8kpxj0f.cloudfront.net/310519663390392783/g9GC8npXGtLqRcd8tG3q6A/modulo-b-judicial-v2-7XmnjC5F5o9CQXubcXSf4k.webp"
@@ -22,7 +24,7 @@ export default function ModuloB() {
             Conselheiro Judicial
           </h1>
           <p className="text-xl text-muted-foreground">Quais são meus direitos e por onde começo?</p>
-          <p className="text-sm text-primary/70 mt-4">Análise disponível agora — vagas limitadas</p>
+          <p className="text-sm text-gold/80 mt-4 font-semibold">✦ Análise disponível — Acesso gratuito</p>
         </div>
       </div>
 

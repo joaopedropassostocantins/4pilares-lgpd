@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import AnalysisBanner from "@/components/AnalysisBanner";
 
 export default function ModuloA() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-primary/5">
+      <AnalysisBanner />
       {/* Hero Image */}
       <div className="w-full h-96 overflow-hidden">
         <img
@@ -24,7 +26,7 @@ export default function ModuloA() {
             Oráculo dos Investimentos
           </h1>
           <p className="text-xl text-muted-foreground">Onde colocar meu dinheiro quando tudo parece incerto?</p>
-          <p className="text-sm text-primary/70 mt-4">Em breve — liberação por demanda</p>
+          <p className="text-sm text-gold/80 mt-4 font-semibold">✦ Análise disponível — Acesso gratuito</p>
         </div>
       </div>
 

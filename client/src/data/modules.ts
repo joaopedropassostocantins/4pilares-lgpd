@@ -6,7 +6,7 @@ export const modules = [
     shortDescription: "Onde colocar meu dinheiro quando tudo parece incerto?",
     icon: "💰",
     heroImage: "https://d2xsxph8kpxj0f.cloudfront.net/310519663390392783/g9GC8npXGtLqRcd8tG3q6A/modulo-a-investimentos-v2-YTyBBvNG5NunKMKX95X6eF.webp",
-    status: "Em breve — liberação por demanda",
+    status: "✦ Análise disponível — Acesso gratuito",
     fullDescription: `Sabedoria SAJO + I Ching aplicados à riqueza e ao timing financeiro
 
 "때를 알아야 한다 — Você deve conhecer o seu momento."
@@ -94,7 +94,7 @@ O I Ching — adotado e profundamente refinado na Coreia como Yeok (역) — pos
     shortDescription: "Quais são meus direitos e por onde começo?",
     icon: "⚖️",
     heroImage: "https://d2xsxph8kpxj0f.cloudfront.net/310519663390392783/g9GC8npXGtLqRcd8tG3q6A/modulo-b-judicial-v2-7XmnjC5F5o9CQXubcXSf4k.webp",
-    status: "Em breve — lista de espera aberta",
+    status: "✦ Análise disponível — Acesso gratuito",
     fullDescription: `Timing, estratégia energética e clareza para situações jurídicas
 
 "Sung (訟): há obstáculos se você avança, boa sorte se você para. Não é fraqueza recuar — é sabedoria."
@@ -168,7 +168,7 @@ O Musok coreano oferece outra dimensão: o conceito de Wonhan (원한) — resse
     shortDescription: "Como resolver isso sem destruir o relacionamento?",
     icon: "🌉",
     heroImage: "https://d2xsxph8kpxj0f.cloudfront.net/310519663390392783/g9GC8npXGtLqRcd8tG3q6A/modulo-c-conflitos-v2-bQJYRSmif7ywTrzRrpDYm9.webp",
-    status: "Em breve — acesso antecipado disponível",
+    status: "✦ Análise disponível — Acesso gratuito",
     fullDescription: `Leitura energética de tensões relacionais e caminhos de transformação
 
 "化而不同 — Harmonia sem uniformidade. O sábio busca harmonia, não conformidade."
@@ -230,7 +230,7 @@ Compreender a física do conflito transforma a narrativa: de 'ele é impossível
     title: "💕 Oráculo do Amor",
     shortDescription: "O que este relacionamento está tentando me ensinar?",
     icon: "💕",
-    status: "Em breve — beta fechado",
+    status: "✦ Análise disponível — Acesso gratuito",
     fullDescription: `Reflexão profunda sobre padrões afetivos e lições do coração
 
 ## O PADRÃO QUE SE REPETE
@@ -277,7 +277,7 @@ O SAJO revela que a atração não é acaso — é ressonância. Você atrai pes
     title: "🚪 Caminho de Saída",
     shortDescription: "Estou preso. Como começo a sair?",
     icon: "🚪",
-    status: "Em breve — liberação prioritária para lista",
+    status: "✦ Análise disponível — Acesso gratuito",
     fullDescription: `Orientação simbólica para sair de ciclos, relacionamentos e situações que não servem mais
 
 ## QUANDO VOCÊ SABE QUE PRECISA SAIR
@@ -319,7 +319,7 @@ O SAJO oferece uma perspectiva diferente: sair não é fracasso — é transform
     title: "🕯️ Conexão com Quem Partiu",
     shortDescription: "Como faço as pazes com uma perda que ainda dói?",
     icon: "🕯️",
-    status: "Em breve — acesso por demanda emocional",
+    status: "✦ Análise disponível — Acesso gratuito",
     fullDescription: `Ritual simbólico de luto, honra e reconexão espiritual
 
 ## QUANDO A PERDA NÃO CICATRIZA
