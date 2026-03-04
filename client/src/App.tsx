@@ -21,6 +21,7 @@ import AdminLayout from "./components/AdminLayout";
 import AdminDashboard from "./pages/Admin/Dashboard";
 import AdminDiagnostics from "./pages/Admin/Diagnostics";
 import Checkout from "./pages/Checkout";
+import TopPromoBanner from "./components/TopPromoBanner";
 
 function Router() {
   return (
@@ -65,6 +66,7 @@ function App() {
       <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
+          <TopPromoBanner />
           <Router />
         </TooltipProvider>
       </ThemeProvider>

@@ -53,6 +53,15 @@ async function startServer() {
   // Stripe webhook
   app.use("/api/webhooks", stripeWebhookRouter);
 
+  // ─── Tracking de eventos de UI (banner, CTAs) ─────────────────────────────
+  app.post("/api/events", (req, res) => {
+    const { type, meta } = req.body || {};
+    if (type) {
+      console.log(`[Event] ${type}`, meta || {});
+    }
+    res.status(200).json({ ok: true });
+  });
+
   // tRPC API
   app.use(
     "/api/trpc",
