@@ -1,0 +1,456 @@
+{
+  "version": "2.0",
+  "description": "30 ganchos turbinados com dor específica (dívida, caráter, mãe doente, etc)",
+  "hooks": [
+    {
+      "id": "debt_cycle",
+      "category": "FINANÇAS",
+      "title": "Ciclo de Dívida",
+      "pain": "Você está endividado por erros que insiste em repetir.",
+      "data": "7 em cada 10 brasileiros nessa faixa etária têm padrões de gasto que geram dívida silenciosa.",
+      "question": "Quer ver o padrão que te mantém preso nesse ciclo?",
+      "variants": {
+        "a": "Seu padrão financeiro começou cedo. Você repete o mesmo erro a cada 3-4 meses.",
+        "b": "Você gasta impulsivamente quando está sob pressão. Isso custa caro."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Não é diagnóstico. É um padrão observado.",
+      "tags": ["dívida", "gasto", "impulsivo"]
+    },
+    {
+      "id": "character_flaw",
+      "category": "CARÁTER",
+      "title": "Falha de Caráter",
+      "pain": "Seu caráter já falhou em algum ponto e isso pesa.",
+      "data": "Pesquisas mostram que 6 em cada 10 pessoas têm um ponto cego em seu caráter que afeta relacionamentos.",
+      "question": "Quer saber qual é o seu?",
+      "variants": {
+        "a": "Você é controlador em relacionamentos. Isso afasta as pessoas.",
+        "b": "Você promete demais e entrega pouco. Isso destrói confiança."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Autoconhecimento, não julgamento.",
+      "tags": ["caráter", "relacionamento", "confiança"]
+    },
+    {
+      "id": "sick_mother",
+      "category": "FAMÍLIA",
+      "title": "Mãe Doente",
+      "pain": "Sua mãe doente mexe com suas escolhas mais do que imagina.",
+      "data": "Filhos de pais doentes têm 40% mais chance de tomar decisões baseadas em culpa.",
+      "question": "Você está deixando isso influenciar suas decisões?",
+      "variants": {
+        "a": "Você sacrifica sua vida para cuidar dela. Isso te prende.",
+        "b": "Você sente culpa por não fazer o suficiente. Isso te paralisa."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Empatia, não culpa.",
+      "tags": ["família", "culpa", "sacrifício"]
+    },
+    {
+      "id": "career_stagnation",
+      "category": "CARREIRA",
+      "title": "Estagnação Profissional",
+      "pain": "Você está preso no mesmo cargo há 3+ anos sem crescimento.",
+      "data": "Profissionais que não mudam de posição em 3 anos têm 60% menos chance de crescimento futuro.",
+      "question": "Qual é o padrão que te mantém aqui?",
+      "variants": {
+        "a": "Você tem medo de falhar em um novo desafio. Por isso fica seguro.",
+        "b": "Você não sabe pedir aumento ou promoção. Por isso não recebe."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 20, "ageMax": 120 },
+      "disclaimer": "Análise de padrão, não aconselhamento profissional.",
+      "tags": ["carreira", "crescimento", "medo"]
+    },
+    {
+      "id": "relationship_pattern",
+      "category": "RELAÇÕES",
+      "title": "Padrão de Relacionamento",
+      "pain": "Seus relacionamentos sempre terminam do mesmo jeito.",
+      "data": "Pessoas que repetem o mesmo padrão em 2+ relacionamentos têm um gatilho emocional não resolvido.",
+      "question": "Quer descobrir qual é o seu?",
+      "variants": {
+        "a": "Você escolhe parceiros iguais e depois se arrepende.",
+        "b": "Você sabota relacionamentos quando ficam sérios."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Autoconhecimento emocional.",
+      "tags": ["relacionamento", "padrão", "emoção"]
+    },
+    {
+      "id": "health_neglect",
+      "category": "SAÚDE",
+      "title": "Negligência de Saúde",
+      "pain": "Você negligencia sua saúde até ficar doente.",
+      "data": "Pessoas que ignoram sinais de saúde têm 5x mais chance de doenças crônicas.",
+      "question": "Qual é o sinal que você está ignorando agora?",
+      "variants": {
+        "a": "Você dorme pouco e acha que aguenta. Seu corpo está pedindo ajuda.",
+        "b": "Você não faz exercício porque 'não tem tempo'. Mas tem tempo para sofrer."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Não substitui orientação médica.",
+      "tags": ["saúde", "negligência", "prevenção"]
+    },
+    {
+      "id": "anxiety_spiral",
+      "category": "SAÚDE MENTAL",
+      "title": "Espiral de Ansiedade",
+      "pain": "Você entra em espiral de ansiedade e não consegue sair.",
+      "data": "Pessoas ansiosas que não identificam o gatilho têm 70% mais chance de crises recorrentes.",
+      "question": "Qual é o seu gatilho de ansiedade?",
+      "variants": {
+        "a": "Você fica ansioso com incerteza. Precisa de controle total.",
+        "b": "Você fica ansioso com julgamento. Você se importa demais com opinião alheia."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Não substitui terapia profissional.",
+      "tags": ["ansiedade", "gatilho", "saúde mental"]
+    },
+    {
+      "id": "perfectionism_trap",
+      "category": "COMPORTAMENTO",
+      "title": "Armadilha do Perfeccionismo",
+      "pain": "Seu perfeccionismo te paralisa e você nunca termina nada.",
+      "data": "Perfeccionistas têm 50% mais chance de procrastinação e depressão.",
+      "question": "Você está esperando perfeição antes de começar?",
+      "variants": {
+        "a": "Você adia projetos porque não estão 'bons o suficiente'.",
+        "b": "Você revisa tudo 10x antes de enviar. Isso te consome tempo."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Padrão comportamental.",
+      "tags": ["perfeccionismo", "procrastinação", "produtividade"]
+    },
+    {
+      "id": "people_pleaser",
+      "category": "RELACIONAMENTO",
+      "title": "Síndrome do Agradador",
+      "pain": "Você diz 'sim' para tudo e depois se arrepende.",
+      "data": "Agradadores têm 3x mais chance de burnout e ressentimento.",
+      "question": "Quando foi a última vez que você disse 'não'?",
+      "variants": {
+        "a": "Você não consegue dizer 'não' por medo de desagradar.",
+        "b": "Você faz coisas que não quer fazer para ser aceito."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Padrão relacional.",
+      "tags": ["relacionamento", "limites", "autoestima"]
+    },
+    {
+      "id": "imposter_syndrome",
+      "category": "AUTOESTIMA",
+      "title": "Síndrome do Impostor",
+      "pain": "Você acha que não merece o sucesso que tem.",
+      "data": "70% das pessoas experenciam síndrome do impostor em algum ponto.",
+      "question": "Você está sabotando seu próprio sucesso?",
+      "variants": {
+        "a": "Você acha que 'enganou' as pessoas para chegar aonde está.",
+        "b": "Você acha que qualquer um poderia fazer o que você faz."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Padrão de pensamento.",
+      "tags": ["autoestima", "sucesso", "confiança"]
+    },
+    {
+      "id": "avoidance_pattern",
+      "category": "COMPORTAMENTO",
+      "title": "Padrão de Evitação",
+      "pain": "Você evita problemas até eles explodirem.",
+      "data": "Pessoas que evitam problemas têm 80% mais chance de crises.",
+      "question": "Qual problema você está evitando agora?",
+      "variants": {
+        "a": "Você não enfrenta conversas difíceis. Elas pioram.",
+        "b": "Você não resolve conflitos. Eles acumulam."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Padrão de enfrentamento.",
+      "tags": ["evitação", "conflito", "resolução"]
+    },
+    {
+      "id": "comparison_trap",
+      "category": "SAÚDE MENTAL",
+      "title": "Armadilha da Comparação",
+      "pain": "Você se compara com os outros e sempre se sente inferior.",
+      "data": "Pessoas que se comparam constantemente têm 2x mais chance de depressão.",
+      "question": "Você está vivendo a vida dos outros em vez da sua?",
+      "variants": {
+        "a": "Você vê sucesso alheio e se sente fracassado.",
+        "b": "Você vê beleza alheia e se sente feio."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Padrão de pensamento.",
+      "tags": ["comparação", "autoestima", "redes sociais"]
+    },
+    {
+      "id": "trust_issues",
+      "category": "RELACIONAMENTO",
+      "title": "Problemas de Confiança",
+      "pain": "Você não consegue confiar em ninguém.",
+      "data": "Pessoas com problemas de confiança têm 5x mais chance de solidão.",
+      "question": "Qual experiência te fez desconfiar?",
+      "variants": {
+        "a": "Você foi traído e agora desconfia de todos.",
+        "b": "Você cresceu em ambiente de desconfiança. Isso virou seu padrão."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Padrão emocional.",
+      "tags": ["confiança", "relacionamento", "trauma"]
+    },
+    {
+      "id": "victim_mentality",
+      "category": "MENTALIDADE",
+      "title": "Mentalidade de Vítima",
+      "pain": "Você culpa os outros por seus problemas.",
+      "data": "Pessoas com mentalidade de vítima têm 90% menos chance de resolver problemas.",
+      "question": "Quando foi a última vez que você tomou responsabilidade?",
+      "variants": {
+        "a": "Você acha que a vida é injusta com você.",
+        "b": "Você culpa os outros em vez de se culpar."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Padrão de responsabilidade.",
+      "tags": ["responsabilidade", "mentalidade", "empoderamento"]
+    },
+    {
+      "id": "self_sabotage",
+      "category": "COMPORTAMENTO",
+      "title": "Autossabotagem",
+      "pain": "Você sabota seu próprio sucesso quando está perto.",
+      "data": "Pessoas que se sabotam têm padrão de crenças limitantes não resolvidas.",
+      "question": "Qual é a crença que te faz sabotagem?",
+      "variants": {
+        "a": "Você acha que não merece sucesso. Por isso o sabota.",
+        "b": "Você tem medo de responsabilidade. Por isso fracassa no último momento."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Padrão de crenças.",
+      "tags": ["sabotagem", "crenças", "sucesso"]
+    },
+    {
+      "id": "codependency",
+      "category": "RELACIONAMENTO",
+      "title": "Codependência",
+      "pain": "Você precisa de validação externa para se sentir bem.",
+      "data": "Pessoas codependentes têm 3x mais chance de relacionamentos tóxicos.",
+      "question": "Você está vivendo para agradar os outros?",
+      "variants": {
+        "a": "Você muda quem você é dependendo de quem está ao seu lado.",
+        "b": "Você precisa que os outros aprovem suas decisões."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Padrão relacional.",
+      "tags": ["codependência", "validação", "autoestima"]
+    },
+    {
+      "id": "rage_outbursts",
+      "category": "EMOÇÃO",
+      "title": "Explosões de Raiva",
+      "pain": "Você explode de raiva por coisas pequenas.",
+      "data": "Pessoas com explosões de raiva têm problemas não resolvidos de fundo.",
+      "question": "Qual é o real problema por trás da raiva?",
+      "variants": {
+        "a": "Você está frustrado com sua vida e descarrega nos outros.",
+        "b": "Você tem baixa tolerância e explode rápido."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Padrão emocional.",
+      "tags": ["raiva", "emoção", "controle"]
+    },
+    {
+      "id": "passive_aggressive",
+      "category": "COMPORTAMENTO",
+      "title": "Agressividade Passiva",
+      "pain": "Você não fala o que pensa e depois age de forma agressiva.",
+      "data": "Agressividade passiva destrói relacionamentos silenciosamente.",
+      "question": "O que você não está dizendo?",
+      "variants": {
+        "a": "Você fica quieto quando está chateado e depois se vinga.",
+        "b": "Você faz 'favores' mas depois cobra caro."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Padrão comunicacional.",
+      "tags": ["comunicação", "agressividade", "relacionamento"]
+    },
+    {
+      "id": "addiction_pattern",
+      "category": "COMPORTAMENTO",
+      "title": "Padrão de Vício",
+      "pain": "Você tem um vício que está destruindo sua vida.",
+      "data": "Vícios geralmente mascaram problemas emocionais não resolvidos.",
+      "question": "O que você está tentando escapar?",
+      "variants": {
+        "a": "Você bebe, fuma ou usa drogas para lidar com emoções.",
+        "b": "Você trabalha demais, gasta demais ou come demais para fugir."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Não substitui tratamento profissional.",
+      "tags": ["vício", "comportamento", "saúde"]
+    },
+    {
+      "id": "boundary_issues",
+      "category": "RELACIONAMENTO",
+      "title": "Problemas de Limites",
+      "pain": "Você não consegue estabelecer limites saudáveis.",
+      "data": "Pessoas sem limites têm 4x mais chance de burnout e ressentimento.",
+      "question": "Quem está invadindo seu espaço?",
+      "variants": {
+        "a": "Sua família invade sua privacidade e você não consegue dizer não.",
+        "b": "Seu chefe exige demais e você não consegue recusar."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Padrão relacional.",
+      "tags": ["limites", "relacionamento", "autoestima"]
+    },
+    {
+      "id": "fear_of_abandonment",
+      "category": "EMOÇÃO",
+      "title": "Medo de Abandono",
+      "pain": "Você tem medo de ser abandonado e isso controla suas ações.",
+      "data": "Medo de abandono leva a relacionamentos desesperados e tóxicos.",
+      "question": "Você está segurando relacionamentos ruins por medo?",
+      "variants": {
+        "a": "Você fica em relacionamentos ruins porque tem medo de ficar sozinho.",
+        "b": "Você é ciumento e controlador porque tem medo que te deixem."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Padrão emocional.",
+      "tags": ["abandono", "relacionamento", "insegurança"]
+    },
+    {
+      "id": "shame_spiral",
+      "category": "EMOÇÃO",
+      "title": "Espiral de Vergonha",
+      "pain": "Você sente vergonha de quem você é.",
+      "data": "Vergonha crônica leva a isolamento e depressão.",
+      "question": "O que você está escondendo de si mesmo?",
+      "variants": {
+        "a": "Você se sente inadequado e não merece boas coisas.",
+        "b": "Você esconde quem você realmente é por medo de julgamento."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Padrão emocional.",
+      "tags": ["vergonha", "autoestima", "aceitação"]
+    },
+    {
+      "id": "control_issues",
+      "category": "COMPORTAMENTO",
+      "title": "Problemas de Controle",
+      "pain": "Você precisa controlar tudo e todos ao seu redor.",
+      "data": "Necessidade de controle geralmente vem de trauma ou insegurança.",
+      "question": "Do que você realmente tem medo?",
+      "variants": {
+        "a": "Você controla seu parceiro porque tem medo de ser traído.",
+        "b": "Você controla tudo no trabalho porque tem medo de fracassar."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Padrão comportamental.",
+      "tags": ["controle", "insegurança", "relacionamento"]
+    },
+    {
+      "id": "rejection_sensitivity",
+      "category": "EMOÇÃO",
+      "title": "Sensibilidade ao Rejeição",
+      "pain": "Você é extremamente sensível a rejeição.",
+      "data": "Sensibilidade ao rejeição afeta decisões de vida importantes.",
+      "question": "Você está deixando medo de rejeição guiar suas escolhas?",
+      "variants": {
+        "a": "Você não tenta coisas novas porque tem medo de falhar.",
+        "b": "Você não se aproxima de pessoas porque tem medo de ser rejeitado."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Padrão emocional.",
+      "tags": ["rejeição", "medo", "ação"]
+    },
+    {
+      "id": "validation_seeking",
+      "category": "COMPORTAMENTO",
+      "title": "Busca de Validação",
+      "pain": "Você precisa de validação externa para se sentir bem.",
+      "data": "Busca de validação leva a dependência emocional e ansiedade.",
+      "question": "Você está vivendo para os likes e comentários?",
+      "variants": {
+        "a": "Você posta tudo nas redes sociais para receber validação.",
+        "b": "Você precisa que as pessoas digam que você é bom para acreditar."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Padrão comportamental.",
+      "tags": ["validação", "redes sociais", "autoestima"]
+    },
+    {
+      "id": "martyr_complex",
+      "category": "MENTALIDADE",
+      "title": "Complexo de Mártir",
+      "pain": "Você se sacrifica e depois espera reconhecimento.",
+      "data": "Complexo de mártir leva a ressentimento e relacionamentos tóxicos.",
+      "question": "Você está esperando que os outros notem seu sacrifício?",
+      "variants": {
+        "a": "Você faz tudo pelos outros e depois se sente invisível.",
+        "b": "Você sofre em silêncio esperando que alguém perceba."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Padrão relacional.",
+      "tags": ["sacrifício", "ressentimento", "relacionamento"]
+    },
+    {
+      "id": "scarcity_mindset",
+      "category": "MENTALIDADE",
+      "title": "Mentalidade de Escassez",
+      "pain": "Você vive com medo de não ter o suficiente.",
+      "data": "Mentalidade de escassez limita oportunidades e criatividade.",
+      "question": "Você está deixando medo de falta guiar suas decisões?",
+      "variants": {
+        "a": "Você guarda dinheiro obsessivamente por medo de pobreza.",
+        "b": "Você não investe em si mesmo porque tem medo de perder."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Padrão de mentalidade.",
+      "tags": ["escassez", "abundância", "mentalidade"]
+    },
+    {
+      "id": "emotional_numbness",
+      "category": "SAÚDE MENTAL",
+      "title": "Dormência Emocional",
+      "pain": "Você não consegue sentir emoções. Está entorpecido.",
+      "data": "Dormência emocional geralmente é proteção contra trauma.",
+      "question": "O que você está tentando não sentir?",
+      "variants": {
+        "a": "Você não consegue chorar ou se emocionar com nada.",
+        "b": "Você sente vazio e não consegue se conectar com ninguém."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Não substitui terapia profissional.",
+      "tags": ["emoção", "trauma", "saúde mental"]
+    },
+    {
+      "id": "hypervigilance",
+      "category": "SAÚDE MENTAL",
+      "title": "Hipervigilância",
+      "pain": "Você está sempre alerta e tenso. Nunca relaxa.",
+      "data": "Hipervigilância é sinal de ansiedade ou trauma não resolvido.",
+      "question": "Do que você realmente tem medo?",
+      "variants": {
+        "a": "Você está sempre esperando algo ruim acontecer.",
+        "b": "Você não consegue relaxar porque acha que algo vai dar errado."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Padrão de ansiedade.",
+      "tags": ["ansiedade", "trauma", "vigilância"]
+    },
+    {
+      "id": "people_pleaser_burnout",
+      "category": "SAÚDE",
+      "title": "Burnout do Agradador",
+      "pain": "Você está queimado de tentar agradar a todos.",
+      "data": "Agradadores têm 5x mais chance de burnout que a população geral.",
+      "question": "Quando foi a última vez que você colocou você em primeiro lugar?",
+      "variants": {
+        "a": "Você está exausto de dizer sim para tudo.",
+        "b": "Você não tem tempo para si mesmo porque está ocupado com os outros."
+      },
+      "compatibility": { "gender": ["male", "female", "other"], "ageMin": 16, "ageMax": 120 },
+      "disclaimer": "Padrão de comportamento.",
+      "tags": ["burnout", "esgotamento", "autoestima"]
+    }
+  ]
+}

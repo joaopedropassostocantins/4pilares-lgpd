@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO coupons (code, fixedPrice, maxRedemptions, redeemedCount, active, expiresAt, createdAt) VALUES ('PRIMEIRAS100', 9.90, 100, 0, true, DATE_ADD(NOW(), INTERVAL 30 DAY), NOW());",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GxbsQmoYM7gXTW.root --database g9GC8npXGtLqRcd8tG3q6A --execute INSERT INTO coupons (code, fixedPrice, maxRedemptions, redeemedCount, active, expiresAt, createdAt) VALUES ('PRIMEIRAS100', 9.90, 100, 0, true, DATE_ADD(NOW(), INTERVAL 30 DAY), NOW());",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 77
+}

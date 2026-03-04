@@ -1,0 +1,227 @@
+[
+  {
+    "id": 1,
+    "categoria": "SAUDE",
+    "compat": { "sexo": ["Any"], "faixas": ["25-34", "35-44", "45-54", "55+"] },
+    "a": "Seu corpo costuma dar sinais antes de um problema maior aparecer. Quer ver o que pode estar chamando atenção agora?",
+    "b": "Existem padrões físicos que valem observar antes que virem algo mais sério. Quer identificar o seu?",
+    "d": ["Não é diagnóstico."],
+    "t": ["corpo", "sinal", "saude"]
+  },
+  {
+    "id": 2,
+    "categoria": "SAUDE",
+    "compat": { "sexo": ["Any"], "faixas": ["25-34", "35-44", "45-54", "55+"] },
+    "a": "Há fases em que o ritmo exige mais do que o corpo consegue entregar sem custo. Vale entender onde você está nisso.",
+    "b": "Viver no limite por muito tempo tem consequências que costumam aparecer mais tarde. Quer mapear isso agora?",
+    "d": ["Não é diagnóstico."],
+    "t": ["limite", "energia", "ritmo"]
+  },
+  {
+    "id": 3,
+    "categoria": "SAUDE",
+    "compat": { "sexo": ["Any"], "faixas": ["16-24", "25-34", "35-44", "45-54", "55+"] },
+    "a": "Certos padrões de rotina podem estar drenando sua energia sem que você perceba. Quer identificar qual é o seu?",
+    "b": "Existe algo no seu dia a dia que pode estar pesando mais do que parece. Vale olhar com atenção.",
+    "d": ["Não é diagnóstico."],
+    "t": ["rotina", "energia", "padrao"]
+  },
+  {
+    "id": 4,
+    "categoria": "SAUDE",
+    "compat": { "sexo": ["Any"], "faixas": ["25-34", "35-44", "45-54", "55+"] },
+    "a": "Ignorar certos sinais por tempo demais costuma cobrar um preço — físico ou emocional. Quer ver o que pode estar acumulando?",
+    "b": "Algumas escolhas de rotina têm efeito cumulativo. É comum só perceber quando já pesou. Quer antecipar?",
+    "d": ["Não é diagnóstico."],
+    "t": ["acumulado", "saude", "custo"]
+  },
+  {
+    "id": 5,
+    "categoria": "SAUDE",
+    "compat": { "sexo": ["Any"], "faixas": ["35-44", "45-54", "55+"] },
+    "a": "Em certas fases, vale prestar atenção a alertas que passam despercebidos no dia a dia. Quer identificar o seu?",
+    "b": "Alguns sinais são mais comuns nessa fase e valem observação. Quer ver o que pode estar começando?",
+    "d": ["Não é diagnóstico."],
+    "t": ["alerta", "saude", "fase"]
+  },
+  {
+    "id": 6,
+    "categoria": "SAUDE",
+    "compat": { "sexo": ["Any"], "faixas": ["16-24", "25-34", "35-44", "45-54", "55+"] },
+    "a": "O sono é um dos primeiros indicadores de que algo pode estar fora do ponto. Quer ver o impacto?",
+    "b": "Sono ruim costuma afetar mais do que só cansaço. É comum subestimar esse efeito dominó.",
+    "d": ["Não é diagnóstico."],
+    "t": ["sono", "saude", "energia"]
+  },
+  {
+    "id": 7,
+    "categoria": "SEGURANCA",
+    "compat": { "sexo": ["Any"], "faixas": ["25-34", "35-44", "45-54", "55+"] },
+    "a": "Há exposições que passam despercebidas no cotidiano, mas que valem ser mapeadas com atenção.",
+    "b": "Quem tem responsabilidades tende a subestimar vulnerabilidades do dia a dia. Quer ver onde pode estar o ponto cego?",
+    "d": [],
+    "t": ["seguranca", "exposicao", "ponto-cego"]
+  },
+  {
+    "id": 8,
+    "categoria": "SEGURANCA",
+    "compat": { "sexo": ["Any"], "faixas": ["16-24", "25-34", "35-44", "45-54", "55+"] },
+    "a": "Algumas vulnerabilidades de rotina são mais visíveis de fora do que para quem está dentro. Quer identificar a sua?",
+    "b": "É comum ter pontos de exposição que parecem pequenos, mas chamam atenção de quem observa. Quer mapear?",
+    "d": [],
+    "t": ["vulnerabilidade", "rotina", "seguranca"]
+  },
+  {
+    "id": 9,
+    "categoria": "SEGURANCA",
+    "compat": { "sexo": ["Any"], "faixas": ["16-24", "25-34", "35-44", "45-54", "55+"] },
+    "a": "Há padrões de trajeto e rotina que podem aumentar risco sem você perceber. Vale mapear o seu.",
+    "b": "Situações de risco costumam surgir nos pontos que consideramos mais seguros. Quer identificar o ponto de atenção?",
+    "d": [],
+    "t": ["trajeto", "rotina", "risco"]
+  },
+  {
+    "id": 10,
+    "categoria": "SEGURANCA",
+    "compat": { "sexo": ["Any"], "faixas": ["16-24", "25-34", "35-44", "45-54", "55+"] },
+    "a": "É comum depositar confiança em pessoas que ainda não foram testadas em situações difíceis. Vale observar sinais.",
+    "b": "Nem toda relação de confiança foi construída com tempo suficiente. Quer identificar o ponto cego?",
+    "d": [],
+    "t": ["confianca", "relacoes", "seguranca"]
+  },
+  {
+    "id": 11,
+    "categoria": "SEGURANCA",
+    "compat": { "sexo": ["Any"], "faixas": ["16-24", "25-34", "35-44", "45-54", "55+"] },
+    "a": "Intuições sobre risco costumam ter base. Quer ver o ponto de atenção?",
+    "b": "A sensação de que pode dar ruim merece atenção. Quer mapear de onde ela vem?",
+    "d": [],
+    "t": ["intuicao", "risco", "seguranca"]
+  },
+  {
+    "id": 12,
+    "categoria": "FINANCAS",
+    "compat": { "sexo": ["Any"], "faixas": ["16-24", "25-34", "35-44", "45-54", "55+"] },
+    "a": "Há padrões de gasto que drenam recursos de forma silenciosa. Quer identificar o seu?",
+    "b": "É comum perder dinheiro por hábitos que parecem inofensivos quando somados. Quer ver onde isso pode estar acontecendo?",
+    "d": [],
+    "t": ["gasto", "habito", "financas"]
+  },
+  {
+    "id": 13,
+    "categoria": "FINANCAS",
+    "compat": { "sexo": ["Any"], "faixas": ["25-34", "35-44", "45-54", "55+"] },
+    "a": "Imprevistos financeiros pesam muito mais quando não há margem. Quer ver seu cenário antes que aperte?",
+    "b": "Um choque inesperado tem impacto maior sem reserva. Quer antecipar o risco?",
+    "d": [],
+    "t": ["imprevisto", "reserva", "financas"]
+  },
+  {
+    "id": 14,
+    "categoria": "FINANCAS",
+    "compat": { "sexo": ["Any"], "faixas": ["25-34", "35-44", "45-54", "55+"] },
+    "a": "Há estruturas financeiras que parecem estáveis, mas têm um pilar fraco não percebido. Quer identificar o seu?",
+    "b": "É comum sustentar compromissos que, somados, criam um ponto de ruptura. Vale mapear onde está a fragilidade.",
+    "d": [],
+    "t": ["estrutura", "fragilidade", "financas"]
+  },
+  {
+    "id": 15,
+    "categoria": "FINANCAS",
+    "compat": { "sexo": ["Any"], "faixas": ["16-24", "25-34", "35-44", "45-54", "55+"] },
+    "a": "Uma escolha financeira no timing errado pode gerar meses de pressão. Quer ver o cenário antes de decidir?",
+    "b": "Há decisões simples com consequências longas. Vale antecipar o pior cenário possível.",
+    "d": [],
+    "t": ["decisao", "timing", "financas"]
+  },
+  {
+    "id": 16,
+    "categoria": "FINANCAS",
+    "compat": { "sexo": ["Any"], "faixas": ["25-34", "35-44", "45-54", "55+"] },
+    "a": "Padrões financeiros repetidos sem revisão costumam virar queda. Quer identificar a falha no seu plano?",
+    "b": "É comum manter um plano que não funciona porque parece familiar. Quer ver o que trava o resultado?",
+    "d": [],
+    "t": ["plano", "falha", "financas"]
+  },
+  {
+    "id": 17,
+    "categoria": "RELACOES",
+    "compat": { "sexo": ["Any"], "faixas": ["16-24", "25-34", "35-44", "45-54", "55+"] },
+    "a": "Silêncios prolongados raramente significam resolução. Costumam ser acúmulo. Vale observar.",
+    "b": "O que fica sem conversa tende a crescer. Quer ver o que pode estar se acumulando?",
+    "d": [],
+    "t": ["relacoes", "comunicacao", "silencio"]
+  },
+  {
+    "id": 18,
+    "categoria": "RELACOES",
+    "compat": { "sexo": ["Any"], "faixas": ["16-24", "25-34", "35-44", "45-54", "55+"] },
+    "a": "Segurar dor emocional por muito tempo tem um ponto de saturação. É comum não perceber onde ele está.",
+    "b": "Emoções não processadas costumam aparecer de outras formas mais tarde. Quer mapear o que pode estar acumulando?",
+    "d": ["Não é diagnóstico."],
+    "t": ["emocao", "acumulo", "relacoes"]
+  },
+  {
+    "id": 19,
+    "categoria": "RELACOES",
+    "compat": { "sexo": ["Any"], "faixas": ["16-24", "25-34", "35-44", "45-54", "55+"] },
+    "a": "Nem toda pessoa próxima é presença de apoio. Às vezes o que drena vem de perto. Vale observar.",
+    "b": "É comum confundir presença com apoio. Quer identificar quem pode estar custando mais do que contribuindo?",
+    "d": [],
+    "t": ["circulo", "apoio", "risco"]
+  },
+  {
+    "id": 20,
+    "categoria": "RELACOES",
+    "compat": { "sexo": ["Any"], "faixas": ["16-24", "25-34", "35-44", "45-54", "55+"] },
+    "a": "Rupturas raramente começam na crise. Os primeiros sinais aparecem antes. Vale reconhecer.",
+    "b": "É comum ignorar sinais iniciais porque parecem pequenos. Quer ver o que vale observar?",
+    "d": [],
+    "t": ["ruptura", "sinais", "relacoes"]
+  },
+  {
+    "id": 21,
+    "categoria": "RELACOES",
+    "compat": { "sexo": ["Any"], "faixas": ["16-24", "25-34", "35-44", "45-54", "55+"] },
+    "a": "Há momentos em que sobrecarga emocional aumenta risco de decisões caras depois. Vale mapear.",
+    "b": "Decisões sob pressão emocional têm padrão. Quer identificar seu gatilho?",
+    "d": ["Não é diagnóstico."],
+    "t": ["emocao", "decisao", "gatilho"]
+  },
+  {
+    "id": 22,
+    "categoria": "FUTURO",
+    "compat": { "sexo": ["Any"], "faixas": ["25-34", "35-44", "45-54", "55+"] },
+    "a": "Há fases em que erros de decisão custam mais. Quer saber se você está numa dessas fases agora?",
+    "b": "O custo de decisões erradas não é uniforme ao longo da vida. Vale mapear o que está em jogo.",
+    "d": [],
+    "t": ["decisao", "fase", "futuro"]
+  },
+  {
+    "id": 23,
+    "categoria": "FUTURO",
+    "compat": { "sexo": ["Any"], "faixas": ["16-24", "25-34", "35-44", "45-54", "55+"] },
+    "a": "Existe uma armadilha que parece lógica por fora, mas destrói o timing por dentro. Quer identificar se está perto dela?",
+    "b": "Decisões racionais às vezes têm custo de timing que só aparece depois. Vale ver antes de agir.",
+    "d": [],
+    "t": ["timing", "armadilha", "futuro"]
+  },
+  {
+    "id": 24,
+    "categoria": "FUTURO",
+    "compat": { "sexo": ["Any"], "faixas": ["16-24", "25-34", "35-44", "45-54", "55+"] },
+    "a": "Há janelas de tempo que, uma vez perdidas, não voltam com o mesmo valor. Quer ver se você está perto de uma?",
+    "b": "Tempo desperdiçado na fase errada tem custo que não aparece na hora. Vale mapear agora.",
+    "d": [],
+    "t": ["tempo", "janela", "futuro"]
+  },
+  {
+    "id": 25,
+    "categoria": "FUTURO",
+    "compat": { "sexo": ["Any"], "faixas": ["16-24", "25-34", "35-44", "45-54", "55+"] },
+    "a": "O medo de perder costuma ter base real — certos riscos ficam mais próximos do que parecem nessa fase. Quer ver o seu?",
+    "b": "Intuições de risco raramente são exagero. Há padrões reconhecíveis. Quer ver o que está mais perto agora?",
+    "d": [],
+    "t": ["risco", "medo", "futuro"]
+  }
+]

@@ -1,0 +1,90 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1772265952916,
+      "tag": "0000_tired_pepper_potts",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1772266015742,
+      "tag": "0001_public_cammi",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1772277697354,
+      "tag": "0002_amused_betty_brant",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1772279242472,
+      "tag": "0003_rich_impossible_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1772289588495,
+      "tag": "0004_massive_the_executioner",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1772290615986,
+      "tag": "0005_numerous_forgotten_one",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1772294029074,
+      "tag": "0006_burly_whirlwind",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1772294980661,
+      "tag": "0007_groovy_hercules",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1772367761809,
+      "tag": "0008_previous_purifiers",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1772571936657,
+      "tag": "0009_lovely_shatterstar",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1772575482530,
+      "tag": "0010_overjoyed_wildside",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1772577878777,
+      "tag": "0011_cute_sentinels",
+      "breakpoints": true
+    }
+  ]
+}

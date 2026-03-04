@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "categoria": "SAUDE",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["25-34","35-44","45-54","55+"]
+    },
+    "leveA": "Seu corpo costuma dar sinais antes de um problema maior aparecer. Quer ver o que pode estar chamando atenção agora?",
+    "leveB": "Existem padrões físicos que valem observar antes que virem algo mais sério. Quer identificar o seu?",
+    "disclaimers": ["Não é diagnóstico."],
+    "tags": ["corpo","sinal","saude"]
+  },
+  {
+    "id": 2,
+    "categoria": "SAUDE",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["25-34","35-44","45-54","55+"]
+    },
+    "leveA": "Há fases em que o ritmo exige muito mais do que o corpo consegue entregar sem custo. Vale entender onde você está nisso.",
+    "leveB": "Viver no limite por muito tempo tem consequências que costumam aparecer mais tarde. Quer mapear isso agora?",
+    "disclaimers": ["Não é diagnóstico."],
+    "tags": ["limite","energia","ritmo"]
+  },
+  {
+    "id": 3,
+    "categoria": "SAUDE",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["16-24","25-34","35-44","45-54","55+"]
+    },
+    "leveA": "Certos padrões de rotina podem estar drenando sua energia sem que você perceba. Quer identificar qual é o seu?",
+    "leveB": "Existe algo no seu dia a dia que pode estar pesando mais do que parece. Vale olhar com atenção.",
+    "disclaimers": ["Não é diagnóstico."],
+    "tags": ["rotina","energia","padrao"]
+  },
+  {
+    "id": 4,
+    "categoria": "SAUDE",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["25-34","35-44","45-54","55+"]
+    },
+    "leveA": "Ignorar certos sinais por tempo demais costuma cobrar um preço — físico ou emocional. Quer ver o que pode estar acumulando?",
+    "leveB": "Algumas escolhas de rotina têm efeito cumulativo. É comum só perceber quando já pesou. Quer antecipar?",
+    "disclaimers": ["Não é diagnóstico."],
+    "tags": ["acumulado","saude","custo"]
+  },
+  {
+    "id": 5,
+    "categoria": "SAUDE",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["35-44","45-54","55+"]
+    },
+    "leveA": "Em certas fases da vida, vale prestar atenção a alertas que passam despercebidos no dia a dia. Quer identificar o seu?",
+    "leveB": "Dados públicos mostram que algumas condições de saúde são mais comuns nessa fase. Vale observar o que pode estar começando.",
+    "disclaimers": ["Não é diagnóstico."],
+    "tags": ["alerta","saude","fase"]
+  },
+  {
+    "id": 6,
+    "categoria": "SAUDE",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["16-24","25-34","35-44","45-54","55+"]
+    },
+    "leveA": "O sono é um dos primeiros indicadores de que algo no seu equilíbrio pode estar fora do ponto. Quer ver o impacto?",
+    "leveB": "Qualidade de sono ruim costuma afetar muito mais do que só o cansaço. É comum subestimar esse efeito dominó.",
+    "disclaimers": ["Não é diagnóstico."],
+    "tags": ["sono","saude","energia"]
+  },
+  {
+    "id": 7,
+    "categoria": "SEGURANCA",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["25-34","35-44","45-54","55+"]
+    },
+    "leveA": "Há exposições que passam despercebidas no cotidiano familiar, mas que valem ser mapeadas com atenção.",
+    "leveB": "Quem tem família tende a subestimar certas vulnerabilidades do dia a dia. Quer ver onde pode estar o ponto cego?",
+    "disclaimers": [],
+    "tags": ["familia","seguranca","exposicao"]
+  },
+  {
+    "id": 8,
+    "categoria": "SEGURANCA",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["16-24","25-34","35-44","45-54","55+"]
+    },
+    "leveA": "Algumas vulnerabilidades de rotina são mais visíveis do exterior do que para quem está dentro. Quer identificar a sua?",
+    "leveB": "É comum ter pontos de exposição que parecem pequenos mas chamam atenção de quem está de fora. Quer mapear?",
+    "disclaimers": [],
+    "tags": ["vulnerabilidade","rotina","seguranca"]
+  },
+  {
+    "id": 9,
+    "categoria": "SEGURANCA",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["16-24","25-34","35-44","45-54","55+"]
+    },
+    "leveA": "Há padrões de trajeto e rotina que podem aumentar o risco sem que a gente perceba. Vale mapear o seu.",
+    "leveB": "Situações de risco costumam surgir nos pontos que consideramos mais seguros. Quer identificar o seu ponto de atenção?",
+    "disclaimers": [],
+    "tags": ["trajeto","rotina","risco"]
+  },
+  {
+    "id": 10,
+    "categoria": "SEGURANCA",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["16-24","25-34","35-44","45-54","55+"]
+    },
+    "leveA": "É comum depositar confiança em pessoas que ainda não foram testadas em situações difíceis. Vale observar os sinais.",
+    "leveB": "Nem toda relação de confiança foi construída com tempo suficiente. Quer identificar onde pode estar o ponto cego?",
+    "disclaimers": [],
+    "tags": ["confianca","relacoes","seguranca"]
+  },
+  {
+    "id": 11,
+    "categoria": "SEGURANCA",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["16-24","25-34","35-44","45-54","55+"]
+    },
+    "leveA": "Intuições sobre risco costumam ter base — mesmo quando parecem exagero. Quer ver o ponto de atenção?",
+    "leveB": "Aquela sensação de que pode dar ruim merece atenção, não descarte. Quer mapear de onde ela vem?",
+    "disclaimers": [],
+    "tags": ["intuicao","risco","seguranca"]
+  },
+  {
+    "id": 12,
+    "categoria": "FINANCAS",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["16-24","25-34","35-44","45-54","55+"]
+    },
+    "leveA": "Há padrões de gasto que drenam recursos de forma silenciosa — pequenos, constantes, invisíveis. Quer identificar o seu?",
+    "leveB": "É comum perder dinheiro por hábitos que parecem inofensivos somados. Quer ver onde isso pode estar acontecendo?",
+    "disclaimers": [],
+    "tags": ["gasto","habito","financas"]
+  },
+  {
+    "id": 13,
+    "categoria": "FINANCAS",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["25-34","35-44","45-54","55+"]
+    },
+    "leveA": "Dados públicos mostram que imprevistos financeiros costumam pegar desprevenido quem não tem reserva. Vale ver seu cenário.",
+    "leveB": "Um choque financeiro inesperado tem impacto muito maior quando não há margem. Quer antecipar o risco?",
+    "disclaimers": [],
+    "tags": ["imprevisto","reserva","financas"]
+  },
+  {
+    "id": 14,
+    "categoria": "FINANCAS",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["25-34","35-44","45-54","55+"]
+    },
+    "leveA": "Há estruturas financeiras que parecem estáveis mas têm um pilar fraco não percebido. Quer identificar o seu?",
+    "leveB": "É comum sustentar compromissos que, somados, criam um ponto de ruptura. Vale mapear onde está a fragilidade.",
+    "disclaimers": [],
+    "tags": ["estrutura","debito","financas"]
+  },
+  {
+    "id": 15,
+    "categoria": "FINANCAS",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["16-24","25-34","35-44","45-54","55+"]
+    },
+    "leveA": "Uma escolha financeira feita no momento errado pode gerar meses de pressão. Quer ver o cenário antes de decidir?",
+    "leveB": "Há decisões que parecem simples mas têm consequências longas. Vale antecipar o pior cenário possível.",
+    "disclaimers": [],
+    "tags": ["decisao","timing","financas"]
+  },
+  {
+    "id": 16,
+    "categoria": "FINANCAS",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["25-34","35-44","45-54","55+"]
+    },
+    "leveA": "Padrões financeiros repetidos sem revisão costumam virar queda. Quer identificar onde está a falha no seu plano?",
+    "leveB": "É comum manter um plano que não funciona porque parece familiar. Vale ver o que está travando o resultado.",
+    "disclaimers": [],
+    "tags": ["plano","falha","financas"]
+  },
+  {
+    "id": 17,
+    "categoria": "RELACOES",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["16-24","25-34","35-44","45-54","55+"]
+    },
+    "leveA": "Silêncios prolongados em relacionamentos raramente significam resolução — costumam ser acúmulo. Vale observar.",
+    "leveB": "O que fica sem conversa num relacionamento tende a crescer. Quer ver o que pode estar se acumulando?",
+    "disclaimers": [],
+    "tags": ["relacionamento","comunicacao","silencio"]
+  },
+  {
+    "id": 18,
+    "categoria": "RELACOES",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["16-24","25-34","35-44","45-54","55+"]
+    },
+    "leveA": "Segurar dor emocional por muito tempo tem um ponto de saturação. É comum não perceber onde esse ponto está.",
+    "leveB": "Emoções não processadas costumam aparecer de outras formas mais tarde. Quer mapear o que pode estar acumulando?",
+    "disclaimers": ["Não é diagnóstico."],
+    "tags": ["emocao","acumulo","relacoes"]
+  },
+  {
+    "id": 19,
+    "categoria": "RELACOES",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["16-24","25-34","35-44","45-54","55+"]
+    },
+    "leveA": "Nem toda pessoa próxima é uma presença de apoio de fato. Às vezes a energia que drena vem de perto. Vale observar.",
+    "leveB": "É comum confundir presença com apoio. Quer identificar quem na sua rede pode estar custando mais do que contribuindo?",
+    "disclaimers": [],
+    "tags": ["circulo","apoio","risco"]
+  },
+  {
+    "id": 20,
+    "categoria": "RELACOES",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["16-24","25-34","35-44","45-54","55+"]
+    },
+    "leveA": "Rupturas relacionais raramente começam no momento da crise — os primeiros sinais aparecem antes. Vale aprender a reconhecê-los.",
+    "leveB": "É comum ignorar os sinais iniciais de uma ruptura porque parecem pequenos. Quer ver o que vale observar?",
+    "disclaimers": [],
+    "tags": ["ruptura","sinais","relacoes"]
+  },
+  {
+    "id": 21,
+    "categoria": "RELACOES",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["16-24","25-34","35-44","45-54","55+"]
+    },
+    "leveA": "Há momentos em que o estado emocional aumenta o risco de tomar decisões que vão custar caro depois. Vale mapear.",
+    "leveB": "Decisões tomadas em sobrecarga emocional costumam ter um padrão reconhecível. Quer identificar o seu gatilho?",
+    "disclaimers": ["Não é diagnóstico."],
+    "tags": ["emocao","decisao","gatilho"]
+  },
+  {
+    "id": 22,
+    "categoria": "FUTURO",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["25-34","35-44","45-54","55+"]
+    },
+    "leveA": "Há fases em que erros de decisão custam mais do que em outras. Quer saber se você está numa dessas fases agora?",
+    "leveB": "O custo de decisões erradas não é uniforme ao longo da vida — há períodos em que o preço é mais alto. Vale mapear.",
+    "disclaimers": [],
+    "tags": ["decisao","fase","futuro"]
+  },
+  {
+    "id": 23,
+    "categoria": "FUTURO",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["16-24","25-34","35-44","45-54","55+"]
+    },
+    "leveA": "Existe um tipo de armadilha que parece lógica por fora mas destrói o timing por dentro. Quer identificar se está perto da sua?",
+    "leveB": "Decisões que parecem racionais às vezes têm um custo de timing que só aparece depois. Vale ver antes de agir.",
+    "disclaimers": [],
+    "tags": ["timing","armadilha","futuro"]
+  },
+  {
+    "id": 24,
+    "categoria": "FUTURO",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["16-24","25-34","35-44","45-54","55+"]
+    },
+    "leveA": "Há janelas de tempo que, uma vez perdidas, não voltam com o mesmo valor. Quer ver se você está perto de uma delas?",
+    "leveB": "Tempo desperdiçado na fase errada tem um custo que não aparece imediatamente. Vale mapear o que está em jogo agora.",
+    "disclaimers": [],
+    "tags": ["tempo","janela","futuro"]
+  },
+  {
+    "id": 25,
+    "categoria": "FUTURO",
+    "compatibilidade": {
+      "sexo": ["Any"],
+      "faixas": ["16-24","25-34","35-44","45-54","55+"]
+    },
+    "leveA": "O medo de perder costuma ter base real — dados públicos mostram que certos riscos são mais próximos do que parecem nessa fase.",
+    "leveB": "Intuições de risco não costumam ser exagero — há padrões reconhecíveis. Quer ver o que está mais perto de você agora?",
+    "disclaimers": [],
+    "tags": ["risco","medo","futuro"]
+  }
+]
