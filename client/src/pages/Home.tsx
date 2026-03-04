@@ -8,6 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import ModuleCard from "@/components/ModuleCard";
 import { modules } from "@/data/modules";
 import { selectHook, calcFaixa } from "@/data/hooks";
+import ZodiacGrid from "@/components/ZodiacGrid";
 import {
   Loader2,
   Search,
@@ -547,10 +548,10 @@ export default function Home() {
               <div key={step} className="flex-1 flex items-center gap-2">
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${step < formStep
-                      ? "progress-step completed"
-                      : step === formStep
-                        ? "progress-step active"
-                        : "bg-muted text-muted-foreground"
+                    ? "progress-step completed"
+                    : step === formStep
+                      ? "progress-step active"
+                      : "bg-muted text-muted-foreground"
                     }`}
                 >
                   {step < formStep ? "✓" : step}
@@ -1040,8 +1041,7 @@ export default function Home() {
           </h2>
         </div>
         <p className="text-center text-muted-foreground mb-10 max-w-2xl mx-auto">
-          Além da análise dos 4 Pilares, estamos desenvolvendo 6 módulos para áreas específicas da sua vida.
-          Garanta sua vaga na fila de espera.
+          Escolha o módulo que mais ressoa com o que você está vivendo agora — e inicie sua análise personalizada.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {modules.map((module) => (
@@ -1049,6 +1049,9 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* ═══════ SIGNOS COREANOS ═══════ */}
+      <ZodiacGrid />
 
       {/* ═══════ FOOTER ═══════ */}
       <footer className="border-t border-border/30 mt-16 py-8 text-center text-muted-foreground text-sm">

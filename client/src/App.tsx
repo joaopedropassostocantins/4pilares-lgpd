@@ -20,6 +20,7 @@ import BetaSignupThankYou from "./pages/BetaSignupThankYou";
 import AdminLayout from "./components/AdminLayout";
 import AdminDashboard from "./pages/Admin/Dashboard";
 import AdminDiagnostics from "./pages/Admin/Diagnostics";
+import Checkout from "./pages/Checkout";
 
 function Router() {
   return (
@@ -37,6 +38,7 @@ function Router() {
       <Route path="/obrigado-cadastro" component={BetaSignupThankYou} />
       <Route path="/resultado/:publicId" component={Resultado} />
       <Route path="/obrigado/:publicId" component={Obrigado} />
+      <Route path="/checkout/:module" component={Checkout} />
       <Route path="/admin">
         {() => (
           <AdminLayout>
