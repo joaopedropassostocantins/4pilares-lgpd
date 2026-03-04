@@ -52,20 +52,8 @@ export default function ModuleDetail() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Image */}
-      {module.heroImage && (
-        <div className="w-full h-64 md:h-96 overflow-hidden relative">
-          <img
-            src={module.heroImage}
-            alt={module.title}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background" />
-        </div>
-      )}
-
-      {/* Header */}
-      <div className="max-w-3xl mx-auto px-5 -mt-16 relative z-10">
+      {/* Header - MOVED TO TOP */}
+      <div className="max-w-3xl mx-auto px-5 pt-6 relative z-10">
         <Link href="/">
           <span className="inline-flex items-center gap-2 text-gold text-sm mb-6 hover:text-gold/80 transition-colors cursor-pointer">
             <ArrowLeft className="h-4 w-4" />
@@ -87,6 +75,17 @@ export default function ModuleDetail() {
           {module.status}
         </span>
       </div>
+
+      {/* Hero Image - MOVED BELOW HEADER */}
+      {module.heroImage && (
+        <div className="w-full h-48 md:h-64 overflow-hidden relative mt-6">
+          <img
+            src={module.heroImage}
+            alt={module.title}
+            className="w-full h-full object-cover rounded-lg"
+          />
+        </div>
+      )}
 
       {/* Content */}
       <div className="max-w-3xl mx-auto px-5 py-12 space-y-10">

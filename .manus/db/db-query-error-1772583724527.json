@@ -1,0 +1,8 @@
+{
+  "query": "SELECT \n  d.archetype,\n  COUNT(f.id) as total_feedback,\n  COUNT(CASE WHEN f.isAccurate = 1 THEN 1 END) as accurate_count,\n  COUNT(CASE WHEN f.isAccurate = 0 THEN 1 END) as inaccurate_count,\n  ROUND(COUNT(CASE WHEN f.isAccurate = 0 THEN 1 END) * 100.0 / COUNT(f.id), 2) as rejection_rate\nFROM diagnostics d\nLEFT JOIN feedbacks f ON d.publicId = f.diagnosticPublicId\nWHERE f.id IS NOT NULL\nGROUP BY d.archetype\nORDER BY rejection_rate DESC;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GxbsQmoYM7gXTW.root --database g9GC8npXGtLqRcd8tG3q6A --execute SELECT \n  d.archetype,\n  COUNT(f.id) as total_feedback,\n  COUNT(CASE WHEN f.isAccurate = 1 THEN 1 END) as accurate_count,\n  COUNT(CASE WHEN f.isAccurate = 0 THEN 1 END) as inaccurate_count,\n  ROUND(COUNT(CASE WHEN f.isAccurate = 0 THEN 1 END) * 100.0 / COUNT(f.id), 2) as rejection_rate\nFROM diagnostics d\nLEFT JOIN feedbacks f ON d.publicId = f.diagnosticPublicId\nWHERE f.id IS NOT NULL\nGROUP BY d.archetype\nORDER BY rejection_rate DESC;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'f.diagnosticpublicid' in 'on clause'"
+  ]
+}

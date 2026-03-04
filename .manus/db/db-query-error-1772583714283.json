@@ -1,0 +1,8 @@
+{
+  "query": "SELECT \n  JSON_EXTRACT(analysis, '$.modules[*].id') as module_ids,\n  COUNT(*) as total_diagnostics,\n  COUNT(CASE WHEN paymentStatus = 'paid' THEN 1 END) as paid_count,\n  ROUND(COUNT(CASE WHEN paymentStatus = 'paid' THEN 1 END) * 100.0 / COUNT(*), 2) as conversion_rate\nFROM diagnostics \nWHERE analysis IS NOT NULL\nGROUP BY JSON_EXTRACT(analysis, '$.modules[*].id')\nORDER BY conversion_rate ASC\nLIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GxbsQmoYM7gXTW.root --database g9GC8npXGtLqRcd8tG3q6A --execute SELECT \n  JSON_EXTRACT(analysis, '$.modules[*].id') as module_ids,\n  COUNT(*) as total_diagnostics,\n  COUNT(CASE WHEN paymentStatus = 'paid' THEN 1 END) as paid_count,\n  ROUND(COUNT(CASE WHEN paymentStatus = 'paid' THEN 1 END) * 100.0 / COUNT(*), 2) as conversion_rate\nFROM diagnostics \nWHERE analysis IS NOT NULL\nGROUP BY JSON_EXTRACT(analysis, '$.modules[*].id')\nORDER BY conversion_rate ASC\nLIMIT 20;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'analysis' in 'group statement'"
+  ]
+}

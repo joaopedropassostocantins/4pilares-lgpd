@@ -1,0 +1,9 @@
+{
+  "query": "SELECT \n  d.archetype,\n  COUNT(f.id) as total_feedback,\n  COUNT(CASE WHEN f.accuracy IN ('very_inaccurate', 'inaccurate') THEN 1 END) as rejection_count,\n  ROUND(COUNT(CASE WHEN f.accuracy IN ('very_inaccurate', 'inaccurate') THEN 1 END) * 100.0 / COUNT(f.id), 2) as rejection_rate\nFROM diagnostics d\nINNER JOIN feedbacks f ON d.id = f.diagnosticId\nGROUP BY d.archetype\nORDER BY rejection_rate DESC;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GxbsQmoYM7gXTW.root --database g9GC8npXGtLqRcd8tG3q6A --execute SELECT \n  d.archetype,\n  COUNT(f.id) as total_feedback,\n  COUNT(CASE WHEN f.accuracy IN ('very_inaccurate', 'inaccurate') THEN 1 END) as rejection_count,\n  ROUND(COUNT(CASE WHEN f.accuracy IN ('very_inaccurate', 'inaccurate') THEN 1 END) * 100.0 / COUNT(f.id), 2) as rejection_rate\nFROM diagnostics d\nINNER JOIN feedbacks f ON d.id = f.diagnosticId\nGROUP BY d.archetype\nORDER BY rejection_rate DESC;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 71
+}
