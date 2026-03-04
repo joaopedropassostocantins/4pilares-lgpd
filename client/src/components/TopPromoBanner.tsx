@@ -5,7 +5,7 @@ import { Link } from "wouter";
 const BANNER_KEY = "promo_banner_closed_until";
 const BANNER_TTL_DAYS = 7;
 // Altere o número abaixo para o WhatsApp real (ou defina como "" para ocultar o botão)
-const WHATSAPP_NUMBER = "5511999999999"; // ex: "5511999999999"
+const WHATSAPP_NUMBER = "5563984381782"; // (63) 98438-1782
 const WHATSAPP_MSG = encodeURIComponent(
     "Olá! Vi o banner sobre os módulos de análise SAJO e quero saber mais sobre o acompanhamento virtual de 90 dias."
 );
