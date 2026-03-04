@@ -12,6 +12,25 @@ export default function ModuleCard({ module }: ModuleCardProps) {
   const accentColor = (module as any).accentColor ?? "#C9A84C";
   const colorClass = (module as any).colorClass ?? "";
   const paymentSlug = (module as any).paymentSlug;
+  
+  // Preços e status por módulo
+  const getPriceInfo = () => {
+    const moduleId = (module as any).id;
+    if (moduleId === 'a' || moduleId === 'f') {
+      return {
+        price: 'R$ 3.999',
+        status: 'SEM VAGAS - ENTRADA E FILA DE ESPERA',
+        hasSpots: false
+      };
+    }
+    return {
+      price: 'R$ 1.499',
+      status: 'COM VAGA',
+      hasSpots: true
+    };
+  };
+  
+  const priceInfo = getPriceInfo();
 
   return (
     <div
@@ -68,7 +87,7 @@ export default function ModuleCard({ module }: ModuleCardProps) {
               className="btn-module-checkout block text-center w-full text-sm py-2.5"
               style={{ background: accentColor }}
             >
-              💳 Desbloquear R$ 3.990,00 - SINAL R$ 1499,90 (TURMA 07/26) - WHASTAPP MAIS DETALHES
+              💳 Desbloquear {priceInfo.price} - {priceInfo.status}
             </span>
           </Link>
         )}
