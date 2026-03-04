@@ -22,7 +22,7 @@ export default function ModuloD() {
             Oráculo do Amor
           </h1>
           <p className="text-xl text-muted-foreground">Será que essa é a pessoa certa para mim?</p>
-          <p className="text-sm text-primary/70 mt-4">Em breve — lista de espera aberta</p>
+          <p className="text-sm text-primary/70 mt-4">Análise disponível agora — vagas limitadas</p>
         </div>
       </div>
 
@@ -71,9 +71,9 @@ export default function ModuloD() {
         </div>
 
         <div className="text-center py-8">
-          <Link href="/">
+          <Link href="/?scroll=form">
             <Button size="lg" className="text-lg px-8 py-6">
-              FAZER MINHA ANÁLISE GRATUITA
+              FAZER MINHA ANÁLISE GRATUITA AGORA
             </Button>
           </Link>
           <p className="text-sm text-muted-foreground mt-4">
