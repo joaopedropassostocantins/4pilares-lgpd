@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, diagnostics, InsertDiagnostic, feedbacks, InsertFeedback, coupons, couponRedemptions } from "../drizzle/schema";
+import { InsertUser, users, diagnostics, InsertDiagnostic, Diagnostic, feedbacks, InsertFeedback, coupons, couponRedemptions } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -53,8 +53,12 @@ export async function getUserByOpenId(openId: string) {
 export async function createDiagnostic(data: InsertDiagnostic) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.insert(diagnostics).values(data).returning();
-  return result[0];
+  await db.insert(diagnostics).values(data);
+  // Return the created diagnostic by fetching it
+  if (data.publicId) {
+    return getDiagnosticByPublicId(data.publicId);
+  }
+  return undefined;
 }
 
 export async function getDiagnosticByPublicId(publicId: string) {
@@ -67,8 +71,8 @@ export async function getDiagnosticByPublicId(publicId: string) {
 export async function updateDiagnostic(publicId: string, data: Partial<InsertDiagnostic>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.update(diagnostics).set(data).where(eq(diagnostics.publicId, publicId)).returning();
-  return result[0];
+  await db.update(diagnostics).set(data).where(eq(diagnostics.publicId, publicId));
+  return getDiagnosticByPublicId(publicId);
 }
 
 export async function getAllDiagnostics(limit: number = 50, offset: number = 0) {
@@ -101,8 +105,8 @@ export async function getTotalRevenue() {
 export async function createFeedback(data: InsertFeedback) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.insert(feedbacks).values(data).returning();
-  return result[0];
+  await db.insert(feedbacks).values(data);
+  return data;
 }
 
 export async function getFeedbackByDiagnosticId(diagnosticPublicId: string) {

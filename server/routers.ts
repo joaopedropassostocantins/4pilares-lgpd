@@ -663,9 +663,9 @@ const feedbackRouter = router({
     }),
 
   getByDiagnosticId: publicProcedure
-    .input(z.object({ diagnosticId: z.number() }))
+    .input(z.object({ diagnosticPublicId: z.string() }))
     .query(async ({ input }) => {
-      return await getFeedbackByDiagnosticId(input.diagnosticId);
+      return await getFeedbackByDiagnosticId(input.diagnosticPublicId);
     }),
 
   stats: publicProcedure.query(async () => {
