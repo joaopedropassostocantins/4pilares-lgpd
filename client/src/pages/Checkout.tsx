@@ -1,8 +1,6 @@
-import { useParams, Link } from "wouter";
-import { useEffect } from "react";
-
-// PAYMENT INTEGRATION WILL BE IMPLEMENTED BY MANUS
-// MERCADO PAGO + PIX
+import { useParams, Link, useLocation } from "wouter";
+import { useEffect, useState } from "react";
+import { trpc } from "@/lib/trpc";
 
 const MODULE_INFO: Record<string, {
     title: string;
@@ -55,7 +53,6 @@ const MODULE_INFO: Record<string, {
     },
 };
 
-// Fallback genérico para slugs desconhecidos
 const DEFAULT_MODULE = {
     title: "Módulo",
     emoji: "✦",
@@ -66,13 +63,47 @@ const DEFAULT_MODULE = {
 
 export default function CheckoutPage() {
     const params = useParams<{ module: string }>();
+    const [, navigate] = useLocation();
     const slug = params?.module ?? "";
     const mod = MODULE_INFO[slug] ?? DEFAULT_MODULE;
+    const [loading, setLoading] = useState(false);
+    const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
 
-    // Correção de navegação — sempre inicia no topo
+    const createModulePayment = trpc.payment.createModulePayment.useMutation();
+
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "instant" });
     }, [slug]);
+
+    const handlePayment = async () => {
+        if (!email || !name) {
+            alert("Por favor, preencha email e nome");
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const result = await createModulePayment.mutateAsync({
+                module: slug,
+                userEmail: email,
+                userName: name,
+                returnUrl: window.location.origin + "/",
+            });
+
+            if (result.initPoint) {
+                // Redirect to Mercado Pago checkout
+                window.location.href = result.initPoint;
+            } else {
+                alert("Erro ao criar pagamento. Tente novamente.");
+            }
+        } catch (error) {
+            console.error("Payment error:", error);
+            alert("Erro ao processar pagamento. Tente novamente.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className={`min-h-screen bg-gradient-to-b from-background via-background to-primary/5 ${mod.colorClass}`}>
@@ -132,6 +163,24 @@ export default function CheckoutPage() {
                         </p>
                     </div>
 
+                    {/* Formulário */}
+                    <div className="mb-6 space-y-3">
+                        <input
+                            type="email"
+                            placeholder="Seu email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full px-4 py-2 rounded-lg bg-background/50 border border-border text-foreground placeholder-muted-foreground"
+                        />
+                        <input
+                            type="text"
+                            placeholder="Seu nome"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="w-full px-4 py-2 rounded-lg bg-background/50 border border-border text-foreground placeholder-muted-foreground"
+                        />
+                    </div>
+
                     {/* Preço + Botão */}
                     <div className="mb-4">
                         <p className="text-4xl font-bold mb-1" style={{ color: mod.color, fontFamily: "'Cinzel', serif" }}>
@@ -139,18 +188,13 @@ export default function CheckoutPage() {
                         </p>
                         <p className="text-xs text-muted-foreground mb-5">Acesso único · Sem mensalidade</p>
 
-                        {/* PAYMENT INTEGRATION WILL BE IMPLEMENTED BY MANUS */}
-                        {/* MERCADO PAGO + PIX */}
                         <button
-                            className="btn-module-checkout w-full text-white font-bold py-4 text-lg rounded-full"
+                            className="btn-module-checkout w-full text-white font-bold py-4 text-lg rounded-full disabled:opacity-50"
                             style={{ background: mod.color }}
-                            onClick={() => {
-                                // TODO(MANUS): Integrar com Mercado Pago / PIX
-                                // POST /api/payments/create { module: slug, amount: 1499 }
-                                alert("Integração de pagamento em implementação. Em breve disponível!");
-                            }}
+                            onClick={handlePayment}
+                            disabled={loading}
                         >
-                            💳 Pagar R$ 14,99
+                            {loading ? "Processando..." : "💳 Pagar R$ 14,99"}
                         </button>
                     </div>
 

@@ -639,6 +639,48 @@ const paymentRouter = router({
       const result = await applyCoupon(diagnostic.publicId, input.couponCode);
       return result;
     }),
+
+  createModulePayment: publicProcedure
+    .input(
+      z.object({
+        module: z.string(),
+        userEmail: z.string().email(),
+        userName: z.string(),
+        returnUrl: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      try {
+        initMercadoPago();
+        const MODULE_PRICES: Record<string, number> = {
+          "oraculo-investimentos": 1499,
+          "conselheiro-judicial": 1499,
+          "navegador-conflitos": 1499,
+          "oraculo-amor": 1499,
+          "caminho-saida": 1499,
+          "conexao-quem-partiu": 1499,
+        };
+        const amount = MODULE_PRICES[input.module] || 1499;
+        const preference = await createPaymentPreference({
+          diagnosticId: nanoid(),
+          userEmail: input.userEmail,
+          userName: input.userName,
+          amount,
+          returnUrl: input.returnUrl,
+        });
+        return {
+          preferenceId: preference.preferenceId,
+          initPoint: preference.initPoint,
+          amount,
+        };
+      } catch (error) {
+        console.error("[Module Payment] Error:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create payment",
+        });
+      }
+    }),
 });
 
 // ============================================================================
