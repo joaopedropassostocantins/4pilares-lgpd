@@ -68,7 +68,7 @@ export default function ModuleCard({ module }: ModuleCardProps) {
               className="btn-module-checkout block text-center w-full text-sm py-2.5"
               style={{ background: accentColor }}
             >
-              💳 Desbloquear R$ 14,99
+              💳 Desbloquear R$ 3.990,00 - SINAL R$ 1499,90 (TURMA 07/26) - WHASTAPP MAIS DETALHES
             </span>
           </Link>
         )}
