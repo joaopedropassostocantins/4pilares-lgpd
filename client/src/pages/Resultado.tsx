@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { useState, useEffect, ReactNode } from "react";
 import { useRoute } from "wouter";
 import { PaymentMethodSelector } from "@/components/PaymentMethodSelector";
+import PostTastingQuestionnaire from "@/components/PostTastingQuestionnaire";
 
 // ─── Type definitions ─────────────────────────────────────────────────────────
 interface StemInfo {
@@ -374,7 +375,7 @@ export default function Resultado() {
               const fullText = isPaid
                 ? (diagnostic.basicAnalysis || diagnostic.tastingAnalysis || "Análise em processamento...")
                 : (diagnostic.tastingAnalysis || "Análise em processamento...");
-              
+
               const formatHtml = (text: string) => text
                 .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
                 .replace(/\*([^*]+)\*/g, '<em>$1</em>');
@@ -387,7 +388,7 @@ export default function Resultado() {
               return (
                 <div className="prose-mystic">
                   {/* VISIBLE PART - always shown */}
-                  <div 
+                  <div
                     className="text-foreground whitespace-pre-wrap text-base leading-relaxed"
                     dangerouslySetInnerHTML={{ __html: formatHtml(visiblePart) }}
                   />
@@ -396,7 +397,7 @@ export default function Resultado() {
                   {hiddenPart && !isPaid && (
                     <div className="relative mt-6">
                       {/* Blurred content */}
-                      <div 
+                      <div
                         className="text-foreground whitespace-pre-wrap text-base leading-relaxed select-none"
                         style={{ filter: 'blur(8px)', WebkitFilter: 'blur(8px)', userSelect: 'none', pointerEvents: 'none' }}
                         dangerouslySetInnerHTML={{ __html: formatHtml(hiddenPart) }}
@@ -409,7 +410,7 @@ export default function Resultado() {
                             3 Padrões Graves Detectados
                           </h3>
                           <p className="text-sm text-muted-foreground mb-4">
-                            Seus Pilares revelaram padrões urgentes que precisam de atenção imediata. 
+                            Seus Pilares revelaram padrões urgentes que precisam de atenção imediata.
                             Desbloqueie agora para ver o que está escondido.
                           </p>
                           <Button
@@ -426,7 +427,7 @@ export default function Resultado() {
 
                   {/* HIDDEN PART - shown if paid */}
                   {hiddenPart && isPaid && (
-                    <div 
+                    <div
                       className="text-foreground whitespace-pre-wrap text-base leading-relaxed mt-6 pt-6 border-t border-primary/30"
                       dangerouslySetInnerHTML={{ __html: formatHtml(hiddenPart) }}
                     />
@@ -438,6 +439,18 @@ export default function Resultado() {
         </Card>
 
 
+
+        {/* ── POST-TASTING QUESTIONNAIRE — módulo ideal ── */}
+        {!isPaid && (
+          <PostTastingQuestionnaire
+            consultantName={diagnostic.consultantName}
+            onUnlock={() => {
+              const el = document.getElementById('payment-options');
+              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              setShowPayment(true);
+            }}
+          />
+        )}
 
         {/* -- PAYMENT SECTION (PROMINENT & VISIBLE) -- */}
         {!isPaid && (
@@ -458,11 +471,10 @@ export default function Resultado() {
                   ([planKey, plan]) => (
                     <div
                       key={planKey}
-                      className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                        selectedPlan === planKey
+                      className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${selectedPlan === planKey
                           ? "border-primary bg-primary/10"
                           : "border-primary/30 bg-card/40 hover:border-primary/50"
-                      }`}
+                        }`}
                       onClick={() => {
                         setSelectedPlan(planKey);
                         createPreference.reset();
@@ -610,9 +622,9 @@ export default function Resultado() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="gap-2"
                 onClick={() => {
                   const url = window.location.href;
@@ -623,9 +635,9 @@ export default function Resultado() {
                 <Share2 className="h-4 w-4" />
                 Copiar Link
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="gap-2"
                 onClick={() => {
                   const url = window.location.href;
@@ -636,9 +648,9 @@ export default function Resultado() {
                 <MessageCircle className="h-4 w-4" />
                 WhatsApp
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="gap-2"
                 onClick={() => {
                   const url = window.location.href;
@@ -649,9 +661,9 @@ export default function Resultado() {
                 <Facebook className="h-4 w-4" />
                 Facebook
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="gap-2"
                 onClick={() => {
                   const url = window.location.href;
