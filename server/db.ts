@@ -1,4 +1,4 @@
-import { eq, desc, and, lt } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, diagnostics, InsertDiagnostic, feedbacks, InsertFeedback, coupons, couponRedemptions } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -53,86 +53,76 @@ export async function getUserByOpenId(openId: string) {
 export async function createDiagnostic(data: InsertDiagnostic) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await db.insert(diagnostics).values(data);
-  const result = await db.select().from(diagnostics).where(eq(diagnostics.publicId, data.publicId!)).limit(1);
+  const result = await db.insert(diagnostics).values(data).returning();
   return result[0];
 }
 
 export async function getDiagnosticByPublicId(publicId: string) {
   const db = await getDb();
-  if (!db) throw new Error("Database not available");
+  if (!db) { console.warn("[Database] Cannot get diagnostic: database not available"); return undefined; }
   const result = await db.select().from(diagnostics).where(eq(diagnostics.publicId, publicId)).limit(1);
-  return result.length > 0 ? result[0] : null;
+  return result.length > 0 ? result[0] : undefined;
 }
 
 export async function updateDiagnostic(publicId: string, data: Partial<InsertDiagnostic>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await db.update(diagnostics).set(data).where(eq(diagnostics.publicId, publicId));
+  const result = await db.update(diagnostics).set(data).where(eq(diagnostics.publicId, publicId)).returning();
+  return result[0];
 }
 
-// Admin queries
-export async function getAllDiagnostics(limit = 50, offset = 0) {
+export async function getAllDiagnostics(limit: number = 50, offset: number = 0) {
   const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  const result = await db
-    .select()
-    .from(diagnostics)
-    .orderBy(desc(diagnostics.createdAt))
-    .limit(limit)
-    .offset(offset);
-  return result;
+  if (!db) { console.warn("[Database] Cannot get diagnostics: database not available"); return []; }
+  return await db.select().from(diagnostics).limit(limit).offset(offset);
 }
 
 export async function getDiagnosticsCount() {
   const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  const result = await db.select({ count: diagnostics.id }).from(diagnostics);
-  return result[0]?.count || 0;
+  if (!db) { console.warn("[Database] Cannot count diagnostics: database not available"); return 0; }
+  const result = await db.select().from(diagnostics);
+  return result.length;
 }
 
 export async function getPaidDiagnosticsCount() {
   const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  const result = await db
-    .select({ count: diagnostics.id })
-    .from(diagnostics)
-    .where(eq(diagnostics.paymentStatus, "paid"));
-  return result[0]?.count || 0;
+  if (!db) { console.warn("[Database] Cannot count paid diagnostics: database not available"); return 0; }
+  const result = await db.select().from(diagnostics).where(eq(diagnostics.paymentStatus, "paid"));
+  return result.length;
 }
 
 export async function getTotalRevenue() {
   const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  // Each paid diagnostic = R$ 14.99
-  const paidCount = await getPaidDiagnosticsCount();
-  return paidCount * 14.99;
+  if (!db) { console.warn("[Database] Cannot get revenue: database not available"); return 0; }
+  const result = await db.select().from(diagnostics).where(eq(diagnostics.paymentStatus, "paid"));
+  return result.reduce((sum, d) => sum + (parseFloat(d.amountPaid?.toString() || "0")), 0);
 }
 
-// Feedback queries
 export async function createFeedback(data: InsertFeedback) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await db.insert(feedbacks).values(data);
-  const result = await db.select().from(feedbacks).orderBy(desc(feedbacks.createdAt)).limit(1);
+  const result = await db.insert(feedbacks).values(data).returning();
   return result[0];
 }
 
-export async function getFeedbackByDiagnosticId(diagnosticId: number) {
+export async function getFeedbackByDiagnosticId(diagnosticPublicId: string) {
   const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  const result = await db.select().from(feedbacks).where(eq(feedbacks.diagnosticId, diagnosticId));
-  return result.length > 0 ? result[0] : null;
+  if (!db) { console.warn("[Database] Cannot get feedback: database not available"); return undefined; }
+  // feedbacks.diagnosticId is an INT FK; we look up the diagnostic first
+  const diag = await getDiagnosticByPublicId(diagnosticPublicId);
+  if (!diag) return undefined;
+  const result = await db.select().from(feedbacks).where(eq(feedbacks.diagnosticId, diag.id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
 }
 
 export async function getAccuracyStats() {
   const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  const result = await db.select({ accuracy: feedbacks.accuracy, count: feedbacks.id }).from(feedbacks).groupBy(feedbacks.accuracy);
-  return result;
+  if (!db) { console.warn("[Database] Cannot get accuracy stats: database not available"); return { total: 0, accurate: 0 }; }
+  const allFeedbacks = await db.select().from(feedbacks);
+  const accurate = allFeedbacks.filter((f: any) => f.isAccurate).length;
+  return { total: allFeedbacks.length, accurate };
 }
 
-// Coupon queries
 export async function getCouponByCode(code: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
@@ -140,33 +130,45 @@ export async function getCouponByCode(code: string) {
   return result.length > 0 ? result[0] : null;
 }
 
-export async function applyCoupon(diagnosticId: number, couponCode: string) {
+// Base price constant — single source of truth
+const BASE_PRICE = 29.99;
+
+export async function applyCoupon(diagnosticPublicId: string, couponCode: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  
+
   const coupon = await getCouponByCode(couponCode);
   if (!coupon) {
     return { valid: false, reason: "Cupom nao encontrado" };
   }
-  
-  if (!coupon.active) {
+
+  if (!coupon.isActive) {
     return { valid: false, reason: "Cupom inativo" };
   }
-  
-  if (coupon.redeemedCount >= coupon.maxRedemptions) {
+
+  if (coupon.usedCount >= coupon.maxUses) {
     return { valid: false, reason: "Cupom expirado (limite atingido)" };
   }
-  
+
   if (coupon.expiresAt && new Date() > coupon.expiresAt) {
     return { valid: false, reason: "Cupom expirado" };
   }
-  
+
   // Atomic transaction: increment count + insert redemption
   try {
-    await db.update(coupons).set({ redeemedCount: coupon.redeemedCount + 1 }).where(eq(coupons.id, coupon.id));
-    await db.insert(couponRedemptions).values({ couponId: coupon.id, diagnosticId });
-    await db.update(diagnostics).set({ couponApplied: couponCode }).where(eq(diagnostics.id, diagnosticId));
-    return { valid: true, finalPrice: parseFloat(coupon.fixedPrice.toString()) };
+    await db.update(coupons).set({ usedCount: coupon.usedCount + 1 }).where(eq(coupons.id, coupon.id));
+    await db.insert(couponRedemptions).values({ couponId: coupon.id, diagnosticPublicId });
+    await db.update(diagnostics).set({ couponApplied: couponCode }).where(eq(diagnostics.publicId, diagnosticPublicId));
+
+    // Calculate final price based on discount type
+    let finalPrice = BASE_PRICE;
+    if (coupon.discountType === 'fixed') {
+      finalPrice = BASE_PRICE - parseFloat(coupon.discountValue.toString());
+    } else if (coupon.discountType === 'percentage') {
+      finalPrice = BASE_PRICE * (1 - parseFloat(coupon.discountValue.toString()) / 100);
+    }
+
+    return { valid: true, finalPrice };
   } catch (error) {
     console.error("[Coupon] Error applying coupon:", error);
     return { valid: false, reason: "Erro ao aplicar cupom" };

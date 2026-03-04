@@ -1,0 +1,533 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Serif+KR:wght@300;400;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.video-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.lang-label {
+  color: #c8a84b;
+  font-size: 11px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.phone-frame {
+  width: 280px;
+  height: 497px;
+  border-radius: 36px;
+  border: 2px solid rgba(200, 168, 75, 0.3);
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 0 40px rgba(200, 168, 75, 0.15), 0 0 80px rgba(0, 30, 80, 0.4);
+}
+
+.video-canvas {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: #000;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* BACKGROUND LAYERS */
+.bg-stars {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 50% 30%,
+    #0a1628 0%,
+    #000510 60%,
+    #000 100%
+  );
+}
+
+.nebula {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+      ellipse 60% 40% at 30% 60%,
+      rgba(20, 60, 120, 0.4) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 40% 30% at 70% 30%,
+      rgba(80, 40, 100, 0.3) 0%,
+      transparent 70%
+    );
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+.gold-light {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 80% 80% at 50% 50%,
+    rgba(200, 168, 75, 0.15) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 1.5s;
+}
+
+/* STARS */
+.stars-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.star {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  animation: twinkle var(--d) var(--delay) infinite alternate ease-in-out;
+}
+
+@keyframes twinkle {
+  from {
+    opacity: var(--min);
+    transform: scale(1);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.4);
+  }
+}
+
+/* PARTICLES */
+.particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #c8a84b;
+  border-radius: 50%;
+  opacity: 0;
+  animation: fall var(--fd) var(--fdelay) infinite linear;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-10px) translateX(var(--fx));
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(520px) translateX(calc(var(--fx) + var(--drift)));
+    opacity: 0;
+  }
+}
+
+/* KOREAN SYMBOLS */
+.symbols-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 180px;
+  height: 180px;
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+.symbol-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Noto Serif KR", serif;
+  font-size: 44px;
+  color: #c8a84b;
+  text-shadow: 0 0 20px rgba(200, 168, 75, 0.8), 0 0 40px rgba(200, 168, 75, 0.4);
+  animation: rotateSymbol 8s linear infinite;
+}
+
+@keyframes rotateSymbol {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.pillar-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #c8a84b;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #c8a84b;
+  opacity: 0;
+  animation: pulseDot 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes pulseDot {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.8);
+    box-shadow: 0 0 20px #c8a84b;
+  }
+}
+
+.pd-top {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.pd-right {
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+.pd-bottom {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.pd-left {
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+/* CONSTELLATION LINES */
+.constellation-svg {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+/* TEXT OVERLAYS */
+.text-overlay {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.text-hook {
+  top: 15%;
+  padding: 0 20px;
+  font-family: "Cinzel", serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #e8e0d0;
+  line-height: 1.5;
+  text-shadow: 0 0 30px rgba(200, 168, 75, 0.5);
+  letter-spacing: 1px;
+}
+
+.text-pillars {
+  top: 35%;
+  padding: 0 16px;
+}
+
+.text-pillars .kanji {
+  font-family: "Noto Serif KR", serif;
+  font-size: 28px;
+  color: #c8a84b;
+  text-shadow: 0 0 20px rgba(200, 168, 75, 0.9);
+  display: block;
+  margin-bottom: 6px;
+  letter-spacing: 8px;
+}
+
+.text-pillars .subtitle {
+  font-size: 11px;
+  color: #c8a84b;
+  letter-spacing: 3px;
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.9;
+}
+
+.text-pillars .areas {
+  font-size: 10px;
+  color: rgba(255, 220, 150, 0.85);
+  letter-spacing: 2px;
+  display: block;
+}
+
+.text-free {
+  top: 70%;
+  padding: 0 20px;
+  font-size: 13px;
+  color: #fff;
+  letter-spacing: 2px;
+  text-shadow: 0 0 15px rgba(200, 168, 75, 0.7);
+}
+
+.text-cta {
+  bottom: 12%;
+  padding: 0 16px;
+}
+
+.cta-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, #c8a84b, #f0d080, #c8a84b);
+  color: #000;
+  font-family: "Cinzel", serif;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  padding: 10px 18px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  animation: pulseCTA 1s ease-in-out infinite alternate;
+  box-shadow: 0 0 20px rgba(200, 168, 75, 0.6);
+  margin-bottom: 6px;
+  display: block;
+  margin: 0 auto 6px;
+}
+
+@keyframes pulseCTA {
+  from {
+    box-shadow: 0 0 15px rgba(200, 168, 75, 0.5);
+  }
+  to {
+    box-shadow: 0 0 35px rgba(200, 168, 75, 0.9), 0 0 60px rgba(200, 168, 75, 0.3);
+  }
+}
+
+.cta-url {
+  font-size: 8px;
+  color: rgba(200, 168, 75, 0.7);
+  letter-spacing: 1px;
+  display: block;
+  margin-top: 4px;
+}
+
+/* LOGO */
+.logo-end {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  opacity: 0;
+  transition: opacity 1.2s;
+}
+
+.logo-end .fusion {
+  font-family: "Noto Serif KR", serif;
+  font-size: 20px;
+  color: #c8a84b;
+  letter-spacing: 6px;
+  display: block;
+  text-shadow: 0 0 20px rgba(200, 168, 75, 0.8);
+}
+
+.logo-end .tagline {
+  font-size: 8px;
+  color: rgba(200, 168, 75, 0.6);
+  letter-spacing: 3px;
+  display: block;
+  margin-top: 4px;
+}
+
+/* FACE OVERLAY */
+.face-scene {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1s;
+  background: linear-gradient(to bottom, transparent 40%, rgba(0, 0, 0, 0.8) 100%),
+    radial-gradient(
+      ellipse 60% 80% at 50% 30%,
+      rgba(0, 30, 80, 0.6) 0%,
+      transparent 70%
+    );
+}
+
+/* PHONE SCENE */
+.phone-scene {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+.phone-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 180px;
+  background: linear-gradient(
+    135deg,
+    rgba(200, 168, 75, 0.3),
+    rgba(100, 150, 255, 0.2)
+  );
+  border-radius: 12px;
+  border: 1px solid rgba(200, 168, 75, 0.5);
+  box-shadow: 0 0 40px rgba(200, 168, 75, 0.4);
+}
+
+/* GOLD FLASH */
+.gold-flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(200, 168, 75, 0.6) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+/* PROGRESS */
+.progress-bar {
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  border-radius: 1px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #c8a84b, #f0d080);
+  width: 0%;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 6px rgba(200, 168, 75, 0.8);
+}
+
+/* CONTROLS */
+.controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-play {
+  background: rgba(200, 168, 75, 0.15);
+  border: 1px solid rgba(200, 168, 75, 0.5);
+  color: #c8a84b;
+  font-family: "Cinzel", serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  padding: 8px 20px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: uppercase;
+}
+
+.btn-play:hover {
+  background: rgba(200, 168, 75, 0.3);
+  box-shadow: 0 0 15px rgba(200, 168, 75, 0.3);
+}
+
+.timer-display {
+  color: rgba(200, 168, 75, 0.5);
+  font-size: 10px;
+  letter-spacing: 2px;
+  min-width: 40px;
+  text-align: center;
+}
+
+/* SCAN LINE EFFECT */
+.scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* VIGNETTE */
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  pointer-events: none;
+  z-index: 9;
+}
+
+.play-hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  opacity: 1;
+  transition: opacity 0.5s;
+  z-index: 20;
+}
+
+.play-hint .play-icon {
+  width: 50px;
+  height: 50px;
+  border: 2px solid rgba(200, 168, 75, 0.6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 8px;
+  animation: pulsePlay 2s ease-in-out infinite;
+}
+
+@keyframes pulsePlay {
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(200, 168, 75, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(200, 168, 75, 0.7);
+  }
+}
+
+.play-icon::after {
+  content: "▶";
+  color: #c8a84b;
+  font-size: 16px;
+  margin-left: 3px;
+}
+
+.play-hint span {
+  font-size: 9px;
+  color: rgba(200, 168, 75, 0.6);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  display: block;
+}

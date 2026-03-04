@@ -5,10 +5,10 @@ export default function ModuloF() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-primary/5">
       <div className="w-full h-96 overflow-hidden">
-        <img 
-          src="https://d2xsxph8kpxj0f.cloudfront.net/310519663390392783/g9GC8npXGtLqRcd8tG3q6A/modulo-f-conexao-v2-7jgaca3Shg3kmj64W4eyBk.webp" 
-          alt="Conexão com Quem Partiu" 
-          className="w-full h-full object-cover" 
+        <img
+          src="https://d2xsxph8kpxj0f.cloudfront.net/310519663390392783/g9GC8npXGtLqRcd8tG3q6A/modulo-f-conexao-v2-7jgaca3Shg3kmj64W4eyBk.webp"
+          alt="Conexão com Quem Partiu"
+          className="w-full h-full object-cover"
         />
       </div>
 
@@ -22,7 +22,7 @@ export default function ModuloF() {
             Conexão com Quem Partiu
           </h1>
           <p className="text-xl text-muted-foreground">Como honrar quem se foi e seguir em frente?</p>
-          <p className="text-sm text-primary/70 mt-4">Em breve — lista de espera aberta</p>
+          <p className="text-sm text-primary/70 mt-4">Análise disponível agora — vagas limitadas</p>
         </div>
       </div>
 
@@ -71,9 +71,9 @@ export default function ModuloF() {
         </div>
 
         <div className="text-center py-8">
-          <Link href="/cadastro">
+          <Link href="/?scroll=form">
             <Button size="lg" className="text-lg px-8 py-6">
-              GARANTIR MINHA VAGA NA LISTA
+              FAZER MINHA ANÁLISE GRATUITA AGORA
             </Button>
           </Link>
           <p className="text-sm text-muted-foreground mt-4">

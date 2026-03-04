@@ -45,6 +45,8 @@ export const diagnostics = mysqlTable("diagnostics", {
   selectedPlan: mysqlEnum("selectedPlan", ["promo", "normal", "lifetime"]),
   selectedHooks: json("selectedHooks"),
   selectedVariants: json("selectedVariants"),
+  referralCode: varchar("referralCode", { length: 32 }).unique(),
+  referredBy: varchar("referredBy", { length: 32 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
@@ -65,10 +67,11 @@ export type InsertFeedback = typeof feedbacks.$inferInsert;
 export const coupons = mysqlTable("coupons", {
   id: int("id").autoincrement().primaryKey(),
   code: varchar("code", { length: 64 }).notNull().unique(),
-  fixedPrice: decimal("fixedPrice", { precision: 10, scale: 2 }).notNull(),
-  maxRedemptions: int("maxRedemptions").notNull(),
-  redeemedCount: int("redeemedCount").default(0).notNull(),
-  active: boolean("active").default(true).notNull(),
+  discountType: mysqlEnum("discountType", ["fixed", "percentage"]).notNull(),
+  discountValue: decimal("discountValue", { precision: 10, scale: 2 }).notNull(),
+  maxUses: int("maxUses").notNull(),
+  usedCount: int("usedCount").default(0).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   expiresAt: timestamp("expiresAt"),
 });
@@ -79,7 +82,7 @@ export type InsertCoupon = typeof coupons.$inferInsert;
 export const couponRedemptions = mysqlTable("coupon_redemptions", {
   id: int("id").autoincrement().primaryKey(),
   couponId: int("couponId").notNull(),
-  diagnosticId: int("diagnosticId").notNull(),
+  diagnosticPublicId: varchar("diagnosticPublicId", { length: 32 }).notNull(),
   appliedAt: timestamp("appliedAt").defaultNow().notNull(),
 });
 

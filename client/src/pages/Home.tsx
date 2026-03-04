@@ -232,6 +232,16 @@ export default function Home() {
     trackPageView("Home", headlineVariant === "a" ? "A" : "B");
   }, [headlineVariant]);
 
+  // ─── Auto-scroll ao formulário via ?scroll=form ──────────────────────
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("scroll") === "form" && formRef.current) {
+      setTimeout(() => {
+        formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 400);
+    }
+  }, []);
+
   const createDiagnostic = trpc.diagnostic.create.useMutation({
     onSuccess: (data) => {
       toast.success("Análise pronta. Veja os padrões do seu momento atual.", {
@@ -290,8 +300,8 @@ export default function Home() {
           today.getFullYear() -
           selectedDate.getFullYear() -
           (today.getMonth() < selectedDate.getMonth() ||
-          (today.getMonth() === selectedDate.getMonth() &&
-            today.getDate() < selectedDate.getDate())
+            (today.getMonth() === selectedDate.getMonth() &&
+              today.getDate() < selectedDate.getDate())
             ? 1
             : 0);
         if (age < 16) {
@@ -315,8 +325,8 @@ export default function Home() {
       today.getFullYear() -
       selectedDate.getFullYear() -
       (today.getMonth() < selectedDate.getMonth() ||
-      (today.getMonth() === selectedDate.getMonth() &&
-        today.getDate() < selectedDate.getDate())
+        (today.getMonth() === selectedDate.getMonth() &&
+          today.getDate() < selectedDate.getDate())
         ? 1
         : 0);
     const sexoStr = gender === "male" ? "M" : gender === "female" ? "F" : "";
@@ -457,7 +467,7 @@ export default function Home() {
           )}
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-            Aquela escolha que você fez há 3 anos e ainda pesa. O dinheiro que some sem explicação.
+            Aquela escolha que você fez há algum tempo e ainda pesa. O dinheiro que some sem explicação.
             O relacionamento que sempre termina do mesmo jeito. Tem um padrão por trás — e ele aparece
             nos seus dados de nascimento. Em 30 segundos, você vai ver.
           </p>
@@ -536,21 +546,19 @@ export default function Home() {
             {[1, 2, 3].map((step) => (
               <div key={step} className="flex-1 flex items-center gap-2">
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
-                    step < formStep
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${step < formStep
                       ? "progress-step completed"
                       : step === formStep
-                      ? "progress-step active"
-                      : "bg-muted text-muted-foreground"
-                  }`}
+                        ? "progress-step active"
+                        : "bg-muted text-muted-foreground"
+                    }`}
                 >
                   {step < formStep ? "✓" : step}
                 </div>
                 {step < 3 && (
                   <div
-                    className={`flex-1 h-0.5 ${
-                      step < formStep ? "bg-purple" : "bg-muted"
-                    }`}
+                    className={`flex-1 h-0.5 ${step < formStep ? "bg-purple" : "bg-muted"
+                      }`}
                   />
                 )}
               </div>
@@ -758,9 +766,8 @@ export default function Home() {
                               selectedArchetype === arch.id ? "" : arch.id
                             )
                           }
-                          className={`archetype-card p-2.5 rounded-lg text-xs font-medium ${
-                            selectedArchetype === arch.id ? "selected" : ""
-                          }`}
+                          className={`archetype-card p-2.5 rounded-lg text-xs font-medium ${selectedArchetype === arch.id ? "selected" : ""
+                            }`}
                           title={arch.desc}
                         >
                           {arch.name}
