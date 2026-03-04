@@ -1031,7 +1031,7 @@ export default function Home() {
       </section>
 
       {/* ═══════ MODULES ═══════ */}
-      <section className="max-w-6xl mx-auto px-5 py-16">
+      <section id="modulos" className="max-w-6xl mx-auto px-5 py-16">
         <div className="ornamental-divider mb-12">
           <h2
             className="text-3xl font-bold shimmer-gold whitespace-nowrap"

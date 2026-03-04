@@ -53,8 +53,8 @@ export async function createPaymentPreference(input: {
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const validEmail = emailRegex.test(input.userEmail) 
-      ? input.userEmail 
+    const validEmail = emailRegex.test(input.userEmail)
+      ? input.userEmail
       : `user-${input.diagnosticId}@fusion-sajo.com`;
 
     // Validate userName (max 256 chars, no special chars)
@@ -88,7 +88,7 @@ export async function createPaymentPreference(input: {
         payment_methods: {
           excluded_payment_types: [],
           excluded_payment_methods: [],
-          installments: 1,
+          installments: 6,
           default_installments: 1,
         },
         back_urls: {
@@ -163,7 +163,7 @@ export async function processWebhook(webhookData: any) {
 
       // Get payment details
       const paymentDetails = await getPaymentDetails(paymentId.toString());
-      
+
       return {
         paymentId: paymentDetails.id,
         status: paymentDetails.status,
@@ -173,7 +173,7 @@ export async function processWebhook(webhookData: any) {
         createdAt: paymentDetails.createdAt,
       };
     }
-    
+
     return null;
   } catch (error) {
     console.error("[Mercado Pago Webhook] Error processing webhook:", error);
@@ -230,7 +230,7 @@ export async function createPixPayment(input: {
     console.log("[Mercado Pago] PIX payment created successfully:", response.id);
 
     const pixData = response.point_of_interaction?.transaction_data as any;
-    
+
     return {
       paymentId: response.id,
       qrCode: pixData?.qr_code,
