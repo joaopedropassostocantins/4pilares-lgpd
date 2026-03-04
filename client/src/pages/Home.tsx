@@ -457,7 +457,7 @@ export default function Home() {
           )}
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-            Aquela escolha que você fez há 3 anos e ainda pesa. O dinheiro que some sem explicação.
+            Aquela escolha que você fez há algum tempo e ainda pesa. O dinheiro que some sem explicação.
             O relacionamento que sempre termina do mesmo jeito. Tem um padrão por trás — e ele aparece
             nos seus dados de nascimento. Em 30 segundos, você vai ver.
           </p>
