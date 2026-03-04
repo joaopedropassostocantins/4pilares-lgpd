@@ -1,76 +1,95 @@
 # RELEASE CHECKLIST — FUSION SAJO
-**Data alvo:** Após revalidação no Manus
+**Versão:** 1.0.x | **Data:** 2026-03-04 | **Responsável:** Manus + Antigravity
 
 ---
 
-## ✅ Pré-Deploy (código)
+## ✅ Código / Build
 
-- [x] P0: `getFeedbackByDiagnosticId` corrigido (campo FK correto)
-- [x] P0: `getDiagnosticsCount` corrigido (não usa `eq` como agregador)
-- [x] P0: `BASE_PRICE` extraído como constante em `applyCoupon`
-- [x] P1: Typo `hasCVWNote` → `hasCVVNote` corrigido
-- [x] P1: Leitura `hasCVVNote` no `PostTastingQuestionnaire` corrigida
-- [x] P1: Links `/cadastro` → `/` em todos os 6 módulos (A–F)
-- [x] P1: Banner CVV 188 adicionado em `ModuloE.tsx`
-- [x] QA_REPORT.md criado
-- [x] IMPROVEMENTS.md criado
+- [x] Todos os P0/P1 corrigidos (ver QA_REPORT.md)
+- [x] schema.ts alinhado com migrações
+- [x] Formulário de 4 Pilares funciona (submit → resultado)
+- [x] Análise de degustação gerada pelo LLM e salva no banco
+- [x] Banner de módulos visível em todas as páginas
+- [x] Âncora `#modulos` funcional no Home
 
 ---
 
-## ✅ Variáveis de Ambiente (verificar no Manus)
+## 🔑 Variáveis de Ambiente (configurar no Manus/servidor)
 
-- [ ] `DATABASE_URL` — MySQL connection string ativa
-- [ ] `MERCADOPAGO_ACCESS_TOKEN` — token de produção (não sandbox)
-- [ ] `OPENAI_API_KEY` ou equivalente LLM — para geração de análises
-- [ ] `MP_WEBHOOK_SECRET` — para validação de assinatura webhook (IMP-01)
-- [ ] `SENDGRID_API_KEY` ou equivalente email
-- [ ] `OWNER_OPEN_ID` — para rota admin
-
----
-
-## ✅ Pré-Deploy (infra)
-
-- [ ] Build `pnpm build` verde no Manus (sem erros TypeScript reais)
-- [ ] Banco de dados com migrations `pnpm db:push` aplicadas
-- [ ] Endpoint `/api/webhooks/mercadopago` configurado no painel Mercado Pago
-- [ ] SSL ativo em pilaresdasabedoria.club
-- [ ] Domínio resolvendo corretamente
+| Var | Descrição | Status |
+|-----|-----------|--------|
+| `DATABASE_URL` | MySQL/PlanetScale connection string | ✅ Configurada |
+| `MERCADOPAGO_ACCESS_TOKEN` | Token de produção MP | ❓ Confirmar |
+| `OPENAI_API_KEY` ou equiv. | LLM para análises | ❓ Confirmar |
+| `MP_WEBHOOK_SECRET` | Assinatura webhook MP (opcional mas recomendado) | ⚠️ Não configurado |
+| `WHATSAPP_NUMBER` | Número WhatsApp da consultora | ⚠️ Configurar no banner |
 
 ---
 
-## ✅ Testes pós-deploy (smoke test manual)
+## 🔗 Webhook Mercado Pago
 
-- [ ] Home carrega em < 3s
-- [ ] Formulário 4 Pilares funciona e gera resultado
-- [ ] Página `/resultado/:id` exibe análise gratuita
-- [ ] PostTastingQuestionnaire aparece após análise
-- [ ] Questionário Likert (32 perguntas) submete corretamente
-- [ ] Hook é exibido com módulo correto após scoring
-- [ ] CVV 188 aparece quando módulo E ou F é selecionado
-- [ ] Botão "Pagar R$ 9,99" abre pagamento Mercado Pago
-- [ ] Webhook de pagamento (teste com PIX sandbox) dispara análise completa
-- [ ] Email de análise enviado após pagamento
-- [ ] Páginas ModuloA–F: CTA leva à home corretamente
-- [ ] ModuloE: banner CVV 188 visível
-- [ ] Rota `/admin` protegida (retorna 401 para usuários sem auth)
-- [ ] Rota inexistente retorna 404 gracioso
+- [ ] URL configurada no painel MP: `https://pilaresdasabedoria.club/api/webhooks/mercadopago`
+- [ ] Evento selecionado: `payment` (tipo: `payment.updated`)
+- [ ] Teste com pagamento sandbox realizado ✓ ver logs `[Webhook]`
+- [ ] Validação de assinatura implementada (IMP-01)
 
 ---
 
-## ✅ Performance
+## 💳 Teste de Pagamento Real
 
-- [ ] Lighthouse Score > 70 em Mobile (home)
-- [ ] Web Vitals: LCP < 4s, CLS < 0.1
+- [ ] Criar diagnóstico de teste: nome "Teste QA", data 01/01/1990
+- [ ] Fluxo: formulário → análise degustação → "Desbloquear" → Mercado Pago
+- [ ] Pagamento aprovado → webhook recebido → `paymentStatus: "paid"` no banco
+- [ ] Análise completa gerada e visível em `/resultado/{publicId}`
+- [ ] Email enviado com análise
+- [ ] Notificação de owner recebida
 
 ---
 
-## 🚀 Go/No-Go
+## 📊 Módulos + Checkout
+
+- [ ] 6 módulos listados na Home com cores Obangsaek
+- [ ] Botão "Desbloquear R$ 14,99" em cada módulo
+- [ ] Página `/checkout/{slug}` carrega para cada módulo
+- [ ] `createModulePayment` retorna preferenceId válido
+
+---
+
+## 🛡️ Segurança
+
+- [ ] Tokens de API não expostos no bundle do cliente (verificar build)
+- [ ] CORS configurado adequadamente
+- [ ] Webhook MP com validação de assinatura (IMP-01 — urgente)
+- [ ] Rate limit básico em endpoints (IMP-02)
+
+---
+
+## 📈 Métricas / Observabilidade
+
+- [ ] Logs `[Event]` funcionam para `banner_view`, `banner_click_*`, `banner_close`
+- [ ] Log `[Analytics]` ao criar diagnóstico
+- [ ] Log `[Webhook]` ao processar pagamento
+- [ ] Admin dashboard em `/admin` carrega lista de diagnósticos
+
+---
+
+## ⚖️ LGPD / Legal
+
+- [ ] Política de Privacidade acessível (link no footer/formulário)
+- [ ] Campos PII (email, whatsapp) coletados com consentimento
+- [ ] Dados não logados em texto puro desnecessariamente
+
+---
+
+## 🔖 Go/No-Go Final
 
 | Item | Status |
 |------|--------|
-| Todos P0/P1 corrigidos | ✅ |
-| Build verde | ⏳ Confirmar no Manus |
-| Smoke test completo | ⏳ Confirmar no Manus |
-| Envs de produção | ⏳ Confirmar |
+| Build sem erros críticos | ✅ |
+| Análise de degustação funcionando | ✅ |
+| Módulos listados com cores | ✅ |
+| Banner de promoção visível | ✅ |
+| Pagamento MP configurado | ❓ Confirmar produção |
+| Webhook MP testado end-to-end | ❓ Aguarda teste real |
 
-**DECISÃO:** GO após confirmação dos itens ⏳
+**Status:** 🟡 PRONTO PARA DEPLOY — Aguarda confirmação de variáveis e teste de pagamento real
