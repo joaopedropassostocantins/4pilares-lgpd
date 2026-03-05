@@ -648,14 +648,14 @@ const paymentRouter = router({
       try {
         initMercadoPago();
         const MODULE_PRICES: Record<string, number> = {
-          "oraculo-investimentos": 1499,
-          "conselheiro-judicial": 1499,
-          "navegador-conflitos": 1499,
-          "oraculo-amor": 1499,
-          "caminho-saida": 1499,
-          "conexao-quem-partiu": 1499,
+          "oraculo-investimentos": 29900,
+          "conselheiro-judicial": 29900,
+          "navegador-conflitos": 29900,
+          "oraculo-amor": 29900,
+          "caminho-saida": 29900,
+          "conexao-quem-partiu": 29900,
         };
-        const amount = MODULE_PRICES[input.module] || 1499;
+        const amount = MODULE_PRICES[input.module] || 29900;
         const preference = await createPaymentPreference({
           diagnosticId: nanoid(),
           userEmail: input.userEmail,
@@ -667,6 +667,9 @@ const paymentRouter = router({
           preferenceId: preference.preferenceId,
           initPoint: preference.initPoint,
           amount,
+          userEmail: input.userEmail,
+          userName: input.userName,
+          module: input.module,
         };
       } catch (error) {
         console.error("[Module Payment] Error:", error);

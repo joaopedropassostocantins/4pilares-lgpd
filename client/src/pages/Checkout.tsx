@@ -202,6 +202,7 @@ export default function CheckoutPage() {
                             R$ 299
                         </p>
                         <p className="text-xs text-muted-foreground mb-5">Pagamento único · Cartão de crédito via Mercado Pago</p>
+                        <Link href="/garantia"><span className="text-xs text-gold underline cursor-pointer hover:text-gold/80 mb-3 inline-block">🛡️ Garantia total de devolução</span></Link>
 
                         <button
                             className="btn-module-checkout w-full text-white font-bold py-4 text-lg rounded-full disabled:opacity-50"
