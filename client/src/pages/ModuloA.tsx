@@ -80,15 +80,25 @@ export default function ModuloA() {
         </div>
 
         {/* CTA */}
-        <div className="text-center py-8">
-          <Link href="/">
-            <Button size="lg" className="text-lg px-8 py-6">
-              FAZER MINHA ANÁLISE GRATUITA
-            </Button>
+        <div className="text-center py-8 space-y-4">
+          <div className="rounded-2xl p-6 mb-4 text-left max-w-md mx-auto" style={{ background: "rgba(201,168,76,0.08)", border: "1px solid rgba(201,168,76,0.3)" }}>
+            <p className="text-center text-xl font-bold text-gold mb-4" style={{ fontFamily: "'Cinzel', serif" }}>O que esta incluido</p>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li className="flex gap-2"><span className="text-gold">✓</span>Analise completa personalizada deste modulo</li>
+              <li className="flex gap-2"><span className="text-gold">✓</span>1 videochamada por semana durante 90 dias</li>
+              <li className="flex gap-2"><span className="text-gold">✓</span>Acompanhamento ao vivo com o Xama</li>
+              <li className="flex gap-2"><span className="text-gold">✓</span>Garantia total de devolucao - sem burocracia</li>
+            </ul>
+            <div className="text-center mt-4 pt-4 border-t border-gold/20">
+              <p className="text-3xl font-bold text-gold" style={{ fontFamily: "'Cinzel', serif" }}>R$ 299</p>
+              <p className="text-xs text-muted-foreground mt-1">Pagamento unico - Cartao de credito via Mercado Pago</p>
+            </div>
+          </div>
+          <Link href="/checkout/oraculo-investimentos">
+            <Button size="lg" className="text-lg px-10 py-6 w-full max-w-md font-bold rounded-full shadow-lg animate-pulse hover:animate-none" style={{ minHeight: "58px" }}>💳 GARANTIR MINHA VAGA - R$ 299</Button>
           </Link>
-          <p className="text-sm text-muted-foreground mt-4">
-            Acesso liberado por demanda. Quanto mais interesse, mais rápido você entra.
-          </p>
+          <p className="text-xs text-muted-foreground">🔒 Somente Mercado Pago - Cartao de credito - Vagas limitadas por modulo</p>
+          <p className="text-sm text-muted-foreground pt-2">Ainda tem duvidas? <Link href="/#form"><span className="text-primary underline cursor-pointer hover:opacity-80">Faca a analise gratuita primeiro</span></Link></p>
         </div>
       </div>
     </div>

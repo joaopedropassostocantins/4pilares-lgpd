@@ -69,6 +69,13 @@ export default function CheckoutPage() {
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
+    const [isWebview, setIsWebview] = useState(false);
+    
+    useEffect(() => {
+      const ua = navigator.userAgent || "";
+      const detected = ua.includes("FBAN") || ua.includes("FBAV") || ua.includes("Instagram") || ua.includes("TikTok") || ua.includes("BytedanceWebview") || (ua.includes("wv") && ua.includes("Android"));
+      setIsWebview(detected);
+    }, []);
 
     const createModulePayment = trpc.payment.createModulePayment.useMutation();
 
@@ -150,17 +157,23 @@ export default function CheckoutPage() {
                         {mod.description}
                     </p>
 
-                    {/* Instruções de pagamento */}
-                    <div
-                        className="rounded-xl p-5 mb-6 text-left"
-                        style={{ background: `${mod.color}10`, border: `1px solid ${mod.color}40` }}
-                    >
-                        <p className="text-foreground font-medium mb-2 text-sm">
-                            📋 Este módulo será desbloqueado após confirmação de pagamento.
-                        </p>
-                        <p className="text-muted-foreground text-xs leading-relaxed">
-                            Integração com <strong>PIX</strong> e <strong>Mercado Pago</strong> será realizada automaticamente após o seu pagamento ser aprovado.
-                        </p>
+                    {isWebview && (
+                      <div className="w-full max-w-xl mb-4 px-2 rounded-xl p-4 text-center" style={{ background: "rgba(255,165,0,0.12)", border: "1px solid rgba(255,165,0,0.5)" }}>
+                        <p className="text-sm font-bold mb-1" style={{ color: "#ffa500" }}>⚠️ Para garantir sua compra, abra no Chrome ou Safari</p>
+                        <p className="text-xs text-muted-foreground mb-3">Navegadores internos de apps (TikTok, Instagram) podem bloquear o pagamento.</p>
+                        <button onClick={() => window.open(window.location.href, "_blank")} className="text-xs font-bold px-4 py-2 rounded-full" style={{ background: "rgba(255,165,0,0.2)", color: "#ffa500", border: "1px solid #ffa500" }}>Abrir no navegador →</button>
+                      </div>
+                    )}
+
+                    {/* O QUE ESTÁ INCLUÍDO */}
+                    <div className="rounded-xl p-5 mb-6 text-left" style={{ background: `${mod.color}10`, border: `1px solid ${mod.color}40` }}>
+                      <p className="font-bold text-sm mb-3" style={{ color: mod.color }}>✦ O que você recebe:</p>
+                      <ul className="space-y-2 text-sm text-muted-foreground">
+                        <li className="flex gap-2"><span style={{ color: mod.color }} className="flex-shrink-0">✓</span>Análise completa e personalizada deste módulo</li>
+                        <li className="flex gap-2"><span style={{ color: mod.color }} className="flex-shrink-0">✓</span>1 videochamada por semana durante 90 dias</li>
+                        <li className="flex gap-2"><span style={{ color: mod.color }} className="flex-shrink-0">✓</span>Acompanhamento ao vivo com o Xamã</li>
+                        <li className="flex gap-2"><span style={{ color: mod.color }} className="flex-shrink-0">✓</span>Garantia total de devolução - sem perguntas</li>
+                      </ul>
                     </div>
 
                     {/* Formulário */}
@@ -170,23 +183,25 @@ export default function CheckoutPage() {
                             placeholder="Seu email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-4 py-2 rounded-lg bg-background/50 border border-border text-foreground placeholder-muted-foreground"
+                            style={{ fontSize: "16px", minHeight: "52px" }}
+                            className="w-full px-4 py-4 rounded-xl bg-background/50 border border-border text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/60"
                         />
                         <input
                             type="text"
                             placeholder="Seu nome"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="w-full px-4 py-2 rounded-lg bg-background/50 border border-border text-foreground placeholder-muted-foreground"
+                            style={{ fontSize: "16px", minHeight: "52px" }}
+                            className="w-full px-4 py-4 rounded-xl bg-background/50 border border-border text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/60"
                         />
                     </div>
 
                     {/* Preço + Botão */}
                     <div className="mb-4">
                         <p className="text-4xl font-bold mb-1" style={{ color: mod.color, fontFamily: "'Cinzel', serif" }}>
-                            R$ 14,99
+                            R$ 299
                         </p>
-                        <p className="text-xs text-muted-foreground mb-5">Acesso único · Sem mensalidade</p>
+                        <p className="text-xs text-muted-foreground mb-5">Pagamento único · Cartão de crédito via Mercado Pago</p>
 
                         <button
                             className="btn-module-checkout w-full text-white font-bold py-4 text-lg rounded-full disabled:opacity-50"
@@ -194,7 +209,7 @@ export default function CheckoutPage() {
                             onClick={handlePayment}
                             disabled={loading}
                         >
-                            {loading ? "Processando..." : "💳 Pagar R$ 14,99"}
+                            {loading ? "Processando..." : "💳 Pagar R$ 299"}
                         </button>
                     </div>
 

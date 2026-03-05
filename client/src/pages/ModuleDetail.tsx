@@ -177,16 +177,37 @@ export default function ModuleDetail() {
             className="text-2xl font-bold shimmer-gold mb-3"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
-            Quero acesso antecipado
+            Analise + Acompanhamento 90 dias
           </h3>
-          <p className="text-muted-foreground mb-6 text-sm">
-            Garanta sua vaga na lista de espera. Gratuito. Sem compromisso.
-          </p>
-          <Link href={`/cadastro?modulo=${module.id}`}>
-            <span className="btn-gold btn-gold-pulse inline-block">
-              GARANTIR MINHA VAGA NA LISTA
-            </span>
+          <ul className="text-left text-sm text-muted-foreground space-y-2 mb-6 max-w-xs mx-auto">
+            <li className="flex gap-2">
+              <span className="text-gold flex-shrink-0">✓</span>
+              Analise completa personalizada deste modulo
+            </li>
+            <li className="flex gap-2">
+              <span className="text-gold flex-shrink-0">✓</span>
+              1 videochamada por semana durante 90 dias
+            </li>
+            <li className="flex gap-2">
+              <span className="text-gold flex-shrink-0">✓</span>
+              Acompanhamento ao vivo com o Xama
+            </li>
+            <li className="flex gap-2">
+              <span className="text-gold flex-shrink-0">✓</span>
+              Garantia total de devolucao - sem burocracia
+            </li>
+          </ul>
+          <p className="text-4xl font-bold text-gold mb-1" style={{ fontFamily: "'Cinzel', serif" }}>R$ 299</p>
+          <p className="text-xs text-muted-foreground mb-6">Pagamento unico - Cartao de credito via Mercado Pago</p>
+          <Link href={`/checkout/${(module as any).paymentSlug || module.slug.replace('modulo-', '')}`}>
+            <span className="btn-gold btn-gold-pulse inline-block w-full text-center py-4 text-base">💳 GARANTIR MINHA VAGA - R$ 299</span>
           </Link>
+          <p className="text-xs text-muted-foreground/70 mt-4">🔒 Somente Mercado Pago - Cartao de credito - Vagas limitadas</p>
+          <div className="mt-4 pt-4 border-t border-border/30">
+            <Link href={`/cadastro?modulo=${module.id}`}>
+              <span className="text-xs text-muted-foreground/50 underline cursor-pointer hover:text-muted-foreground">Quero entrar na lista de espera gratuita</span>
+            </Link>
+          </div>
         </div>
 
         {/* LGPD Footer */}

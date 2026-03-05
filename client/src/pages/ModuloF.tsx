@@ -16,7 +16,7 @@ export default function ModuloF() {
 
       <div className="bg-gradient-to-r from-primary/20 to-primary/10 border-b border-primary/30 py-12">
         <div className="container mx-auto px-4">
-          <Link href="/">
+          <Link href="/checkout/conexao-quem-partiu">
             <Button variant="ghost" className="mb-6">← Voltar</Button>
           </Link>
           <div className="text-5xl mb-4">🕊️</div>

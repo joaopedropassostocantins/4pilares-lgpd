@@ -12,25 +12,6 @@ export default function ModuleCard({ module }: ModuleCardProps) {
   const accentColor = (module as any).accentColor ?? "#C9A84C";
   const colorClass = (module as any).colorClass ?? "";
   const paymentSlug = (module as any).paymentSlug;
-  
-  // Preços e status por módulo
-  const getPriceInfo = () => {
-    const moduleId = (module as any).id;
-    if (moduleId === 'a' || moduleId === 'f') {
-      return {
-        price: 'R$ 3.999',
-        status: 'SEM VAGAS - ENTRADA E FILA DE ESPERA',
-        hasSpots: false
-      };
-    }
-    return {
-      price: 'R$ 1.499',
-      status: 'COM VAGA',
-      hasSpots: true
-    };
-  };
-  
-  const priceInfo = getPriceInfo();
 
   return (
     <div
@@ -87,11 +68,20 @@ export default function ModuleCard({ module }: ModuleCardProps) {
               className="btn-module-checkout block text-center w-full text-sm py-2.5"
               style={{ background: accentColor }}
             >
-              💳 Desbloquear {priceInfo.price} - {priceInfo.status}
+              🔓 Módulo + 90 dias com Xamã — R$ 299
             </span>
           </Link>
         )}
       </div>
+
+      {/* Descrição de benefícios */}
+      {paymentSlug && (
+        <p className="text-xs text-muted-foreground text-center mt-2 leading-relaxed">
+          Inclui análise completa + 1 videochamada/semana por 90 dias
+          <br />
+          <span style={{ color: "#C9A84C" }}>✓ Garantia total de devolução</span>
+        </p>
+      )}
     </div>
   );
 }
