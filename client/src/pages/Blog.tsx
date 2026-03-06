@@ -18,6 +18,54 @@ interface BlogPost {
 
 const blogPosts: BlogPost[] = [
   {
+    id: "battle-of-fates",
+    title: "O Disney+ acabou de provar que o SAJU é real — e o mundo está prestando atenção",
+    excerpt: "Battle of Fates (운명전쟁49) estreou no Disney+ e se tornou o reality mais assistido da história da plataforma na Coreia do Sul. 49 xamãs competem para provar quem realmente consegue ler o futuro.",
+    content: `Há algumas semanas, o Disney+ estreou um reality show diferente de tudo que já foi feito: **Battle of Fates (운명전쟁49)**. Nenhum chef. Nenhum cantor. Nenhuma prova de resistência física.
+
+49 leitores do destino — xamãs, tarólogos, fisiognomonistas e mestres do SAJO, a astrologia ancestral coreana — competindo para provar quem realmente consegue ler o futuro.
+
+## O Fenômeno do Reality
+
+O programa se tornou o reality mais assistido da história do Disney+ na Coreia do Sul, superando títulos com orçamentos milionários. E a razão é simples: as pessoas querem respostas que a lógica convencional não dá.
+
+Os participantes foram submetidos a desafios perturbadoramente precisos:
+- Identificar a causa da morte de desconhecidos
+- Encontrar pessoas com determinado patrimônio
+- Reconhecer casais com múltiplos filhos apenas pela energia
+
+No episódio final, três famílias que perderam entes queridos buscaram mensagens dos que partiram. Os xamãs conduziram rituais para guiar as almas em paz.
+
+## O Significado Cultural
+
+Crença ou ceticismo à parte: quando um dos maiores estúdios do mundo decide apostar em xamanismo e SAJO como formato de entretenimento global, algo mudou.
+
+Não é mais sobre crenças marginalizadas. É sobre reconhecimento de um sistema milenar que funciona.
+
+## O que o SAJU Realmente É
+
+O SAJU (四柱, "quatro pilares") não é adivinhação. É um sistema milenar de leitura de padrões baseado na sua data de nascimento — ano, mês, dia e hora — cruzados com os cinco elementos e os ciclos energéticos que governam cada período da sua vida.
+
+Enquanto o reality mostra o espetáculo, o que fazemos aqui vai mais fundo: identificamos o padrão específico que se repete na sua vida — em dinheiro, amor, saúde ou decisões — e mostramos a janela exata para romper esse ciclo.
+
+## Próximos Passos
+
+Você não precisa acreditar. Precisa ver.
+
+A análise gratuita leva 30 segundos. Sem cadastro. Revelar seu padrão agora.
+
+Quer ir mais fundo? Os módulos especializados combinam sua análise dos 4 Pilares com acompanhamento ao vivo — uma videochamada por semana durante 90 dias.
+
+---
+
+**Referência:** Battle of Fates está disponível no Disney+. O programa marca um ponto de virada no reconhecimento global da sabedoria ancestral coreana.`,
+    category: "historia",
+    author: "Especialista Musok (무속) coreano",
+    date: "2026-03-06",
+    readTime: 6,
+    image: "📺",
+  },
+  {
     id: "kut-ritual",
     title: "O Kut: O Ritual Sagrado do Musok Coreano",
     excerpt: "Descubra os mistérios do Kut, o ritual mais importante do xamanismo coreano, e como ele conecta o mundo espiritual com o humano.",
