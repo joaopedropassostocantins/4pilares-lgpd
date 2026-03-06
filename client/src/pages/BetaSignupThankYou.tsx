@@ -115,7 +115,7 @@ export default function BetaSignupThankYou() {
             <div>
               <h4 className="font-semibold text-primary mb-1">Preciso pagar algo?</h4>
               <p className="text-sm text-muted-foreground">
-                Não. A degustação é 100% gratuita. Você só paga se quiser a análise completa (R$ 29,99).
+                Não. A degustação é 100% gratuita. Você só paga se quiser a análise completa (R$ 299,00).
               </p>
             </div>
 

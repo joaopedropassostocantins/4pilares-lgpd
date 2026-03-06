@@ -82,7 +82,7 @@ Sua análise de degustação está pronta, mas o pagamento ainda não foi confir
 
 ⚠️ *Sua promoção expira em ${hoursUntilExpiry} horas!*
 
-Depois disso, o preço volta ao normal (R$ 29,99).
+Depois disso, o preço volta ao normal (R$ 299,00).
 
 Clique agora para desbloquear sua análise completa:
 ${resultUrl}

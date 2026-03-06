@@ -45,7 +45,7 @@ describe('Payment Integration Tests', () => {
           diagnosticId: 'diag-456',
           userEmail: 'user@example.com',
           userName: 'User Name',
-          amount: 29.99,
+          amount: 299,
           returnUrl: 'https://example.com/resultado/diag-456',
         });
 
@@ -61,7 +61,7 @@ describe('Payment Integration Tests', () => {
     });
 
     it('should handle different amounts correctly', async () => {
-      const amounts = [9.99, 14.99, 29.99, 299.90];
+      const amounts = [9.99, 14.99, 299, 299.90];
 
       for (const amount of amounts) {
         try {
@@ -123,7 +123,7 @@ describe('Payment Integration Tests', () => {
 
     it('should return correct prices for normal plan', () => {
       const testCases = [
-        { country: 'BR', expected: 2999 }, // R$ 29.99
+        { country: 'BR', expected: 2999 }, // R$ 299
         { country: 'IN', expected: 199900 }, // ₹ 1,999
         { country: 'US', expected: 2499 }, // $ 24.99
       ];
@@ -247,7 +247,7 @@ describe('Payment Integration Tests', () => {
     });
 
     it('should validate payment amounts are positive', () => {
-      const validAmounts = [9.99, 14.99, 29.99, 299.90];
+      const validAmounts = [9.99, 14.99, 299, 299.90];
       const invalidAmounts = [0, -10, -0.01];
 
       validAmounts.forEach((amount) => {

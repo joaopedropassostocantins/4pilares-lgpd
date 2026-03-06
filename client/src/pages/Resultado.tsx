@@ -175,7 +175,7 @@ export default function Resultado() {
 
   // Plan prices
   const plans = {
-    normal: { price: 29.99, label: "Normal", description: "Acesso 1x à análise completa" },
+    normal: { price: 299, label: "Normal", description: "Acesso 1x à análise completa" },
     lifetime: { price: 299.90, label: "Vitalicio", description: "Acesso ilimitado + atualizações" },
   };
 
@@ -324,12 +324,26 @@ export default function Resultado() {
                 );
               })}
               {/* Lock Button Section */}
-              <div id="lock-container" className="mt-8 pt-6 border-t-2 border-dashed border-[#d4af37]">
+              <div id="lock-container" className="mt-8 pt-6">
                 <div className="text-center space-y-4">
-                  <div className="inline-flex items-center justify-center p-4 rounded-full bg-[#d4af37]/20">
-                    <Lock className="h-8 w-8 text-[#d4af37]" />
+                  <div
+                    className="inline-flex items-center justify-center p-4 rounded-full"
+                    style={{
+                      background: "rgba(201,168,76,0.12)",
+                      border: "1px solid rgba(201,168,76,0.35)",
+                      boxShadow: "0 0 40px rgba(201,168,76,0.15)",
+                    }}
+                  >
+                    <span style={{ fontSize: "1.5rem" }}>🔒</span>
                   </div>
-                  <h3 className="text-2xl font-bold text-[#d4af37]" style={{ fontFamily: "'Playfair Display', serif" }}>
+                  <h3
+                    className="text-2xl font-bold"
+                    style={{
+                      fontFamily: "'Cinzel', serif",
+                      color: "#E6C76A",
+                      textShadow: "0 0 20px rgba(201,168,76,0.5)",
+                    }}
+                  >
                     3 Padrões Graves Detectados
                   </h3>
                   <p className="text-sm text-muted-foreground max-w-md mx-auto">
@@ -337,7 +351,15 @@ export default function Resultado() {
                   </p>
                   <button
                     id="btn-unlock"
-                    className="btn-unlock w-full py-4 px-6 rounded-full text-lg font-bold bg-gradient-to-r from-[#d4af37] to-[#e68c0f] text-black shadow-lg hover:shadow-xl transition-all"
+                    className="w-full font-bold py-5 rounded-2xl text-base flex items-center justify-center gap-2 transition-all hover:opacity-90 active:scale-95"
+                    style={{
+                      background: "linear-gradient(135deg, #C9A84C 0%, #E6C76A 50%, #C9A84C 100%)",
+                      color: "#0a0614",
+                      fontFamily: "'Cinzel', serif",
+                      letterSpacing: "0.05em",
+                      boxShadow: "0 4px 30px rgba(201,168,76,0.45), 0 0 60px rgba(201,168,76,0.15)",
+                      minHeight: "60px",
+                    }}
                     onClick={() => {
                       const paymentSection = document.getElementById('payment-options');
                       if (paymentSection) {
@@ -345,8 +367,7 @@ export default function Resultado() {
                       }
                     }}
                   >
-                    <Lock className="inline mr-2 h-5 w-5" />
-                    DESBLOQUEIE A ANÁLISE COMPLETA AGORA
+                    🔓 DESBLOQUEIE A ANÁLISE COMPLETA
                   </button>
                 </div>
               </div>

@@ -51,7 +51,7 @@ export function generateWelcomeEmail(userName: string, diagnosticId: string): Em
               </ul>
               
               <p><span class="urgency">⏰ Promoção especial válida apenas até 01/março às 23:59</span></p>
-              <p>Depois disso, o valor volta ao normal (R$ 29,99).</p>
+              <p>Depois disso, o valor volta ao normal (R$ 299,00).</p>
               
               <center>
                 <a href="${resultUrl}" class="cta-button">Ver Minha Análise Completa (R$ 14,99)</a>
@@ -78,7 +78,7 @@ Seus 4 Pilares SAJO foram revelados! Sua análise de degustação está pronta.
 Mas aqui está a verdade: a análise de degustação é apenas o começo. Ela mostra quem você é, mas não revela suas previsões exatas, o que você precisa fazer AGORA, os ciclos de abundância, rituais ancestrais e ações corretivas.
 
 ⏰ Promoção especial válida apenas até 01/março às 23:59
-Depois disso, o valor volta ao normal (R$ 29,99).
+Depois disso, o valor volta ao normal (R$ 299,00).
 
 Ver sua análise completa: ${resultUrl}
 
@@ -143,7 +143,7 @@ export function generateUpsellEmail(userName: string, diagnosticId: string): Ema
               </div>
               
               <p><span class="urgency">⏰ Atenção: Sua promoção de R$ 14,99 expira em 01/março às 23:59</span></p>
-              <p>Depois disso, o preço volta para R$ 29,99.</p>
+              <p>Depois disso, o preço volta para R$ 299,00.</p>
               
               <center>
                 <a href="${resultUrl}" class="cta-button">Desbloquear Agora (R$ 14,99)</a>
@@ -176,7 +176,7 @@ Depoimentos de clientes:
 - Juliana Costa: "Finalmente entendi por que tenho dificuldades em finanças. Muito revelador!"
 
 ⏰ Sua promoção de R$ 14,99 expira em 01/março às 23:59
-Depois disso, o preço volta para R$ 29,99.
+Depois disso, o preço volta para R$ 299,00.
 
 Desbloquear agora: ${resultUrl}
 

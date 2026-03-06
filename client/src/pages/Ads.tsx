@@ -240,7 +240,7 @@ export default function Ads() {
               Desbloqueie análise completa por apenas
             </p>
             <div className="text-3xl font-bold text-primary mb-2">
-              R$ <span className="text-primary">29,99</span>
+              R$ <span className="text-primary">299,00</span>
             </div>
             <p className="text-xs text-muted-foreground">
               para quem compartilhar

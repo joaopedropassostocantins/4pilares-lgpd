@@ -135,7 +135,7 @@ export async function getCouponByCode(code: string) {
 }
 
 // Base price constant — single source of truth
-const BASE_PRICE = 29.99;
+const BASE_PRICE = 299;
 
 export async function applyCoupon(diagnosticPublicId: string, couponCode: string) {
   const db = await getDb();

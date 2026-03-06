@@ -51,7 +51,7 @@ describe('Coupon System', () => {
   });
 
   it('should calculate final price with fixed discount', async () => {
-    const basePrice = 29.99;
+    const basePrice = 299;
     const coupon = await db.select().from(coupons).where(eq(coupons.code, 'TEST100')).limit(1);
     
     if (coupon[0].discountType === 'fixed') {

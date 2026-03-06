@@ -210,13 +210,20 @@ export default function CheckoutPage() {
                         <Link href="/garantia"><span className="text-xs text-gold underline cursor-pointer hover:text-gold/80 mb-3 inline-block">🛡️ Garantia total de devolução</span></Link>
 
                         <button
-                            className="btn-module-checkout w-full text-white font-bold py-4 text-lg rounded-full disabled:opacity-50"
-                            style={{ background: mod.color }}
+                            className="w-full font-bold py-5 text-lg rounded-2xl text-white flex items-center justify-center gap-2 disabled:opacity-50 transition-all hover:opacity-90 active:scale-95"
+                            style={{
+                                background: "linear-gradient(135deg, #009EE3 0%, #0070B3 100%)",
+                                minHeight: "62px",
+                                boxShadow: "0 4px 24px rgba(0,158,227,0.4)",
+                            }}
                             onClick={handlePayment}
                             disabled={loading}
                         >
-                            {loading ? "Processando..." : "💳 Pagar R$ 299"}
+                            {loading ? "Processando..." : "💳 Pagar com Cartão — R$ 299"}
                         </button>
+                        <p className="text-center text-xs mt-3" style={{ color: "#B8A99A" }}>
+                            ou em até <strong style={{ color: "#E6C76A" }}>12x de R$ 24,92</strong> no cartão de crédito
+                        </p>
                     </div>
 
                     {/* Garantia */}

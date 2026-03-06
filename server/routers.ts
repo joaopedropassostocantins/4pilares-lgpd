@@ -474,7 +474,7 @@ const paymentRouter = router({
     .input(
       z.object({
         diagnosticPublicId: z.string(),
-        amount: z.number().default(29.99),
+        amount: z.number().default(299),
       })
     )
     .mutation(async ({ input }) => {
