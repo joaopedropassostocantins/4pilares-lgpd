@@ -8,7 +8,7 @@ interface BlogPost {
   id: string;
   title: string;
   excerpt: string;
-  content: string;
+  content?: string;
   category: "ritual" | "pratica" | "historia" | "guia";
   author: string;
   date: string;
@@ -17,6 +17,56 @@ interface BlogPost {
 }
 
 const blogPosts: BlogPost[] = [
+  {
+    id: "ralo-invisivel-dinheiro",
+    title: "O 'ralo invisível' do dinheiro: por que algumas pessoas acumulam e outras gastam tudo no mesmo mês",
+    excerpt: "Não é falta de disciplina. O comportamento com dinheiro tem um padrão que aparece no seu mapa de nascimento.",
+    category: "pratica",
+    author: "Especialista Musok (무속) coreano",
+    date: "2026-03-06",
+    readTime: 7,
+    image: "💵",
+  },
+  {
+    id: "saju-casamento-empresa",
+    title: "Por que os coreanos consultam o SAJU antes de casar, abrir empresa ou mudar de cidade",
+    excerpt: "Na Coreia, consultar o SAJU antes de decisões importantes não é superstição — é protocolo.",
+    category: "historia",
+    author: "Especialista Musok (무속) coreano",
+    date: "2026-03-05",
+    readTime: 6,
+    image: "🃶",
+  },
+  {
+    id: "por-que-repito-erros",
+    title: "Você não é sabotador. Seu padrão de nascimento é que está no comando",
+    excerpt: "A psicologia chama de compulsão à repetição. O SAJU chama de padrão dos 4 Pilares.",
+    category: "pratica",
+    author: "Especialista Musok (무속) coreano",
+    date: "2026-03-04",
+    readTime: 8,
+    image: "🔄",
+  },
+  {
+    id: "cetico-saju",
+    title: "Não acredito em misticismo — mas o SAJU me acertou em coisas que ninguém poderia saber",
+    excerpt: "Um olhar cético sobre o SAJU. O que é, como funciona, e por que o sistema não exige fé.",
+    category: "guia",
+    author: "Especialista Musok (무속) coreano",
+    date: "2026-03-03",
+    readTime: 7,
+    image: "🔍",
+  },
+  {
+    id: "xamanismo-luto",
+    title: "O que o xamanismo coreano diz sobre as almas que partem sem despedida",
+    excerpt: "Na tradição coreana, mortes abruptas deixam almas em transição. O ritual Gut existe para fechar o que ficou em aberto.",
+    category: "ritual",
+    author: "Especialista Musok (무속) coreano",
+    date: "2026-03-02",
+    readTime: 8,
+    image: "🔮",
+  },
   {
     id: "battle-of-fates",
     title: "O Disney+ acabou de provar que o SAJU é real — e o mundo está prestando atenção",
@@ -61,7 +111,7 @@ Quer ir mais fundo? Os módulos especializados combinam sua análise dos 4 Pilar
 **Referência:** Battle of Fates está disponível no Disney+. O programa marca um ponto de virada no reconhecimento global da sabedoria ancestral coreana.`,
     category: "historia",
     author: "Especialista Musok (무속) coreano",
-    date: "2026-03-06",
+    date: "2026-03-01",
     readTime: 6,
     image: "📺",
   },

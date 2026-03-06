@@ -16,6 +16,81 @@ interface BlogPost {
 }
 
 const blogPosts: Record<string, BlogPost> = {
+  "ralo-invisivel-dinheiro": {
+    id: "ralo-invisivel-dinheiro",
+    title: "O 'ralo invisível' do dinheiro: por que algumas pessoas acumulam e outras gastam tudo no mesmo mês",
+    excerpt: "Não é falta de disciplina. O comportamento com dinheiro tem um padrão que aparece no seu mapa de nascimento.",
+    content: `No sistema dos Quatro Pilares, cada pessoa nasce com uma configuração específica de elementos. O Elemento de Riqueza — o que você tem capacidade de acumular — pode estar forte e acessível, forte mas bloqueado, ou fraco ou ausente.
+
+Quando o Elemento de Riqueza está em conflito com o Oficial Severo, o resultado é um "ralo invisível": você trabalha, ganha, e no final do mês não sabe para onde foi.
+
+O autoboicote financeiro existe — mas na maioria dos casos, o que parece sabotagem é, na verdade, um padrão energético rodando em segundo plano desde que você nasceu.`,
+    category: "pratica",
+    author: "Especialista Musok (무속) coreano",
+    date: "2026-03-06",
+    readTime: 7,
+    image: "💵",
+  },
+  "saju-casamento-empresa": {
+    id: "saju-casamento-empresa",
+    title: "Por que os coreanos consultam o SAJU antes de casar, abrir empresa ou mudar de cidade",
+    excerpt: "Na Coreia, consultar o SAJU antes de decisões importantes não é superstição — é protocolo.",
+    content: `Na Coreia do Sul, o SAJU é consultado antes de casamentos, abertura de empresas, contratos e mudanças. O sistema usa quatro pilares: ano, mês, dia e hora de nascimento.
+
+Cada pilar carrega dois caracteres — um Tronco Celestial e um Ramo Terrestre — formando um mapa de 8 caracteres que descreve os elementos que regem sua vida.
+
+Esses elementos (Madeira, Fogo, Terra, Metal, Água) interagem entre si de formas previsíveis. Quando o Elemento de Riqueza está em conflito com o Oficial Severo, por exemplo, o dinheiro escoa.`,
+    category: "historia",
+    author: "Especialista Musok (무속) coreano",
+    date: "2026-03-05",
+    readTime: 6,
+    image: "🃶",
+  },
+  "por-que-repito-erros": {
+    id: "por-que-repito-erros",
+    title: "Você não é sabotador. Seu padrão de nascimento é que está no comando",
+    excerpt: "A psicologia chama de compulsão à repetição. O SAJU chama de padrão dos 4 Pilares.",
+    content: `O relacionamento termina. Você promete que da próxima vez vai ser diferente. E na próxima vez, é igual.
+
+Sigmund Freud chamou de "compulsão à repetição": a tendência inconsciente de recriar situações dolorosas até que o padrão subjacente seja reconhecido.
+
+O SAJU mapeou algo que a psicologia ocidental leva anos para nomear: o padrão de repetição está codificado na configuração dos seus elementos ao nascimento.`,
+    category: "pratica",
+    author: "Especialista Musok (무속) coreano",
+    date: "2026-03-04",
+    readTime: 8,
+    image: "🔄",
+  },
+  "cetico-saju": {
+    id: "cetico-saju",
+    title: "Não acredito em misticismo — mas o SAJU me acertou em coisas que ninguém poderia saber",
+    excerpt: "Um olhar cético sobre o SAJU. O que é, como funciona, e por que o sistema não exige fé.",
+    content: `Eu não acredito em horóscopo. Nunca acreditei. Signo solar não faz sentido para mim.
+
+O SAJU não usa o signo solar. Usa quatro variáveis: ano, mês, dia e hora de nascimento — cruzadas com um sistema de 10 Troncos Celestiais e 12 Ramos Terrestres.
+
+Ceticismo de verdade não é rejeição automática. É abertura à evidência. O SAJU não pede fé. Pede que você observe se o padrão descrito corresponde à sua experiência.`,
+    category: "guia",
+    author: "Especialista Musok (무속) coreano",
+    date: "2026-03-03",
+    readTime: 7,
+    image: "🔍",
+  },
+  "xamanismo-luto": {
+    id: "xamanismo-luto",
+    title: "O que o xamanismo coreano diz sobre as almas que partem sem despedida",
+    excerpt: "Na tradição coreana, mortes abruptas deixam almas em transição. O ritual Gut existe para fechar o que ficou em aberto.",
+    content: `Na tradição xamânica coreana, existe uma distinção fundamental entre duas formas de partir.
+
+Quando alguém morre depois de uma vida longa, rodeado por quem ama — a alma percorre o caminho de transição com clareza.
+
+O Gut é o ritual xamânico coreano conduzido por uma mudang para servir de ponte entre os mundos. Para os vivos que ficaram, o Gut oferece algo que nenhum processo de luto convencional consegue dar: a possibilidade de um fechamento.`,
+    category: "ritual",
+    author: "Especialista Musok (무속) coreano",
+    date: "2026-03-02",
+    readTime: 8,
+    image: "🔮",
+  },
   "battle-of-fates": {
     id: "battle-of-fates",
     title: "O Disney+ acabou de provar que o SAJU é real — e o mundo está prestando atenção",
