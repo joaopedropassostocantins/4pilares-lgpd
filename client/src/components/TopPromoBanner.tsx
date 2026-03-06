@@ -71,8 +71,8 @@ export default function TopPromoBanner() {
                 {/* Background gradient escuro/dourado consistente com o tema */}
                 <div
                     style={{
-                        background: "linear-gradient(90deg, #1a1030 0%, #2d1b6b 40%, #1a1030 100%)",
-                        borderBottom: "1px solid rgba(201,168,76,0.4)",
+                        background: "linear-gradient(90deg, #0f0820 0%, #1f1245 40%, #0f0820 100%)",
+                        borderBottom: "1px solid rgba(201,168,76,0.35)",
                     }}
                 >
                     <div
@@ -89,7 +89,7 @@ export default function TopPromoBanner() {
                     >
                         {/* Ícone + Texto */}
                         <div style={{ display: "flex", alignItems: "center", gap: "10px", flex: 1, minWidth: "220px" }}>
-                            <span style={{ fontSize: "1.4rem", flexShrink: 0 }}>🔓</span>
+                            <span style={{ fontSize: "1.4rem", flexShrink: 0, filter: "sepia(1) saturate(3) hue-rotate(5deg)" }}>🔓</span>
                             <div>
                                 <p style={{ margin: 0, fontWeight: 700, fontSize: "0.85rem", color: "#f5d97a", lineHeight: 1.3 }}>
                                     Módulos liberados + acompanhamento virtual por 90 dias

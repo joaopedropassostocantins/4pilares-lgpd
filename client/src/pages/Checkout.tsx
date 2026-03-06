@@ -113,7 +113,12 @@ export default function CheckoutPage() {
     };
 
     return (
-        <div className={`min-h-screen bg-gradient-to-b from-background via-background to-primary/5 ${mod.colorClass}`}>
+        <div
+          className={`min-h-screen ${mod.colorClass}`}
+          style={{
+            background: "radial-gradient(ellipse at 50% 0%, #1a1040 0%, #0a0614 60%)",
+          }}
+        >
             <div className="checkout-container">
                 {/* Voltar */}
                 <div className="w-full max-w-xl mb-6 text-left px-2">

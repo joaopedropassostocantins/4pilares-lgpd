@@ -403,23 +403,56 @@ export default function Resultado() {
                         dangerouslySetInnerHTML={{ __html: formatHtml(hiddenPart) }}
                       />
                       {/* Lock overlay */}
-                      <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/70 backdrop-blur-sm rounded-lg">
+                      <div
+                        className="absolute inset-0 flex flex-col items-center justify-center rounded-lg"
+                        style={{
+                          background: "linear-gradient(to bottom, rgba(10,6,20,0.3) 0%, rgba(10,6,20,0.97) 40%)",
+                          backdropFilter: "blur(8px)",
+                          WebkitBackdropFilter: "blur(8px)",
+                        }}
+                      >
                         <div className="text-center p-6 max-w-md">
-                          <Lock className="h-12 w-12 text-primary mx-auto mb-4 animate-pulse" />
-                          <h3 className="text-xl font-bold text-primary mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+                          <div
+                            className="mb-5 p-5 rounded-full mx-auto w-fit"
+                            style={{
+                              background: "rgba(201,168,76,0.12)",
+                              border: "1px solid rgba(201,168,76,0.35)",
+                              boxShadow: "0 0 40px rgba(201,168,76,0.15)",
+                            }}
+                          >
+                            <span style={{ fontSize: "2rem" }}>🔒</span>
+                          </div>
+                          <h3
+                            className="text-2xl font-bold mb-3"
+                            style={{
+                              fontFamily: "'Cinzel', serif",
+                              color: "#E6C76A",
+                              textShadow: "0 0 20px rgba(201,168,76,0.5)",
+                            }}
+                          >
                             3 Padrões Graves Detectados
                           </h3>
-                          <p className="text-sm text-muted-foreground mb-4">
+                          <p className="text-sm mb-8 leading-relaxed" style={{ color: "#B8A99A" }}>
                             Seus Pilares revelaram padrões urgentes que precisam de atenção imediata.
                             Desbloqueie agora para ver o que está escondido.
                           </p>
-                          <Button
-                            className="w-full py-4 text-lg font-bold rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-black shadow-lg"
+                          <button
                             onClick={handleUnlock}
+                            className="w-full font-bold py-5 rounded-2xl text-base flex items-center justify-center gap-2 transition-all hover:opacity-90 active:scale-95"
+                            style={{
+                              background: "linear-gradient(135deg, #C9A84C 0%, #E6C76A 50%, #C9A84C 100%)",
+                              color: "#0a0614",
+                              fontFamily: "'Cinzel', serif",
+                              letterSpacing: "0.05em",
+                              boxShadow: "0 4px 30px rgba(201,168,76,0.45), 0 0 60px rgba(201,168,76,0.15)",
+                              minHeight: "60px",
+                            }}
                           >
-                            <Lock className="mr-2 h-5 w-5" />
-                            Desbloquear Análise Completa
-                          </Button>
+                            🔓 DESBLOQUEIE A ANÁLISE COMPLETA
+                          </button>
+                          <p className="text-xs mt-4" style={{ color: "#7A6E6A" }}>
+                            Acesso imediato · R$ 299 · Garantia total de devolução
+                          </p>
                         </div>
                       </div>
                     </div>
