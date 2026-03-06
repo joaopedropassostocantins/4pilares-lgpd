@@ -1070,8 +1070,8 @@ export default function Home() {
               <ul className="space-y-2 text-sm">
                 <li><a href="/" className="text-muted-foreground hover:text-primary transition-colors">Início</a></li>
                 <li><a href="/quem-somos" className="text-muted-foreground hover:text-primary transition-colors">Quem Somos</a></li>
+                <li><a href="/blog" className="text-muted-foreground hover:text-primary transition-colors">Blog</a></li>
                 <li><a href="#formulario" className="text-muted-foreground hover:text-primary transition-colors">Módulos</a></li>
-                <li><a href="#depoimentos" className="text-muted-foreground hover:text-primary transition-colors">Depoimentos</a></li>
               </ul>
             </div>
 

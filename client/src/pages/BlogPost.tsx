@@ -1,0 +1,219 @@
+import { useRoute } from "wouter";
+import { Link } from "wouter";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, Calendar, Clock, User } from "lucide-react";
+
+interface BlogPost {
+  id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  category: "ritual" | "pratica" | "historia" | "guia";
+  author: string;
+  date: string;
+  readTime: number;
+  image: string;
+}
+
+const blogPosts: Record<string, BlogPost> = {
+  "kut-ritual": {
+    id: "kut-ritual",
+    title: "O Kut: O Ritual Sagrado do Musok Coreano",
+    excerpt: "Descubra os mistérios do Kut, o ritual mais importante do xamanismo coreano, e como ele conecta o mundo espiritual com o humano.",
+    content: `O Kut (굿) é o ritual xamânico mais importante da tradição Musok coreana. É uma cerimônia complexa que pode durar horas ou até dias, envolvendo cânticos, danças sagradas, oferendas e comunicação direta com entidades espirituais.
+
+## Origens e Significado
+
+O Kut tem raízes que remontam a milhares de anos na história coreana. A palavra "Kut" significa literalmente "diversão" ou "celebração", mas seu significado vai muito além. É um ato de devoção, cura e comunicação com o mundo espiritual.
+
+## Estrutura do Ritual
+
+Um Kut típico segue uma estrutura bem definida:
+
+1. **Invocação Inicial** - O xamã (Mudang ou Paksu) invoca os espíritos e deidades
+2. **Oferendas** - Comida, bebida e objetos são oferecidos aos espíritos
+3. **Danças Sagradas** - Movimentos ritmados que induzem transe espiritual
+4. **Cânticos Sagrados** - Mantras e hinos que elevam a energia espiritual
+5. **Comunicação** - O xamã recebe mensagens dos espíritos para os participantes
+6. **Cura e Bênção** - Rituais de cura e proteção são realizados
+
+## Propósitos do Kut
+
+O Kut é realizado para diversos propósitos:
+- **Cura Espiritual** - Remover maldições e bloqueios energéticos
+- **Proteção** - Afastar influências negativas
+- **Celebração** - Honrar deidades e espíritos ancestrais
+- **Adivinhação** - Receber orientações para o futuro
+- **Transição** - Ajudar almas a passar para o outro mundo
+
+## A Importância Contemporânea
+
+Apesar da modernização da Coreia do Sul, o Kut permanece uma prática viva e respeitada. Muitas famílias ainda realizam Kuts para honrar seus ancestrais e buscar bênçãos espirituais.`,
+    category: "ritual",
+    author: "Especialista Musok (무속) coreano",
+    date: "2026-03-01",
+    readTime: 8,
+    image: "🎭",
+  },
+  "shinbyeong": {
+    id: "shinbyeong",
+    title: "Shinbyeong: A Doença Espiritual que Transforma",
+    excerpt: "Conheça o Shinbyeong, a experiência espiritual que marca o chamado de um novo xamã e transforma vidas.",
+    content: `Shinbyeong (신병), literalmente "doença do espírito", é um fenômeno único na tradição Musok coreana. É uma experiência transformadora que marca o chamado de uma pessoa para se tornar xamã.
+
+## O que é Shinbyeong?
+
+Shinbyeong não é uma doença comum. É uma crise espiritual profunda que afeta pessoas escolhidas pelos espíritos para se tornarem xamãs. Os sintomas incluem:
+
+- Sonhos vívidos e perturbadores
+- Sensibilidade extrema a energias espirituais
+- Mudanças de humor repentinas
+- Sensação de presença espiritual
+- Desejo irresistível de dançar e cantar
+
+## A Jornada de Transformação
+
+A experiência de Shinbyeong é dividida em fases:
+
+1. **Crise Inicial** - O indivíduo experimenta sintomas perturbadores
+2. **Isolamento** - Afastamento temporário da vida normal
+3. **Iniciação** - Encontro com um xamã experiente
+4. **Treinamento** - Aprendizado dos rituais e práticas
+5. **Renascimento** - Aceitação da nova identidade como xamã
+
+## Significado Espiritual
+
+Shinbyeong é visto como um chamado divino. Os espíritos escolhem indivíduos com capacidades especiais para se tornarem intermediários entre os mundos. É uma honra e uma responsabilidade.
+
+## Reconhecimento Moderno
+
+Hoje, o Shinbyeong é reconhecido como uma experiência legítima de transformação espiritual. Muitas escolas de Musok oferecem programas para ajudar pessoas que passam por essa experiência.`,
+    category: "historia",
+    author: "Especialista Musok (무속) coreano",
+    date: "2026-02-28",
+    readTime: 7,
+    image: "✨",
+  },
+};
+
+export default function BlogPostPage() {
+  const [, params] = useRoute("/blog/:id");
+  const postId = params?.id;
+  const post = postId ? blogPosts[postId] : null;
+
+  if (!post) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-foreground mb-4">Artigo não encontrado</h1>
+          <Link href="/blog">
+            <Button>Voltar ao Blog</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-primary/10 to-primary/5 border-b border-border/30 py-12">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <Link href="/blog">
+            <Button variant="ghost" className="mb-6 gap-2">
+              <ArrowLeft className="h-4 w-4" /> Voltar ao Blog
+            </Button>
+          </Link>
+
+          {/* Category Badge */}
+          <div className="inline-block px-3 py-1 rounded-full text-sm font-semibold mb-4 bg-primary/20 text-primary border border-primary/30">
+            {post.category === "ritual" && "🎭 Rituais"}
+            {post.category === "pratica" && "✨ Práticas"}
+            {post.category === "historia" && "📚 História"}
+            {post.category === "guia" && "🧭 Guia"}
+          </div>
+
+          {/* Title */}
+          <h1 className="text-4xl font-bold text-foreground mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
+            {post.title}
+          </h1>
+
+          {/* Meta */}
+          <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <User className="h-4 w-4" />
+              {post.author}
+            </div>
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              {new Date(post.date).toLocaleDateString("pt-BR")}
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4" />
+              {post.readTime} minutos de leitura
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="container mx-auto px-4 py-12 max-w-3xl">
+        {/* Featured Image */}
+        <div className="bg-primary/10 rounded-lg h-64 flex items-center justify-center text-8xl mb-12">
+          {post.image}
+        </div>
+
+        {/* Article Content */}
+        <div className="prose prose-invert max-w-none mb-12">
+          <div className="text-foreground leading-relaxed space-y-4">
+            {post.content.split("\n\n").map((paragraph, idx) => {
+              if (paragraph.startsWith("##")) {
+                return (
+                  <h2 key={idx} className="text-2xl font-bold text-primary mt-8 mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
+                    {paragraph.replace("## ", "")}
+                  </h2>
+                );
+              }
+              if (paragraph.startsWith("-")) {
+                return (
+                  <ul key={idx} className="list-disc list-inside space-y-2 text-muted-foreground">
+                    {paragraph.split("\n").map((item, i) => (
+                      <li key={i}>{item.replace("- ", "")}</li>
+                    ))}
+                  </ul>
+                );
+              }
+              if (paragraph.match(/^\d+\./)) {
+                return (
+                  <ol key={idx} className="list-decimal list-inside space-y-2 text-muted-foreground">
+                    {paragraph.split("\n").map((item, i) => (
+                      <li key={i}>{item.replace(/^\d+\.\s*/, "")}</li>
+                    ))}
+                  </ol>
+                );
+              }
+              return (
+                <p key={idx} className="text-muted-foreground">
+                  {paragraph}
+                </p>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div className="bg-primary/10 border border-primary/30 rounded-lg p-8 text-center">
+          <h3 className="text-2xl font-bold text-primary mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
+            Pronto para aprender mais?
+          </h3>
+          <p className="text-muted-foreground mb-6">
+            Explore nossos módulos educativos e comece sua jornada na sabedoria do Musok coreano.
+          </p>
+          <Link href="/">
+            <Button size="lg">Explorar Módulos</Button>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
