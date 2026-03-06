@@ -60,6 +60,39 @@
 
 :root {
   --radius: 0.65rem;
+  
+  /* ═══════════════════════════════════════════════════════════════════════ */
+  /* PALETA OFICIAL — Joalheria de Luxo + Misticismo Asiático */
+  /* ═══════════════════════════════════════════════════════════════════════ */
+  
+  /* ── Fundos ─────────────────────────────── */
+  --color-bg-deep:        #0a0614;   /* fundo principal — roxo quase preto */
+  --color-bg-card:        #120d22;   /* cards e painéis */
+  --color-bg-overlay:     #1a1235;   /* overlays e modais */
+  --color-bg-highlight:   #1f1640;   /* hover e destaque suave */
+
+  /* ── Dourado (cor de marca) ──────────────── */
+  --color-gold:           #C9A84C;   /* dourado principal */
+  --color-gold-light:     #E6C76A;   /* dourado claro — textos em destaque */
+  --color-gold-dark:      #A0823A;   /* dourado escuro — bordas */
+  --color-gold-glow:      rgba(201,168,76,0.20); /* brilho dourado */
+  --color-gold-subtle:    rgba(201,168,76,0.08); /* fundo sutil dourado */
+
+  /* ── Roxo (cor secundária) ───────────────── */
+  --color-purple-primary: #6B46C1;
+  --color-purple-light:   #9F7AEA;
+  --color-purple-glow:    rgba(107,70,193,0.25);
+
+  /* ── Textos ─────────────────────────────── */
+  --color-text-primary:   #F5EDD6;   /* texto principal — creme quente */
+  --color-text-secondary: #B8A99A;   /* texto secundário — cinza quente */
+  --color-text-muted:     #7A6E6A;   /* texto apagado */
+
+  /* ── Alertas e estados ───────────────────── */
+  --color-danger:         #C0392B;   /* vermelho — padrões graves */
+  --color-danger-bg:      rgba(192,57,43,0.12);
+  --color-success:        #2ECC71;   /* verde — confirmação */
+  --color-warning:        #C9A84C;   /* aviso — usar dourado, não laranja */
   /* PILARES DA SABEDORIA — Tema Claro Sofisticado */
   /* Fundo: #FFFFFF ou #F9FAFB → oklch ~0.98 */
   --background: oklch(0.98 0.01 280);
@@ -497,6 +530,52 @@ html {
 .btn-pagamento:hover {
   transform: translateY(-2px);
   box-shadow: 0 0 35px rgba(201, 168, 76, 0.6);
+}
+
+/* ════════════════════════════════════════ */
+/* BOTÕES GLOBAIS PADRONIZADOS */
+/* ════════════════════════════════════════ */
+
+/* Botão primário — dourado (usar para CTAs de compra) */
+.btn-primary-gold {
+  background: linear-gradient(135deg, #C9A84C 0%, #E6C76A 50%, #C9A84C 100%);
+  color: #0a0614;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-radius: 16px;
+  padding: 16px 32px;
+  min-height: 56px;
+  box-shadow: 0 4px 24px rgba(201,168,76,0.35);
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+.btn-primary-gold:hover {
+  box-shadow: 0 4px 40px rgba(201,168,76,0.55);
+  transform: translateY(-1px);
+}
+.btn-primary-gold:active {
+  transform: scale(0.98);
+}
+
+/* Botão secundário — contorno dourado */
+.btn-secondary-gold {
+  background: rgba(201,168,76,0.08);
+  color: #C9A84C;
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  border-radius: 16px;
+  padding: 14px 28px;
+  min-height: 52px;
+  border: 1px solid rgba(201,168,76,0.45);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.btn-secondary-gold:hover {
+  background: rgba(201,168,76,0.15);
+  border-color: rgba(201,168,76,0.7);
 }
 
 /* ===================== ARCHETYPE CARDS ===================== */
