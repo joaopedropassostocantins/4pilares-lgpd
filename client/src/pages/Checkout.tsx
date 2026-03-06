@@ -171,7 +171,7 @@ export default function CheckoutPage() {
                       <ul className="space-y-2 text-sm text-muted-foreground">
                         <li className="flex gap-2"><span style={{ color: mod.color }} className="flex-shrink-0">✓</span>Análise completa e personalizada deste módulo</li>
                         <li className="flex gap-2"><span style={{ color: mod.color }} className="flex-shrink-0">✓</span>1 videochamada por semana durante 90 dias</li>
-                        <li className="flex gap-2"><span style={{ color: mod.color }} className="flex-shrink-0">✓</span>Acompanhamento ao vivo com o Xamã</li>
+                        <li className="flex gap-2"><span style={{ color: mod.color }} className="flex-shrink-0">✓</span>Acompanhamento ao vivo com o especialista Musok (무속) coreano</li>
                         <li className="flex gap-2"><span style={{ color: mod.color }} className="flex-shrink-0">✓</span>Garantia total de devolução - sem perguntas</li>
                       </ul>
                     </div>

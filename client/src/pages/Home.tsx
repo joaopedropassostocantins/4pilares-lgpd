@@ -408,16 +408,16 @@ export default function Home() {
         </button>
       </div>
 
-      {/* ═══════ HEADER ═══════ */}
+      {/* ═════════ HEADER ═════════ */}
       <header className="bg-background/80 backdrop-blur border-b border-border/30 sticky top-[36px] z-40">
-        <div className="max-w-6xl mx-auto px-5 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-gold" />
-            <span className="text-xl font-bold shimmer-gold" style={{ fontFamily: "'Playfair Display', serif" }}>
-              FUSION-SAJO
-            </span>
+        <div className="max-w-6xl mx-auto px-5 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663390392783/g9GC8npXGtLqRcd8tG3q6A/40F02A6D-313F-46A6-99A4-DBEDA4518771_f50909a0.png" alt="Pilares da Sabedoria" className="h-12 w-auto" />
           </div>
           <nav className="hidden md:flex gap-6 text-sm">
+            <a href="/quem-somos" className="text-muted-foreground hover:text-gold transition-colors">
+              Quem Somos
+            </a>
             <a href="#como-funciona" className="text-muted-foreground hover:text-gold transition-colors">
               Como Funciona
             </a>

@@ -22,6 +22,7 @@ import AdminDashboard from "./pages/Admin/Dashboard";
 import AdminDiagnostics from "./pages/Admin/Diagnostics";
 import Checkout from "./pages/Checkout";
 import Garantia from "./pages/Garantia";
+import QuemSomos from "./pages/QuemSomos";
 import TopPromoBanner from "./components/TopPromoBanner";
 
 function Router() {
@@ -42,6 +43,7 @@ function Router() {
       <Route path="/obrigado/:publicId" component={Obrigado} />
       <Route path="/checkout/:module" component={Checkout} />
       <Route path="/garantia" component={Garantia} />
+      <Route path="/quem-somos" component={QuemSomos} />
       <Route path="/admin">
         {() => (
           <AdminLayout>

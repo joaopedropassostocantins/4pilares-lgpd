@@ -95,7 +95,7 @@ export default function TopPromoBanner() {
                                     Módulos liberados + acompanhamento virtual por 90 dias
                                 </p>
                                 <p style={{ margin: "2px 0 0", fontSize: "0.72rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.4, maxWidth: "560px" }}>
-                                    Desbloqueie as análises dos módulos e receba acompanhamento virtual com Xamã por 90 dias.&nbsp;
+                                    Desbloqueie as análises dos módulos e receba acompanhamento virtual com especialista Musok (무속) coreano por 90 dias.&nbsp;
                                     <strong style={{ color: "#f5d97a" }}>Pague em até 6x no cartão.</strong>&nbsp;
                                     <span style={{ color: "#f09e6e" }}>Vagas limitadas.</span>
                                 </p>

@@ -68,7 +68,7 @@ export default function ModuleCard({ module }: ModuleCardProps) {
               className="btn-module-checkout block text-center w-full text-sm py-2.5"
               style={{ background: accentColor }}
             >
-              🔓 Módulo + 90 dias com Xamã — R$ 299
+              🔓 Módulo + 90 dias com especialista Musok (무속) coreano — R$ 299
             </span>
           </Link>
         )}
