@@ -1050,16 +1050,66 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══════ SIGNOS COREANOS ═══════ */}
+      {/* ═════════ SIGNOS COREANOS ═════════ */}
       <ZodiacGrid />
 
-      {/* ═══════ FOOTER ═══════ */}
-      <footer className="border-t border-border/30 mt-16 py-8 text-center text-muted-foreground text-sm">
-        <p>© 2026 FUSION-SAJO. Astrologia Ancestral Coreana.</p>
-        <p className="text-xs mt-2 text-muted-foreground/60">
-          Este serviço oferece perspectiva simbólica e filosófica. Não substitui aconselhamento profissional.
-        </p>
-      </footer>
-    </div>
+      {/* ═════════ FOOTER ═════════ */}
+      <footer className="border-t border-border/30 mt-16 bg-card/50">
+        <div className="max-w-6xl mx-auto px-5 py-12">
+          {/* Footer Grid */}
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            {/* Brand */}
+            <div>
+              <h3 className="font-bold text-foreground mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>Pilares da Sabedoria</h3>
+              <p className="text-sm text-muted-foreground">Preservando a sabedoria milenar do Musok coreano.</p>
+            </div>
+
+            {/* Navegação */}
+            <div>
+              <h4 className="font-semibold text-foreground mb-4">Navegação</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="/" className="text-muted-foreground hover:text-primary transition-colors">Início</a></li>
+                <li><a href="/quem-somos" className="text-muted-foreground hover:text-primary transition-colors">Quem Somos</a></li>
+                <li><a href="#formulario" className="text-muted-foreground hover:text-primary transition-colors">Módulos</a></li>
+                <li><a href="#depoimentos" className="text-muted-foreground hover:text-primary transition-colors">Depoimentos</a></li>
+              </ul>
+            </div>
+
+            {/* Suporte */}
+            <div>
+              <h4 className="font-semibold text-foreground mb-4">Suporte</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="/garantia" className="text-muted-foreground hover:text-primary transition-colors">Garantia</a></li>
+                <li><a href="/garantia" className="text-muted-foreground hover:text-primary transition-colors">FAQ</a></li>
+                <li><a href="https://wa.me/5511999999999" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">WhatsApp</a></li>
+                <li><a href="mailto:contato@pilaresdasabedoria.club" className="text-muted-foreground hover:text-primary transition-colors">Email</a></li>
+              </ul>
+            </div>
+
+            {/* Redes Sociais */}
+            <div>
+              <h4 className="font-semibold text-foreground mb-4">Redes Sociais</h4>
+              <div className="flex gap-4">
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors text-xl">📱</a>
+                <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors text-xl">🎵</a>
+                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors text-xl">▶️</a>
+                <a href="https://wa.me/5511999999999" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors text-xl">💬</a>
+              </div>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="border-t border-border/30 pt-8">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+              <p className="text-sm text-muted-foreground">
+                © 2026 Pilares da Sabedoria. Astrologia Ancestral Coreana.
+              </p>
+              <p className="text-xs text-muted-foreground/60">
+                Este serviço oferece perspectiva simbólica e filosófica. Não substitui aconselhamento profissional.
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>    </div>
   );
 }
