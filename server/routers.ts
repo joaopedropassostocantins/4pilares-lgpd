@@ -4,6 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import { createTasting, getTastingByEmail, getTastingByCNPJ } from "./db";
+import { processarWebhookMercadoPago } from "./webhooks";
 
 export const appRouter = router({
   system: systemRouter,
@@ -59,6 +60,19 @@ export const appRouter = router({
       .input(z.object({ cnpj: z.string() }))
       .query(async ({ input }) => {
         return await getTastingByCNPJ(input.cnpj);
+      }),
+  }),
+
+  webhooks: router({
+    mercadoPago: publicProcedure
+      .input(z.object({
+        type: z.string(),
+        data: z.object({
+          id: z.number().optional(),
+        }).optional(),
+      }))
+      .mutation(async ({ input }) => {
+        return await processarWebhookMercadoPago(input);
       }),
   }),
 });
