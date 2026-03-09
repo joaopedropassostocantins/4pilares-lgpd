@@ -246,7 +246,7 @@ export default function CheckoutFlow() {
     };
   }, [etapaAtual]);
 
-  const inicializarPaymentBrick = () => {
+  const inicializarPaymentBrick = async () => {
     try {
       console.log("🔧 Iniciando Payment Brick...");
 
@@ -345,7 +345,9 @@ export default function CheckoutFlow() {
         },
       });
 
-      console.log("✅ Payment Brick criado com sucesso");
+      console.log("✅ Payment Brick criado, montando no container...");
+      await brickRef.current.mount("paymentBrick_container");
+      console.log("✅ Payment Brick montado com sucesso");
     } catch (error) {
       console.error("❌ Erro ao inicializar Payment Brick:", error);
       setBrickError(String(error));
