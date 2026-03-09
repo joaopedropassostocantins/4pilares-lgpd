@@ -1,6 +1,8 @@
 import { getDb } from "./db";
 import { subscriptions } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
+import { createHmac } from "crypto";
+import { ENV } from "./_core/env";
 
 /**
  * Processar webhook do Mercado Pago
@@ -53,20 +55,36 @@ export async function processarWebhookMercadoPago(body: any) {
 }
 
 /**
- * Validar assinatura do webhook (opcional mas recomendado)
+ * Validar assinatura do webhook usando HMAC-SHA256
  */
 export function validarAssinaturaWebhook(
   body: string,
-  signature: string,
-  secret: string
+  signature: string | undefined
 ): boolean {
   try {
-    // Implementar validação de assinatura HMAC-SHA256
-    // Consulte a documentação do Mercado Pago para detalhes
+    if (!signature) {
+      console.warn("⚠️ Assinatura não fornecida no webhook");
+      return false;
+    }
+
+    const secret = ENV.mercadoPagoWebhookSecret;
+    if (!secret) {
+      console.warn("⚠️ Chave secreta do webhook não configurada");
+      return false;
+    }
+
     console.log("🔐 Validando assinatura do webhook...");
 
-    // Placeholder - implementar validação real
-    return true;
+    // Calcular HMAC-SHA256
+    const hmac = createHmac("sha256", secret);
+    hmac.update(body);
+    const calculatedSignature = hmac.digest("hex");
+
+    // Comparar assinaturas
+    const isValid = calculatedSignature === signature;
+    console.log(isValid ? "✅ Assinatura válida" : "❌ Assinatura inválida");
+
+    return isValid;
   } catch (error) {
     console.error("❌ Erro ao validar assinatura:", error);
     return false;
