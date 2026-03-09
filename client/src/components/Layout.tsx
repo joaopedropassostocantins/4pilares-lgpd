@@ -12,6 +12,7 @@ const navLinks = [
   { href: "/", label: "Início" },
   { href: "/sobre", label: "Sobre" },
   { href: "/planos", label: "Planos" },
+  { href: "/degustacao", label: "Teste Grátis" },
   { href: "/blog", label: "Blog" },
   { href: "/faq", label: "FAQ" },
   { href: "/contato", label: "Contato" },
@@ -199,10 +200,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 Navegação
               </h4>
               <ul className="space-y-2">
-                {[
+               {[
                   { href: "/", label: "Início" },
                   { href: "/sobre", label: "Sobre" },
                   { href: "/planos", label: "Planos" },
+                  { href: "/degustacao", label: "Teste Grátis" },
                   { href: "/faq", label: "FAQ" },
                   { href: "/blog", label: "Blog" },
                   { href: "/contato", label: "Contato" },

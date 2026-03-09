@@ -1,0 +1,61 @@
+CREATE TABLE `documents` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`user_id` int NOT NULL,
+	`type` enum('politica','termos','ripd','ropa','dpa','procuracao'),
+	`title` varchar(255) NOT NULL,
+	`file_url` varchar(500),
+	`file_key` varchar(255),
+	`status` enum('draft','pending_review','approved','signed') DEFAULT 'draft',
+	`created_at` timestamp NOT NULL DEFAULT (now()),
+	`updated_at` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `documents_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `subscriptions` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`user_id` int NOT NULL,
+	`plan_id` varchar(64) NOT NULL,
+	`plan_name` varchar(100) NOT NULL,
+	`price_monthly` decimal(10,2) NOT NULL,
+	`discount` decimal(5,2) DEFAULT '0',
+	`razao_social` varchar(255) NOT NULL,
+	`cnpj` varchar(18) NOT NULL,
+	`mercado_pago_id` varchar(255),
+	`payment_status` enum('pending','approved','failed','cancelled') DEFAULT 'pending',
+	`status` enum('active','cancelled','suspended','expired') DEFAULT 'active',
+	`start_date` timestamp NOT NULL,
+	`next_billing_date` timestamp,
+	`end_date` timestamp,
+	`created_at` timestamp NOT NULL DEFAULT (now()),
+	`updated_at` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `subscriptions_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `tastings` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`user_id` int,
+	`email` varchar(320) NOT NULL,
+	`razao_social` varchar(255) NOT NULL,
+	`cnpj` varchar(18) NOT NULL,
+	`segmento` varchar(100),
+	`tamanho` enum('micro','pequena','media','grande','multinacional'),
+	`cep` varchar(9),
+	`estado` varchar(2),
+	`cidade` varchar(100),
+	`responsavel` varchar(255),
+	`cargo` varchar(100),
+	`telefone` varchar(20),
+	`demandas` json DEFAULT ('[]'),
+	`riscos` json DEFAULT ('[]'),
+	`status_lei` int NOT NULL DEFAULT 0,
+	`status_regras` int NOT NULL DEFAULT 0,
+	`status_conformidade` int NOT NULL DEFAULT 0,
+	`status_titular` int NOT NULL DEFAULT 0,
+	`observacoes` text,
+	`status` enum('draft','submitted','converted','expired') DEFAULT 'draft',
+	`created_at` timestamp NOT NULL DEFAULT (now()),
+	`updated_at` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	`submitted_at` timestamp,
+	CONSTRAINT `tastings_id` PRIMARY KEY(`id`),
+	CONSTRAINT `tastings_cnpj_unique` UNIQUE(`cnpj`)
+);

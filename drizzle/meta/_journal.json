@@ -8,6 +8,20 @@
       "when": 1773013195343,
       "tag": "0000_aspiring_stellaris",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1773016408809,
+      "tag": "0001_skinny_darwin",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1773016421317,
+      "tag": "0002_first_pyro",
+      "breakpoints": true
     }
   ]
 }

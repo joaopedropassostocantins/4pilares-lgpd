@@ -34,6 +34,8 @@ import CheckoutSuccess from "./pages/CheckoutSuccess";
 
 // Preços
 import Preco from "./pages/Preco";
+import Degustacao from "./pages/Degustacao";
+import DegustacaoSucesso from "./pages/DegustacaoSucesso";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -61,6 +63,8 @@ function Router() {
       <Route path="/checkout-success" component={CheckoutSuccess} />
       <Route path="/preco" component={Preco} />
       <Route path="/precos" component={Preco} />
+      <Route path="/degustacao" component={Degustacao} />
+      <Route path="/degustacao-sucesso" component={DegustacaoSucesso} />
 
       {/* 404 */}
       <Route path="/404" component={NotFound} />
