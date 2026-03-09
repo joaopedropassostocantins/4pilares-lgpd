@@ -54,7 +54,9 @@ export default function CheckoutFlow() {
   const [buscandoCEP, setBuscandoCEP] = useState(false);
   const [aceitouTermos, setAceitouTermos] = useState(false);
   const [brickLoaded, setBrickLoaded] = useState(false);
+  const [brickError, setBrickError] = useState<string | null>(null);
   const brickRef = useRef<any>(null);
+  const sdkLoadedRef = useRef(false);
 
   const { maskCNPJ, maskCPF, maskCEP, maskTelefone, unmask, validarCNPJ, validarCPF } = useMasks();
 
@@ -183,68 +185,107 @@ export default function CheckoutFlow() {
 
   const preco = calcularPreco();
 
-  // Carregar Payment Brick quando chegar na etapa de pagamento
+  // Carregar SDK do Mercado Pago
   useEffect(() => {
     if (etapaAtual !== "pagamento") {
       return;
     }
 
-    // Verificar se já tem script carregado
-    if (document.querySelector('script[src="https://sdk.mercadopago.com/js/v2"]')) {
+    // Se SDK já foi carregado, inicializar brick
+    if (sdkLoadedRef.current && (window as any).MercadoPago) {
+      console.log("SDK já carregado, inicializando brick");
       inicializarPaymentBrick();
       return;
     }
 
+    // Verificar se script já existe
+    const scriptExistente = document.querySelector('script[src="https://sdk.mercadopago.com/js/v2"]');
+    if (scriptExistente) {
+      console.log("Script já existe no DOM");
+      // Aguardar SDK estar disponível
+      const checkInterval = setInterval(() => {
+        if ((window as any).MercadoPago) {
+          clearInterval(checkInterval);
+          sdkLoadedRef.current = true;
+          inicializarPaymentBrick();
+        }
+      }, 100);
+      setTimeout(() => clearInterval(checkInterval), 5000);
+      return;
+    }
+
     // Carregar script do Mercado Pago
+    console.log("Carregando SDK Mercado Pago...");
     const script = document.createElement("script");
     script.src = "https://sdk.mercadopago.com/js/v2";
     script.async = true;
     script.onload = () => {
-      console.log("SDK Mercado Pago carregado");
+      console.log("✅ SDK Mercado Pago carregado com sucesso");
+      sdkLoadedRef.current = true;
       inicializarPaymentBrick();
     };
     script.onerror = () => {
-      console.error("Erro ao carregar SDK Mercado Pago");
+      console.error("❌ Erro ao carregar SDK Mercado Pago");
+      setBrickError("Erro ao carregar sistema de pagamento");
       toast.error("Erro ao carregar sistema de pagamento");
     };
     document.head.appendChild(script);
 
     return () => {
-      // Não remover script para evitar recarregar múltiplas vezes
+      // Não remover script
     };
   }, [etapaAtual]);
 
   const inicializarPaymentBrick = () => {
     try {
+      console.log("🔧 Iniciando Payment Brick...");
+
       const publicKey = import.meta.env.VITE_MERCADO_PAGO_PUBLIC_KEY;
-      
+      console.log("📌 Chave pública:", publicKey ? "✅ Configurada" : "❌ Não configurada");
+
       if (!publicKey) {
-        console.error("Chave pública do Mercado Pago não configurada");
+        console.error("❌ Chave pública do Mercado Pago não configurada");
+        setBrickError("Chave de pagamento não configurada");
         toast.error("Erro: Chave de pagamento não configurada");
         return;
       }
 
+      // Aguardar SDK estar disponível
       if (!(window as any).MercadoPago) {
-        console.error("MercadoPago SDK não carregado");
-        toast.error("Erro ao carregar sistema de pagamento");
+        console.warn("⏳ MercadoPago SDK ainda não disponível, tentando novamente...");
+        setTimeout(() => inicializarPaymentBrick(), 500);
         return;
       }
+
+      console.log("✅ SDK Mercado Pago disponível");
 
       // Limpar brick anterior se existir
       if (brickRef.current) {
         try {
           brickRef.current.unmount();
+          console.log("🧹 Brick anterior desmontado");
         } catch (e) {
-          console.log("Brick anterior já desmontado");
+          console.log("ℹ️ Brick anterior já desmontado");
         }
       }
 
+      console.log("🔐 Inicializando MercadoPago com chave pública");
       const mp = new (window as any).MercadoPago(publicKey, {
         locale: "pt-BR",
       });
 
-      const amount = (preco.valor || 0) * 100; // Converter para centavos
+      const amount = Math.max((preco.valor || 0) * 100, 100); // Mínimo 1 real
+      console.log("💰 Valor do pagamento:", amount, "centavos (R$", (amount / 100).toFixed(2), ")");
 
+      // Verificar se container existe
+      const container = document.getElementById("paymentBrick_container");
+      if (!container) {
+        console.error("❌ Container #paymentBrick_container não encontrado");
+        setBrickError("Container de pagamento não encontrado");
+        return;
+      }
+
+      console.log("🎯 Criando Payment Brick...");
       brickRef.current = mp.bricks().create("payment", {
         initialization: {
           amount: amount,
@@ -267,6 +308,7 @@ export default function CheckoutFlow() {
           onReady: () => {
             console.log("✅ Payment Brick renderizado com sucesso");
             setBrickLoaded(true);
+            setBrickError(null);
             toast.success("Sistema de pagamento carregado");
           },
           onSubmit: async (formData: any) => {
@@ -284,6 +326,7 @@ export default function CheckoutFlow() {
           },
           onError: (error: any) => {
             console.error("❌ Erro no Payment Brick:", error);
+            setBrickError(error.message || "Erro desconhecido");
             toast.error(`Erro: ${error.message || "Erro desconhecido"}`);
           },
           onFetching: (resource: any) => {
@@ -292,9 +335,10 @@ export default function CheckoutFlow() {
         },
       });
 
-      console.log("Payment Brick criado com sucesso");
+      console.log("✅ Payment Brick criado com sucesso");
     } catch (error) {
-      console.error("Erro ao inicializar Payment Brick:", error);
+      console.error("❌ Erro ao inicializar Payment Brick:", error);
+      setBrickError(String(error));
       toast.error("Erro ao inicializar sistema de pagamento");
     }
   };
@@ -598,8 +642,18 @@ export default function CheckoutFlow() {
                   {etapaAtual === "pagamento" && (
                     <motion.div key="pagamento" initial="hidden" animate="visible" exit="exit" variants={fadeIn}>
                       <h2 className="title-serif text-2xl text-slate-900 mb-6">Pagamento seguro</h2>
-                      
-                      {!brickLoaded && (
+
+                      {brickError && (
+                        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+                          <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                          <div className="text-sm text-red-700">
+                            <p className="font-medium mb-1">Erro ao carregar pagamento</p>
+                            <p>{brickError}</p>
+                          </div>
+                        </div>
+                      )}
+
+                      {!brickLoaded && !brickError && (
                         <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-center gap-3">
                           <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />
                           <p className="text-sm text-blue-700">Carregando sistema de pagamento...</p>
@@ -607,7 +661,7 @@ export default function CheckoutFlow() {
                       )}
 
                       <div id="paymentBrick_container" className="mb-6 min-h-96 bg-white rounded-lg border border-slate-200 p-4" />
-                      
+
                       <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start gap-3">
                         <Lock className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
                         <div className="text-xs text-blue-700">
