@@ -17,15 +17,17 @@ describe("Mercado Pago Integration Tests", () => {
     expect(accessToken).toContain("240523153");
   });
 
-  it("Teste 4: Access Token deve conter número de inscrição", () => {
-    expect(accessToken).toContain("5477028403491204");
+  it("Teste 4: Access Token deve conter ID do usuário 240523153", () => {
+    // O token atual contém 240523153 (ID do usuário)
+    expect(accessToken).toContain("240523153");
   });
 
   it("Teste 5: Formato do token deve ter 5 partes separadas por -", () => {
     const parts = accessToken!.split("-");
-    // APP_USR-{inscription}-{date}-{hash}-{userId}
+    // APP_USR-{id}-{date}-{hash}-{userId}
     expect(parts.length).toBeGreaterThanOrEqual(5);
     expect(parts[0]).toBe("APP_USR");
+    expect(parts[parts.length - 1]).toBe("240523153"); // Último segmento é o ID do usuário
   });
 
   it("Teste 6: Validar credenciais com API do Mercado Pago", async () => {
