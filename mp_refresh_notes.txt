@@ -1,0 +1,19 @@
+Mercado Pago OAuth Refresh Token
+
+Endpoint: POST https://api.mercadopago.com/oauth/token
+
+Parâmetros obrigatórios:
+- client_secret: chave privada da aplicação
+- client_id: ID único da aplicação
+- grant_type: "refresh_token"
+- refresh_token: o refresh token recebido anteriormente
+
+Resposta:
+- access_token: novo token de acesso
+- token_type: "bearer"
+- expires_in: 15552000 (180 dias)
+- scope: "read write offline_access"
+- user_id: ID do usuário
+- refresh_token: novo refresh token
+- public_key: chave pública
+- live_mode: true/false
