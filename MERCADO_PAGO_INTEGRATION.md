@@ -1,16 +1,25 @@
-# Integração Mercado Pago — 4 Pilares LGPD
+# Integração Mercado Pago — 4 Pilares LGPD (Versão Corrigida)
 
 ## Overview
 
-A plataforma 4 Pilares LGPD agora possui integração completa com **Mercado Pago Payment Brick** para processamento seguro de pagamentos recorrentes dos planos de adequação LGPD.
+A plataforma 4 Pilares LGPD possui atualmente o **frontend do checkout estruturado com Mercado Pago Payment Brick** para captura segura dos dados de pagamento no navegador.
+
+**Status real da integração:**
+- frontend do checkout: implementado;
+- renderização do Payment Brick: implementada;
+- processamento real do pagamento no backend: pendente;
+- webhook de notificações: pendente;
+- recorrência automática real: pendente.
+
+---
 
 ## Configuração
 
-### 1. Chave Pública (já configurada)
+### 1. Chave Pública
+A chave pública do Mercado Pago é utilizada no frontend:
 
-A chave pública do Mercado Pago está armazenada em:
-```
-VITE_MERCADO_PAGO_PUBLIC_KEY=APP_USR-4f174d8f-6fe6-4905-8969-68d1acd7fb9a
+```env
+VITE_MERCADO_PAGO_PUBLIC_KEY=APP_USR-...
 ```
 
 Esta chave é injetada automaticamente no frontend via variáveis de ambiente.
