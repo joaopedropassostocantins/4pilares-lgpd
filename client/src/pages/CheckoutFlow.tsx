@@ -174,6 +174,62 @@ export default function CheckoutFlow() {
   };
 
   const preco = calcularPreco();
+  const precoValor = preco.valor || 0;
+
+  // Carregar Payment Brick quando chegar na etapa de pagamento
+  useEffect(() => {
+    if (etapaAtual === "pagamento" && typeof window !== "undefined") {
+      // Carregar script do Mercado Pago
+      const script = document.createElement("script");
+      script.src = "https://sdk.mercadopago.com/js/v2";
+      script.async = true;
+      script.onload = () => {
+        // Inicializar Payment Brick
+        if ((window as any).MercadoPago) {
+          const mp = new (window as any).MercadoPago(import.meta.env.VITE_MERCADO_PAGO_PUBLIC_KEY, {
+            locale: "pt-BR",
+          });
+
+          mp.bricks().create("payment", {
+            initialization: {
+              amount: (preco.valor || 0) * 100, // Converter para centavos
+            },
+            customization: {
+              paymentMethods: {
+                creditCard: "all",
+                debitCard: "all",
+                ticket: "all",
+                bankTransfer: "all",
+              },
+              visual: {
+                theme: "default",
+              },
+            },
+            callbacks: {
+              onReady: () => {
+                console.log("Payment Brick pronto");
+              },
+              onSubmit: async (formData: any) => {
+                console.log("Formulário enviado:", formData);
+                // Aqui você enviaria os dados para seu backend
+              },
+              onError: (error: any) => {
+                console.error("Erro no Payment Brick:", error);
+              },
+            },
+          });
+        }
+      };
+      document.head.appendChild(script);
+
+      return () => {
+        // Limpar script ao desmontar
+        if (document.head.contains(script)) {
+          document.head.removeChild(script);
+        }
+      };
+    }
+  }, [etapaAtual, preco]);
 
   return (
     <Layout>

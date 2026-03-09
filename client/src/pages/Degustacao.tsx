@@ -5,9 +5,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronRight, CheckCircle2, AlertCircle } from "lucide-react";
+import { useRouter } from "wouter";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -35,8 +37,10 @@ const riscos = [
 ];
 
 export default function Degustacao() {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const createTastingMutation = trpc.tastings.create.useMutation();
 
   // Formulário
   const [form, setForm] = useState({
@@ -106,12 +110,19 @@ export default function Degustacao() {
 
     setLoading(true);
     try {
-      // Simular envio
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      toast.success("Degustação iniciada! Você receberá um e-mail em breve.");
-      // Redirecionar para página de sucesso
-      window.location.href = "/degustacao-sucesso";
+      const result = await createTastingMutation.mutateAsync({
+        ...form,
+        tamanho: (form.tamanho as "micro" | "pequena" | "media" | "grande" | "multinacional" | undefined),
+      });
+      
+      if (result) {
+        toast.success("Degustação iniciada! Redirecionando...");
+        setTimeout(() => {
+          window.location.href = "/degustacao-sucesso";
+        }, 1000);
+      }
     } catch (error) {
+      console.error("Erro ao criar degustação:", error);
       toast.error("Erro ao iniciar degustação. Tente novamente.");
     } finally {
       setLoading(false);
@@ -485,10 +496,10 @@ export default function Degustacao() {
                   </Button>
                   <Button
                     onClick={handleSubmit}
-                    disabled={loading}
-                    className="bg-blue-700 hover:bg-blue-800 text-white h-11 px-6 rounded-xl"
+                    disabled={loading || createTastingMutation.isPending}
+                    className="bg-blue-700 hover:bg-blue-800 text-white h-11 px-6 rounded-xl disabled:opacity-50"
                   >
-                    {loading ? "Enviando..." : "Iniciar Degustação"}
+                    {loading || createTastingMutation.isPending ? "Enviando..." : "Iniciar Degustação"}
                   </Button>
                 </div>
               </motion.div>

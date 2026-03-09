@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertUser, users, tastings, InsertTasting, Tasting } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -87,6 +87,56 @@ export async function getUserByOpenId(openId: string) {
   const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
 
   return result.length > 0 ? result[0] : undefined;
+}
+
+// Degustacao queries
+export async function createTasting(data: InsertTasting): Promise<Tasting | null> {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot create tasting: database not available");
+    return null;
+  }
+
+  try {
+    await db.insert(tastings).values(data);
+    const inserted = await db.select().from(tastings).where(eq(tastings.cnpj, data.cnpj)).limit(1);
+    return inserted.length > 0 ? inserted[0] : null;
+  } catch (error) {
+    console.error("[Database] Failed to create tasting:", error);
+    throw error;
+  }
+}
+
+export async function getTastingByEmail(email: string): Promise<Tasting | null> {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get tasting: database not available");
+    return null;
+  }
+
+  try {
+    const result = await db.select().from(tastings).where(eq(tastings.email, email)).limit(1);
+    return result.length > 0 ? result[0] : null;
+  } catch (error) {
+    console.error("[Database] Failed to get tasting:", error);
+    throw error;
+  }
+}
+
+export async function getTastingByCNPJ(cnpj: string): Promise<Tasting | null> {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get tasting: database not available");
+    return null;
+  }
+
+  try {
+    const result = await db.select().from(tastings).where(eq(tastings.cnpj, cnpj)).limit(1);
+    return result.length > 0 ? result[0] : null;
+  } catch (error) {
+    console.error("[Database] Failed to get tasting:", error);
+    throw error;
+  }
 }
 
 // TODO: add feature queries here as your schema grows.
