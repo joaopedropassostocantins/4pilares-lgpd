@@ -191,48 +191,58 @@ export default function CheckoutFlow() {
       return;
     }
 
-    // Se SDK já foi carregado, inicializar brick
-    if (sdkLoadedRef.current && (window as any).MercadoPago) {
-      console.log("SDK já carregado, inicializando brick");
-      inicializarPaymentBrick();
-      return;
-    }
+    // Aguardar container estar disponível
+    const checkContainer = setInterval(() => {
+      const container = document.getElementById("paymentBrick_container");
+      if (!container) {
+        console.log("⏳ Aguardando container...");
+        return;
+      }
+      clearInterval(checkContainer);
 
-    // Verificar se script já existe
-    const scriptExistente = document.querySelector('script[src="https://sdk.mercadopago.com/js/v2"]');
-    if (scriptExistente) {
-      console.log("Script já existe no DOM");
-      // Aguardar SDK estar disponível
-      const checkInterval = setInterval(() => {
-        if ((window as any).MercadoPago) {
-          clearInterval(checkInterval);
-          sdkLoadedRef.current = true;
-          inicializarPaymentBrick();
-        }
-      }, 100);
-      setTimeout(() => clearInterval(checkInterval), 5000);
-      return;
-    }
+      // Se SDK já foi carregado, inicializar brick
+      if (sdkLoadedRef.current && (window as any).MercadoPago) {
+        console.log("SDK já carregado, inicializando brick");
+        inicializarPaymentBrick();
+        return;
+      }
 
-    // Carregar script do Mercado Pago
-    console.log("Carregando SDK Mercado Pago...");
-    const script = document.createElement("script");
-    script.src = "https://sdk.mercadopago.com/js/v2";
-    script.async = true;
-    script.onload = () => {
-      console.log("✅ SDK Mercado Pago carregado com sucesso");
-      sdkLoadedRef.current = true;
-      inicializarPaymentBrick();
-    };
-    script.onerror = () => {
-      console.error("❌ Erro ao carregar SDK Mercado Pago");
-      setBrickError("Erro ao carregar sistema de pagamento");
-      toast.error("Erro ao carregar sistema de pagamento");
-    };
-    document.head.appendChild(script);
+      // Verificar se script já existe
+      const scriptExistente = document.querySelector('script[src="https://sdk.mercadopago.com/js/v2"]');
+      if (scriptExistente) {
+        console.log("Script já existe no DOM");
+        // Aguardar SDK estar disponível
+        const checkInterval = setInterval(() => {
+          if ((window as any).MercadoPago) {
+            clearInterval(checkInterval);
+            sdkLoadedRef.current = true;
+            inicializarPaymentBrick();
+          }
+        }, 100);
+        setTimeout(() => clearInterval(checkInterval), 5000);
+        return;
+      }
+
+      // Carregar script do Mercado Pago
+      console.log("Carregando SDK Mercado Pago...");
+      const script = document.createElement("script");
+      script.src = "https://sdk.mercadopago.com/js/v2";
+      script.async = true;
+      script.onload = () => {
+        console.log("✅ SDK Mercado Pago carregado com sucesso");
+        sdkLoadedRef.current = true;
+        inicializarPaymentBrick();
+      };
+      script.onerror = () => {
+        console.error("❌ Erro ao carregar SDK Mercado Pago");
+        setBrickError("Erro ao carregar sistema de pagamento");
+        toast.error("Erro ao carregar sistema de pagamento");
+      };
+      document.head.appendChild(script);
+    }, 100);
 
     return () => {
-      // Não remover script
+      clearInterval(checkContainer);
     };
   }, [etapaAtual]);
 
