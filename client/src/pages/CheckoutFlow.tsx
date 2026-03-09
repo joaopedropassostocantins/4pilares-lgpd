@@ -346,7 +346,11 @@ export default function CheckoutFlow() {
       });
 
       console.log("✅ Payment Brick criado, montando no container...");
-      await brickRef.current.mount("paymentBrick_container");
+      await brickRef.current = await brickBuilder.create(
+  "payment",
+  "paymentBrick_container",
+  settings
+);
       console.log("✅ Payment Brick montado com sucesso");
     } catch (error) {
       console.error("❌ Erro ao inicializar Payment Brick:", error);
