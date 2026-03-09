@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, X, Scale, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import PromoBar from "./PromoBar";
 
 const navLinks = [
   { href: "/", label: "Início" },
@@ -30,6 +31,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#F8FAFC" }}>
+      {/* Barra Promocional */}
+      <PromoBar />
+
       {/* Navbar */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/80">
         <div className="container">

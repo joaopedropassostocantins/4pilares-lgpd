@@ -29,6 +29,11 @@ import PilarTitular from "./pages/PilarTitular";
 import Admin from "./pages/Admin";
 import Dashboard from "./pages/Dashboard";
 import Checkout from "./pages/Checkout";
+import CheckoutFlow from "./pages/CheckoutFlow";
+import CheckoutSuccess from "./pages/CheckoutSuccess";
+
+// Preços
+import Preco from "./pages/Preco";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -52,7 +57,10 @@ function Router() {
       {/* Painéis */}
       <Route path="/admin" component={Admin} />
       <Route path="/dashboard" component={Dashboard} />
-      <Route path="/checkout" component={Checkout} />
+      <Route path="/checkout" component={CheckoutFlow} />
+      <Route path="/checkout-success" component={CheckoutSuccess} />
+      <Route path="/preco" component={Preco} />
+      <Route path="/precos" component={Preco} />
 
       {/* 404 */}
       <Route path="/404" component={NotFound} />
