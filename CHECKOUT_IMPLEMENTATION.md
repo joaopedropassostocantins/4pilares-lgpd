@@ -244,7 +244,7 @@ webhooks: router({
 ### 4. Variáveis de Ambiente
 ```env
 # Backend (adicionar)
-MERCADO_PAGO_ACCESS_TOKEN=APP_USR-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+MERCADO_PAGO_ACCESS_TOKEN=APP_USR-5477028403491204-022805-76ab643dabbde9bb7702cffce6a0edb4-240523153
 MERCADO_PAGO_WEBHOOK_SECRET=seu-webhook-secret
 SMTP_HOST=seu-smtp-host
 SMTP_PORT=587
