@@ -140,7 +140,7 @@ export default function Planos() {
                 <div className={`text-2xl font-semibold mb-6 ${plano.highlight ? "text-white" : "text-slate-900"}`} style={{ fontFamily: "var(--font-sans)" }}>
                   Sob consulta
                 </div>
-                <Link href="/contato">
+                <Link href={`/checkout?plan=${plano.name.toLowerCase()}`}>
                   <Button
                     className="w-full h-11 rounded-xl font-medium"
                     style={
@@ -149,7 +149,7 @@ export default function Planos() {
                         : { backgroundColor: "transparent", color: plano.color, border: `1.5px solid ${plano.color}` }
                     }
                   >
-                    Solicitar proposta <ArrowRight className="ml-2 w-4 h-4" />
+                    Escolher plano <ArrowRight className="ml-2 w-4 h-4" />
                   </Button>
                 </Link>
               </motion.div>

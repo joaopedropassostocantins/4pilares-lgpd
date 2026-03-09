@@ -28,8 +28,9 @@ import PilarTitular from "./pages/PilarTitular";
 // Painéis
 import Admin from "./pages/Admin";
 import Dashboard from "./pages/Dashboard";
-
+import Checkout from "./pages/Checkout";
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       {/* Site institucional */}
@@ -51,6 +52,7 @@ function Router() {
       {/* Painéis */}
       <Route path="/admin" component={Admin} />
       <Route path="/dashboard" component={Dashboard} />
+      <Route path="/checkout" component={Checkout} />
 
       {/* 404 */}
       <Route path="/404" component={NotFound} />
