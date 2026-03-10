@@ -338,42 +338,65 @@ export default function CheckoutFlow() {
           onSubmit: async (formData: any) => {
             console.log("📤 Formulário de pagamento enviado:", formData);
             setLoading(true);
-            try {
-              if (!formData.token) {
-                toast.error("Erro: Token de pagamento não gerado");
-                setLoading(false);
-                return;
-              }
+            let retries = 0;
+            const maxRetries = 2;
 
-              const response = await processPayment.mutateAsync({
-                email: form.email,
-                razaoSocial: form.razaoSocial,
-                cnpj: form.cnpj,
-                cpf: form.cpf,
-                planId: planoSelecionado.id,
-                planName: planoSelecionado.nome,
-                priceMonthly: preco.valor || 0,
-                token: formData.token,
-              });
+            const tentarProcessarPagamento = async () => {
+              try {
+                if (!formData.token) {
+                  toast.error("Erro: Token de pagamento não gerado. Recarregue a página.");
+                  setLoading(false);
+                  return;
+                }
 
-              if (response.status === "approved") {
-                toast.success("Pagamento aprovado com sucesso!");
-                setLocation("/checkout-success");
-              } else if (response.status === "pending") {
-                toast.info("Pagamento em processamento. Você receberá confirmação por e-mail.");
-                setLocation("/checkout-success");
-              } else if (response.status === "rejected") {
-                toast.error(`Pagamento rejeitado: ${response.message || "Motivo desconhecido"}`);
-              } else {
-                toast.error(`Erro no pagamento: ${response.message || "Erro desconhecido"}`);
+                console.log(`💳 Tentativa ${retries + 1}/${maxRetries + 1}`);
+
+                const response = await processPayment.mutateAsync({
+                  email: form.email,
+                  razaoSocial: form.razaoSocial,
+                  cnpj: form.cnpj,
+                  cpf: form.cpf,
+                  planId: planoSelecionado.id,
+                  planName: planoSelecionado.nome,
+                  priceMonthly: preco.valor || 0,
+                  token: formData.token,
+                });
+
+                if (response.status === "approved") {
+                  toast.success("Pagamento aprovado com sucesso!");
+                  setLocation("/checkout-success");
+                } else if (response.status === "pending") {
+                  toast.info("Pagamento em processamento. Você receberá confirmação por e-mail.");
+                  setLocation("/checkout-success");
+                } else if (response.status === "rejected") {
+                  toast.error(`Pagamento rejeitado: ${response.message || "Motivo desconhecido"}`);
+                } else {
+                  toast.error(`Erro no pagamento: ${response.message || "Erro desconhecido"}`);
+                }
+              } catch (error) {
+                console.error(`Erro na tentativa ${retries + 1}:`, error);
+
+                let errorMsg = "Erro ao processar pagamento";
+                let shouldRetry = false;
+
+                if (error instanceof Error) {
+                  errorMsg = error.message;
+                  shouldRetry = errorMsg.includes("timeout") || errorMsg.includes("network") || errorMsg.includes("ECONNREFUSED");
+                }
+
+                if (shouldRetry && retries < maxRetries) {
+                  retries++;
+                  console.log(`🔄 Tentando novamente em 2s... (${retries}/${maxRetries})`);
+                  toast.loading(`Tentando novamente... (${retries}/${maxRetries})`);
+                  setTimeout(tentarProcessarPagamento, 2000);
+                } else {
+                  toast.error(`${errorMsg}. Se persistir, verifique seus dados e tente novamente.`);
+                  setLoading(false);
+                }
               }
-            } catch (error) {
-              console.error("Erro ao processar pagamento:", error);
-              const errorMsg = error instanceof Error ? error.message : "Erro ao processar pagamento";
-              toast.error(errorMsg);
-            } finally {
-              setLoading(false);
-            }
+            };
+
+            tentarProcessarPagamento();
           },
           onError: (error: any) => {
             console.error("❌ Erro no Payment Brick:", error);
