@@ -8,6 +8,8 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { trpc } from "@/lib/trpc";
+import { useLocation } from "wouter";
 
 // Site institucional
 import Home from "./pages/Home";
@@ -41,8 +43,23 @@ import CheckoutSuccess from "./pages/CheckoutSuccess";
 import Preco from "./pages/Preco";
 import Degustacao from "./pages/Degustacao";
 import DegustacaoSucesso from "./pages/DegustacaoSucesso";
+
+const ProtectedRoute = ({ component: Component }: { component: any }) => {
+  const { data: user, isLoading } = trpc.auth.me.useQuery();
+  const [, setLocation] = useLocation();
+
+  if (isLoading) return <div className="p-8 text-center text-slate-500 font-medium font-sans">Carregando painel protegido...</div>;
+
+  if (!user) {
+    // Redireciona com micro-delay se não autenticado
+    setTimeout(() => setLocation("/login"), 0);
+    return null;
+  }
+
+  return <Component />;
+};
+
 function Router() {
-  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       {/* Site institucional */}
@@ -62,13 +79,13 @@ function Router() {
       <Route path="/titular" component={PilarTitular} />
 
       {/* Painéis */}
-      <Route path="/admin" component={Admin} />
-      <Route path="/admin/clientes" component={AdminClientes} />
-      <Route path="/admin/financeiro" component={AdminFinanceiro} />
-      <Route path="/admin/incidentes" component={AdminIncidentes} />
-      <Route path="/portal" component={Portal} />
+      <Route path="/admin" component={() => <ProtectedRoute component={Admin} />} />
+      <Route path="/admin/clientes" component={() => <ProtectedRoute component={AdminClientes} />} />
+      <Route path="/admin/financeiro" component={() => <ProtectedRoute component={AdminFinanceiro} />} />
+      <Route path="/admin/incidentes" component={() => <ProtectedRoute component={AdminIncidentes} />} />
+      <Route path="/portal" component={() => <ProtectedRoute component={Portal} />} />
       <Route path="/login" component={Login} />
-      <Route path="/dashboard" component={Dashboard} />
+      <Route path="/dashboard" component={() => <ProtectedRoute component={Dashboard} />} />
       <Route path="/checkout" component={CheckoutFlow} />
       <Route path="/checkout-success" component={CheckoutSuccess} />
       <Route path="/preco" component={Preco} />

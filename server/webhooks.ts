@@ -16,13 +16,12 @@ export async function processarWebhookMercadoPago(body: any) {
       timestamp: new Date().toISOString(),
     });
 
-    // Apenas processar notificações de pagamento
-    if (body.type !== "payment") {
+    if (!["payment", "subscription"].includes(body.type)) {
       console.log("⏭️ Ignorando notificação de tipo:", body.type);
       return { success: true, message: "Notificação ignorada" };
     }
 
-    const paymentId = body.data?.id;
+    const paymentId = body.data?.id?.toString();
     if (!paymentId) {
       console.warn("⚠️ Payment ID não encontrado na notificação");
       return { success: false, message: "Payment ID não encontrado" };
@@ -30,21 +29,18 @@ export async function processarWebhookMercadoPago(body: any) {
 
     console.log("💳 Processando pagamento:", paymentId);
 
-    // Aqui você buscaria os detalhes do pagamento da API do Mercado Pago
-    // e atualizaria o status da assinatura no banco de dados
-
-    // Exemplo de atualização (você precisa implementar a lógica completa):
-    // const db = await getDb();
-    // if (db) {
-    //   await db
-    //     .update(subscriptions)
-    //     .set({
-    //       status: "ativa",
-    //       mercadoPagoPaymentId: paymentId,
-    //       dataAtualizacao: new Date(),
-    //     })
-    //     .where(eq(subscriptions.mercadoPagoPaymentId, paymentId));
-    // }
+    const db = await getDb();
+    if (db) {
+      await db
+        .update(subscriptions)
+        .set({
+          status: "ativa",
+          mercadoPagoPaymentId: paymentId,
+        })
+        .where(eq(subscriptions.mercadoPagoPaymentId, paymentId));
+        
+      console.log(`✅ Assinatura (Pagamento ${paymentId}) atualizada para ativa`);
+    }
 
     console.log("✅ Webhook processado com sucesso");
     return { success: true, message: "Webhook processado com sucesso" };

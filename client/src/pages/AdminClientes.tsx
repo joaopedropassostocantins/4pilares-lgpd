@@ -11,18 +11,9 @@ import {
   MessageSquare, FileText, MoreHorizontal, ArrowUpRight, ChevronRight, Shield
 } from "lucide-react";
 
-const ADMIN_BG = "#060B14";
+import { trpc } from "@/lib/trpc";
 
-const clientes = [
-  { id: 1, name: "Tech Solutions Ltda", cnpj: "12.345.678/0001-90", plano: "Profissional", planoColor: "#EA580C", segment: "Tecnologia", status: "Em adequação", statusColor: "#059669", progress: 65, responsavel: "João Silva", email: "joao@tech.com", telefone: "(11) 99999-0001", since: "Jan/2025", score: 65 },
-  { id: 2, name: "Clínica Saúde Total", cnpj: "98.765.432/0001-10", plano: "Essencial", planoColor: "#059669", segment: "Saúde", status: "Diagnóstico", statusColor: "#1D4ED8", progress: 20, responsavel: "Maria Souza", email: "maria@clinica.com", telefone: "(21) 98888-0002", since: "Fev/2025", score: 20 },
-  { id: 3, name: "Construtora Alfa", cnpj: "11.222.333/0001-44", plano: "Empresarial", planoColor: "#7C3AED", segment: "Construção", status: "Monitoramento", statusColor: "#7C3AED", progress: 90, responsavel: "Carlos Mendes", email: "carlos@alfa.com", telefone: "(31) 97777-0003", since: "Nov/2024", score: 90 },
-  { id: 4, name: "Escola Digital", cnpj: "44.555.666/0001-77", plano: "Profissional", planoColor: "#EA580C", segment: "Educação", status: "Implementação", statusColor: "#EA580C", progress: 50, responsavel: "Ana Lima", email: "ana@escola.com", telefone: "(41) 96666-0004", since: "Dez/2024", score: 50 },
-  { id: 5, name: "Farmácia Vida+", cnpj: "55.666.777/0001-88", plano: "Essencial", planoColor: "#059669", segment: "Saúde", status: "Diagnóstico", statusColor: "#1D4ED8", progress: 15, responsavel: "Pedro Costa", email: "pedro@vida.com", telefone: "(51) 95555-0005", since: "Mar/2025", score: 15 },
-  { id: 6, name: "Logística Trans Br", cnpj: "66.777.888/0001-99", plano: "Essencial", planoColor: "#059669", segment: "Logística", status: "Diagnóstico", statusColor: "#1D4ED8", progress: 25, responsavel: "Rafael Gomes", email: "rafael@trans.com", telefone: "(61) 94444-0006", since: "Fev/2025", score: 25 },
-  { id: 7, name: "Banco Regional SA", cnpj: "77.888.999/0001-11", plano: "Empresarial", planoColor: "#7C3AED", segment: "Financeiro", status: "Monitoramento", statusColor: "#7C3AED", progress: 78, responsavel: "Fernanda Reis", email: "fernanda@banco.com", telefone: "(71) 93333-0007", since: "Out/2024", score: 78 },
-  { id: 8, name: "Supermercado Bem+", cnpj: "88.999.000/0001-22", plano: "Básico ANPD", planoColor: "#1D4ED8", segment: "Varejo", status: "Diagnóstico", statusColor: "#1D4ED8", progress: 10, responsavel: "Tatiane Moura", email: "tatiane@bem.com", telefone: "(81) 92222-0008", since: "Mar/2025", score: 10 },
-];
+const ADMIN_BG = "#060B14";
 
 const statusOptions = ["Todos", "Diagnóstico", "Em adequação", "Implementação", "Monitoramento"];
 const segmentoOptions = ["Todos", "Tecnologia", "Saúde", "Construção", "Educação", "Logística", "Financeiro", "Varejo"];
@@ -33,6 +24,25 @@ export default function AdminClientes() {
   const [selectedStatus, setSelectedStatus] = useState("Todos");
   const [selectedSegmento, setSelectedSegmento] = useState("Todos");
   const [selectedPlano, setSelectedPlano] = useState("Todos");
+  const { data: subscriptions = [], isLoading } = trpc.subscriptions.listAll.useQuery();
+
+  const clientes = subscriptions.map((sub) => ({
+    id: sub.id,
+    name: sub.razaoSocial || `Cliente #${sub.id}`,
+    cnpj: sub.cnpj || "N/A",
+    plano: sub.planName || "Básico",
+    planoColor: sub.planName === "Essencial" ? "#059669" : (sub.planName === "Profissional" ? "#EA580C" : (sub.planName === "Empresarial" ? "#7C3AED" : "#1D4ED8")),
+    segment: "N/A",
+    status: sub.status === "ativa" ? "Monitoramento" : "Diagnóstico",
+    statusColor: sub.status === "ativa" ? "#059669" : "#1D4ED8",
+    progress: sub.status === "ativa" ? 100 : 20,
+    responsavel: "N/A",
+    email: "N/A",
+    telefone: "N/A",
+    since: sub.startDate ? new Date(sub.startDate).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }) : "N/A",
+    score: sub.status === "ativa" ? 100 : 20,
+  }));
+
   const [selectedClient, setSelectedClient] = useState<typeof clientes[0] | null>(null);
 
   const filtered = clientes.filter((c) => {

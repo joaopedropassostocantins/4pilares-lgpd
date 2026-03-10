@@ -4,7 +4,9 @@
  * Design: Dark sidebar + light content area
  */
 import { useState } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Users, Building2, CreditCard, FileText,
@@ -31,51 +33,80 @@ const navItems = [
   { icon: Settings, label: "Configurações", id: "configuracoes" },
 ];
 
-const statsCards = [
-  { label: "Clientes ativos", value: "24", change: "+3 este mês", trend: "up", icon: Users, color: "#1D4ED8", bg: "#EFF6FF" },
-  { label: "MRR", value: "R$ 38,4k", change: "+12% vs mês ant.", trend: "up", icon: DollarSign, color: "#059669", bg: "#ECFDF5" },
-  { label: "Chamados abertos", value: "7", change: "2 urgentes", trend: "neutral", icon: MessageSquare, color: "#EA580C", bg: "#FFF7ED" },
-  { label: "Docs emitidos", value: "142", change: "+12 este mês", trend: "up", icon: FolderOpen, color: "#7C3AED", bg: "#F5F3FF" },
-];
-
-const recentClients = [
-  { name: "Tech Solutions Ltda", plan: "Profissional", status: "Em adequação", progress: 65, color: "#059669", segment: "Tecnologia", since: "Jan/2025" },
-  { name: "Clínica Saúde Total", plan: "Essencial", status: "Diagnóstico", progress: 20, color: "#1D4ED8", segment: "Saúde", since: "Fev/2025" },
-  { name: "Construtora Alfa", plan: "Empresarial", status: "Monitoramento", progress: 90, color: "#7C3AED", segment: "Construção", since: "Nov/2024" },
-  { name: "Escola Digital", plan: "Profissional", status: "Implementação", progress: 50, color: "#EA580C", segment: "Educação", since: "Dez/2024" },
-  { name: "Farmácia Vida+", plan: "Essencial", status: "Diagnóstico", progress: 15, color: "#1D4ED8", segment: "Saúde", since: "Mar/2025" },
-];
-
 const recentChamados = [
   { id: "#0042", empresa: "Tech Solutions", tipo: "Solicitação de titular", status: "Aberto", urgente: true, data: "08 Mar" },
-  { id: "#0041", empresa: "Clínica Saúde Total", tipo: "Dúvida sobre ROPA", status: "Em análise", urgente: false, data: "06 Mar" },
-  { id: "#0040", empresa: "Construtora Alfa", tipo: "Incidente de segurança", status: "Resolvido", urgente: false, data: "28 Fev" },
-];
-
-const mrrData = [
-  { mes: "Out", valor: 24000 },
-  { mes: "Nov", valor: 27500 },
-  { mes: "Dez", valor: 29800 },
-  { mes: "Jan", valor: 32100 },
-  { mes: "Fev", valor: 35600 },
-  { mes: "Mar", valor: 38400 },
 ];
 
 const adequacaoData = [
   { segmento: "Tecnologia", score: 72 },
   { segmento: "Saúde", score: 58 },
-  { segmento: "Educação", score: 45 },
-  { segmento: "Construção", score: 82 },
-  { segmento: "Varejo", score: 33 },
 ];
 
 export default function Admin() {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [search, setSearch] = useState("");
+  const [, setLocation] = useLocation();
+  const logoutMutation = trpc.auth.logout.useMutation();
+
+  const { data: subscriptions = [], isLoading } = trpc.subscriptions.listAll.useQuery();
+
+  let mrr = 0;
+  const recentClients = subscriptions.slice(-5).map((sub) => {
+    const isPago = sub.status === "ativa";
+    const valor = Number(sub.priceMonthly) || 0;
+    if (isPago) mrr += valor;
+
+    return {
+      name: sub.razaoSocial || `Cliente #${sub.id}`,
+      plan: sub.planName || "Básico",
+      status: isPago ? "Em adequação" : "Pendente",
+      progress: isPago ? 100 : 20,
+      color: isPago ? "#059669" : "#1D4ED8",
+      segment: "N/A",
+      since: sub.startDate ? new Date(sub.startDate).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }) : "N/A"
+    };
+  });
+
+  subscriptions.forEach(sub => {
+    const isPago = sub.status === "ativa";
+    if (isPago && !recentClients.some(rc => rc.name === (sub.razaoSocial || `Cliente #${sub.id}`))) {
+       mrr += Number(sub.priceMonthly) || 0;
+    }
+  });
+
+  const statsCards = [
+    { label: "Clientes ativos", value: subscriptions.filter(s => s.status === 'ativa').length.toString(), change: "Atualizado", trend: "up", icon: Users, color: "#1D4ED8", bg: "#EFF6FF" },
+    { label: "MRR", value: `R$ ${(mrr/1000).toFixed(1)}k`, change: "Atualizado", trend: "up", icon: DollarSign, color: "#059669", bg: "#ECFDF5" },
+    { label: "Chamados abertos", value: "0", change: "0 urgentes", trend: "neutral", icon: MessageSquare, color: "#EA580C", bg: "#FFF7ED" },
+    { label: "Docs emitidos", value: "0", change: "0 este mês", trend: "neutral", icon: FolderOpen, color: "#7C3AED", bg: "#F5F3FF" },
+  ];
+
+  const mrrData = [
+    { mes: "Anterior", valor: mrr * 0.8 },
+    { mes: "Atual", valor: mrr },
+  ];
+
+  const contratosData = subscriptions.map((sub) => ({
+    empresa: sub.razaoSocial || `Cliente #${sub.id}`,
+    plano: sub.planName || "Básico",
+    valor: `R$ ${Number(sub.priceMonthly) || 0}`,
+    venc: sub.startDate ? new Date(new Date(sub.startDate).getTime() + 30*24*60*60*1000).toLocaleDateString('pt-BR') : "N/A",
+    status: sub.status === "ativa" ? "Vigente" : "A vencer",
+    cor: sub.status === "ativa" ? "#059669" : "#EA580C"
+  }));
 
   const handleNav = (item: typeof navItems[0]) => {
     setActiveSection(item.id);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logoutMutation.mutateAsync();
+      setLocation("/login");
+    } catch (e) {
+      toast.error("Erro ao sair");
+    }
   };
 
   return (
@@ -145,12 +176,10 @@ export default function Admin() {
             <Menu className="w-4 h-4 flex-shrink-0" />
             {sidebarOpen && <span className="text-xs">Recolher</span>}
           </button>
-          <Link href="/">
-            <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-colors mt-0.5">
-              <LogOut className="w-4 h-4 flex-shrink-0" />
-              {sidebarOpen && <span className="text-xs">Sair</span>}
-            </button>
-          </Link>
+          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-colors mt-0.5">
+            <LogOut className="w-4 h-4 flex-shrink-0" />
+            {sidebarOpen && <span className="text-xs">Sair</span>}
+          </button>
         </div>
       </aside>
 
@@ -343,13 +372,7 @@ export default function Admin() {
                         <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Status</th>
                       </tr></thead>
                       <tbody>
-                        {[
-                          { empresa: "Tech Solutions Ltda", plano: "Profissional", valor: "R$ 1.997", venc: "15/03/2025", status: "Vigente", cor: "#059669" },
-                          { empresa: "Construtora Alfa", plano: "Empresarial", valor: "R$ 3.997", venc: "01/04/2025", status: "Vigente", cor: "#059669" },
-                          { empresa: "Escola Digital", plano: "Profissional", valor: "R$ 1.997", venc: "30/03/2025", status: "A vencer", cor: "#EA580C" },
-                          { empresa: "Clínica Saúde Total", plano: "Essencial", valor: "R$ 997", venc: "10/04/2025", status: "Vigente", cor: "#059669" },
-                          { empresa: "Farmácia Vida+", plano: "Essencial", valor: "R$ 997", venc: "20/04/2025", status: "Vigente", cor: "#059669" },
-                        ].map((row, i) => (
+                        {contratosData.map((row, i) => (
                           <tr key={i} className="border-b border-slate-50 hover:bg-slate-50 transition-colors">
                             <td className="px-5 py-4 text-sm font-medium text-slate-800">{row.empresa}</td>
                             <td className="px-5 py-4 text-sm text-slate-600">{row.plano}</td>

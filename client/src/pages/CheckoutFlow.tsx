@@ -3,7 +3,7 @@
  * Checkout em 4 etapas com coleta de dados empresariais
  */
 import { useState, useEffect, useRef } from "react";
-import { useSearchParams } from "wouter";
+import { useSearchParams, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertCircle, CheckCircle2, Loader2, ArrowLeft, ArrowRight, Lock } from "lucide-react";
 import { Link } from "wouter";
@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { PLANOS, formatarPreco, getPlanoById } from "@/const/pricing";
 import { useMasks, buscarEnderecoPorCEP } from "@/hooks/useMasks";
+import { trpc } from "@/lib/trpc";
 
 declare global {
   interface Window {
@@ -44,9 +45,11 @@ const fadeIn = {
 };
 
 export default function CheckoutFlow() {
+  const [, setLocation] = useLocation();
   const [searchParams] = useSearchParams();
   const planoId = searchParams.get("plan") || "profissional";
   const plano = getPlanoById(planoId);
+  const createSubscription = trpc.subscriptions.create.useMutation();
 
   const [etapaAtual, setEtapaAtual] = useState<Etapa>("plano");
   const [planoSelecionado, setPlanoSelecionado] = useState(plano);
@@ -326,8 +329,18 @@ export default function CheckoutFlow() {
             console.log("📤 Formulário de pagamento enviado:", formData);
             setLoading(true);
             try {
-              // Aqui você enviaria os dados para seu backend
+              const paymentId = formData.id?.toString() || `pag_${Date.now()}`;
+              await createSubscription.mutateAsync({
+                email: form.email,
+                razaoSocial: form.razaoSocial,
+                cnpj: form.cnpj,
+                planId: planoSelecionado.id,
+                planName: planoSelecionado.nome,
+                priceMonthly: preco.valor || 0,
+                paymentId
+              });
               toast.success("Pagamento processado com sucesso!");
+              setLocation("/checkout-success");
             } catch (error) {
               console.error("Erro ao processar pagamento:", error);
               toast.error("Erro ao processar pagamento");

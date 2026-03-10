@@ -11,44 +11,53 @@ import {
   CheckCircle2, Clock, AlertTriangle, Download, Filter, Shield
 } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { trpc } from "@/lib/trpc";
 
 const ADMIN_BG = "#060B14";
-
-const mrrData = [
-  { mes: "Out/24", mrr: 24000, novos: 3200, cancelamentos: 800 },
-  { mes: "Nov/24", mrr: 27500, novos: 4500, cancelamentos: 1000 },
-  { mes: "Dez/24", mrr: 29800, novos: 3100, cancelamentos: 800 },
-  { mes: "Jan/25", mrr: 32100, novos: 3500, cancelamentos: 1200 },
-  { mes: "Fev/25", mrr: 35600, novos: 4800, cancelamentos: 1300 },
-  { mes: "Mar/25", mrr: 38400, novos: 4200, cancelamentos: 1400 },
-];
-
-const distribuicaoPlanos = [
-  { name: "Básico ANPD", value: 4, color: "#1D4ED8", preco: 150 },
-  { name: "Essencial", value: 8, color: "#059669", preco: 997 },
-  { name: "Profissional", value: 7, color: "#EA580C", preco: 1997 },
-  { name: "Empresarial", value: 5, color: "#7C3AED", preco: 3997 },
-];
-
-const assinaturas = [
-  { empresa: "Tech Solutions Ltda", plano: "Profissional", valor: 1997, status: "Pago", vencimento: "15/03/2025", metodo: "Cartão", statusColor: "#059669" },
-  { empresa: "Construtora Alfa", plano: "Empresarial", valor: 3997, status: "Pago", vencimento: "01/04/2025", metodo: "Cartão", statusColor: "#059669" },
-  { empresa: "Escola Digital", plano: "Profissional", valor: 1997, status: "A vencer", vencimento: "30/03/2025", metodo: "Boleto", statusColor: "#EA580C" },
-  { empresa: "Clínica Saúde Total", plano: "Essencial", valor: 997, status: "Pago", vencimento: "10/04/2025", metodo: "Cartão", statusColor: "#059669" },
-  { empresa: "Farmácia Vida+", plano: "Essencial", valor: 997, status: "Pago", vencimento: "20/04/2025", metodo: "PIX", statusColor: "#059669" },
-  { empresa: "Logística Trans Br", plano: "Essencial", valor: 997, status: "Inadimplente", vencimento: "05/03/2025", metodo: "Boleto", statusColor: "#DC2626" },
-  { empresa: "Banco Regional SA", plano: "Empresarial", valor: 3997, status: "Pago", vencimento: "12/04/2025", metodo: "Cartão", statusColor: "#059669" },
-  { empresa: "Supermercado Bem+", plano: "Básico ANPD", valor: 150, status: "Pago", vencimento: "25/04/2025", metodo: "PIX", statusColor: "#059669" },
-];
-
-const mrr = 38400;
-const inadimplencia = 997;
-const renovacoes = 3;
-const churnRate = 2.1;
 
 export default function AdminFinanceiro() {
   const [periodoFilter, setPeriodoFilter] = useState("6m");
   const [statusFilter, setStatusFilter] = useState("Todos");
+
+  const { data: subscriptions = [], isLoading } = trpc.subscriptions.listAll.useQuery();
+
+  let mrr = 0;
+  let inadimplencia = 0;
+  let renovacoes = 0;
+  const planCount: Record<string, number> = {};
+
+  const assinaturas = subscriptions.map((sub) => {
+    const isPago = sub.status === "ativa";
+    const valor = Number(sub.priceMonthly) || 0;
+    
+    if (isPago) mrr += valor;
+    if (sub.status === "expirada") inadimplencia += valor;
+
+    const planName = sub.planName || "Básico";
+    planCount[planName] = (planCount[planName] || 0) + 1;
+
+    return {
+      empresa: sub.razaoSocial || `Cliente #${sub.id}`,
+      plano: planName,
+      valor: valor,
+      status: isPago ? "Pago" : (sub.status === "pending" ? "Pendente" : "Inadimplente"),
+      vencimento: sub.startDate ? new Date(new Date(sub.startDate).getTime() + 30*24*60*60*1000).toLocaleDateString('pt-BR') : "N/A",
+      metodo: "Checkout",
+      statusColor: isPago ? "#059669" : (sub.status === "pending" ? "#EA580C" : "#DC2626"),
+    };
+  });
+
+  const distribuicaoPlanos = Object.entries(planCount).map(([name, value], idx) => {
+    const colors = ["#1D4ED8", "#059669", "#EA580C", "#7C3AED"];
+    return { name, value, color: colors[idx % colors.length], preco: 0 };
+  });
+
+  const mrrData = [
+    { mes: "Mês Anterior", mrr: mrr * 0.8, novos: 0, cancelamentos: 0 },
+    { mes: "Mês Atual", mrr: mrr, novos: mrr * 0.2, cancelamentos: 0 },
+  ];
+
+  const churnRate = 0.0;
 
   const filtered = assinaturas.filter((a) => statusFilter === "Todos" || a.status === statusFilter);
 

@@ -3,7 +3,8 @@
  * Área do cliente — portal completo com seções funcionais
  */
 import { useState } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
+import { trpc } from "@/lib/trpc";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, FolderOpen, MessageSquare, BarChart3,
@@ -69,9 +70,35 @@ export default function Portal() {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [notificacoes] = useState(3);
+  const [, setLocation] = useLocation();
 
-  const planoAtual = { nome: "Profissional", preco: "R$ 1.997/mês", vencimento: "15/04/2025", status: "Ativo" };
-  const empresa = { razaoSocial: "Tech Solutions Ltda", cnpj: "12.345.678/0001-90", segmento: "Tecnologia", responsavel: "João Tocantins" };
+  const { data: user } = trpc.auth.me.useQuery();
+  const { data: subscription } = trpc.subscriptions.me.useQuery();
+  const logoutMutation = trpc.auth.logout.useMutation();
+
+  const handleLogout = async () => {
+    try {
+      await logoutMutation.mutateAsync();
+      setLocation("/login");
+    } catch (e) {
+      toast.error("Erro ao sair");
+    }
+  };
+
+  const planoAtual = { 
+    nome: subscription?.planName || "Nenhum plano ativo", 
+    preco: subscription?.priceMonthly ? `R$ ${(subscription.priceMonthly / 100).toFixed(2).replace('.', ',')}/mês` : "-", 
+    vencimento: "-", 
+    status: subscription?.status || "Inativo" 
+  };
+  
+  const responsavelFallback = user?.email?.split('@')[0] || "Usuário";
+  const empresa = { 
+    razaoSocial: user?.name || "Empresa / Cliente", 
+    cnpj: "Disponível em breve", 
+    segmento: "Geral", 
+    responsavel: user?.name || responsavelFallback 
+  };
 
   return (
     <div className="min-h-screen flex" style={{ backgroundColor: CONTENT_BG }}>
@@ -124,12 +151,10 @@ export default function Portal() {
             <Menu className="w-4 h-4 flex-shrink-0" />
             {sidebarOpen && <span className="text-xs">Recolher menu</span>}
           </button>
-          <Link href="/login">
-            <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors mt-0.5">
-              <Lock className="w-4 h-4 flex-shrink-0" />
-              {sidebarOpen && <span className="text-xs">Sair</span>}
-            </button>
-          </Link>
+          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors mt-0.5">
+            <Lock className="w-4 h-4 flex-shrink-0" />
+            {sidebarOpen && <span className="text-xs">Sair</span>}
+          </button>
         </div>
       </aside>
 

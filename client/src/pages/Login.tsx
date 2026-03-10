@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { Scale, Mail, Lock, Eye, EyeOff, ArrowRight, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
 
 export default function Login() {
   const [, setLocation] = useLocation();
@@ -15,6 +16,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const loginMutation = trpc.auth.login.useMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,11 +25,15 @@ export default function Login() {
       return;
     }
     setLoading(true);
-    // Simulação de login — substituir por tRPC auth quando disponível
-    await new Promise((r) => setTimeout(r, 1200));
-    setLoading(false);
-    toast.success("Login realizado com sucesso!");
-    setLocation("/portal");
+    try {
+      await loginMutation.mutateAsync({ email, password });
+      toast.success("Login realizado com sucesso!");
+      setLocation("/portal");
+    } catch (err: any) {
+      toast.error(err.message || "Credenciais inválidas");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
