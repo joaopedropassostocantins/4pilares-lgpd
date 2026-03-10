@@ -2,7 +2,7 @@
  * Home.tsx — 4 Pilares LGPD
  * Design: Clareza Estrutural — Hero assimétrico, pilares coloridos, etapas, planos, FAQ, contato
  */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import {
@@ -175,6 +175,11 @@ const fadeUp = {
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [form, setForm] = useState({ nome: "", empresa: "", email: "", mensagem: "" });
+
+  // Otimizar título para SEO (30-60 caracteres)
+  useEffect(() => {
+    document.title = "4 Pilares LGPD - Adequação Completa";
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
