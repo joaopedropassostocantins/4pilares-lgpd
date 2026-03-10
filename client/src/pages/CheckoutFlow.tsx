@@ -49,7 +49,7 @@ export default function CheckoutFlow() {
   const [searchParams] = useSearchParams();
   const planoId = searchParams.get("plan") || "profissional";
   const plano = getPlanoById(planoId);
-  const createSubscription = trpc.subscriptions.create.useMutation();
+  const processPayment = trpc.subscriptions.processPayment.useMutation();
 
   const [etapaAtual, setEtapaAtual] = useState<Etapa>("plano");
   const [planoSelecionado, setPlanoSelecionado] = useState(plano);
@@ -339,21 +339,38 @@ export default function CheckoutFlow() {
             console.log("📤 Formulário de pagamento enviado:", formData);
             setLoading(true);
             try {
-              const paymentId = formData.id?.toString() || `pag_${Date.now()}`;
-              await createSubscription.mutateAsync({
+              if (!formData.token) {
+                toast.error("Erro: Token de pagamento não gerado");
+                setLoading(false);
+                return;
+              }
+
+              const response = await processPayment.mutateAsync({
                 email: form.email,
                 razaoSocial: form.razaoSocial,
                 cnpj: form.cnpj,
+                cpf: form.cpf,
                 planId: planoSelecionado.id,
                 planName: planoSelecionado.nome,
                 priceMonthly: preco.valor || 0,
-                paymentId
+                token: formData.token,
               });
-              toast.success("Pagamento processado com sucesso!");
-              setLocation("/checkout-success");
+
+              if (response.status === "approved") {
+                toast.success("Pagamento aprovado com sucesso!");
+                setLocation("/checkout-success");
+              } else if (response.status === "pending") {
+                toast.info("Pagamento em processamento. Você receberá confirmação por e-mail.");
+                setLocation("/checkout-success");
+              } else if (response.status === "rejected") {
+                toast.error(`Pagamento rejeitado: ${response.message || "Motivo desconhecido"}`);
+              } else {
+                toast.error(`Erro no pagamento: ${response.message || "Erro desconhecido"}`);
+              }
             } catch (error) {
               console.error("Erro ao processar pagamento:", error);
-              toast.error("Erro ao processar pagamento");
+              const errorMsg = error instanceof Error ? error.message : "Erro ao processar pagamento";
+              toast.error(errorMsg);
             } finally {
               setLoading(false);
             }
