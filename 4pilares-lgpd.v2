@@ -1,0 +1,1896 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4 Pilares LGPD — DPO Certificado | Lei · Regras · Conformidade · Titular</title>
+<meta name="description" content="Diagnóstico gratuito: saiba se sua empresa precisa de DPO. Consultoria LGPD baseada em 4 pilares. CNPJ: 58.551.044/0001-90">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   RESET & VARS
+═══════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'DM Sans',sans-serif;color:#1c2b3a;background:#fff;overflow-x:hidden}
+
+:root{
+–lei:#0f172a;
+–lei-lt:#dbeafe;
+–regras:#065f46;
+–regras-lt:#d1fae5;
+–conf:#c2410c;
+–conf-lt:#ffedd5;
+–tit:#5b21b6;
+–tit-lt:#ede9fe;
+–wa:#25d366;
+–ink:#1c2b3a;
+–muted:#64748b;
+–border:#e2e8f0;
+–bg:#f8fafc;
+–white:#fff;
+–gold:#f59e0b;
+–danger:#dc2626;
+–ff-display:‘DM Serif Display’,Georgia,serif;
+–ff-body:‘DM Sans’,sans-serif;
+–shadow:0 2px 16px rgba(0,0,0,.08);
+–shadow-lg:0 8px 40px rgba(0,0,0,.14);
+–radius:12px;
+}
+
+/* ═══ UTILITIES ═══ */
+.container{max-width:1120px;margin:0 auto;padding:0 1.5rem}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+.text-center{text-align:center}
+
+/* ═══ TYPOGRAPHY ═══ */
+h1,h2,h3{font-family:var(–ff-display);line-height:1.15;color:var(–ink)}
+h1{font-size:clamp(2rem,4.5vw,3.4rem);font-weight:400}
+h2{font-size:clamp(1.5rem,3vw,2.4rem);font-weight:400}
+h3{font-size:1.05rem;font-weight:400}
+p{line-height:1.75;color:var(–muted)}
+
+.eyebrow{
+display:inline-flex;align-items:center;gap:.4rem;
+font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+margin-bottom:.9rem;
+}
+.eyebrow::before{content:’’;display:block;width:20px;height:2px;background:currentColor}
+
+/* ═══ BUTTONS ═══ */
+.btn{
+display:inline-flex;align-items:center;gap:.5rem;
+padding:.75rem 1.6rem;border-radius:8px;font-weight:600;
+font-size:.88rem;text-decoration:none;border:2px solid transparent;
+cursor:pointer;transition:all .2s;font-family:var(–ff-body);white-space:nowrap;
+}
+.btn-green{background:var(–wa);color:#fff;border-color:var(–wa)}
+.btn-green:hover{background:#1aad54;border-color:#1aad54;transform:translateY(-1px)}
+.btn-dark{background:var(–lei);color:#fff;border-color:var(–lei)}
+.btn-dark:hover{background:#1e3a5f;transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(–ink);border-color:var(–border)}
+.btn-ghost:hover{border-color:var(–ink);background:var(–bg)}
+.btn-outline-white{background:transparent;color:#fff;border-color:rgba(255,255,255,.4)}
+.btn-outline-white:hover{background:rgba(255,255,255,.1);border-color:#fff}
+.btn-lg{padding:1rem 2rem;font-size:1rem}
+.btn-sm{padding:.5rem 1.1rem;font-size:.8rem}
+
+/* ═══════════════════════════════════════════
+HEADER
+═══════════════════════════════════════════ */
+#header{
+position:fixed;top:0;left:0;right:0;z-index:900;
+background:var(–lei);
+transition:box-shadow .3s;
+}
+#header.scrolled{box-shadow:0 4px 24px rgba(0,0,0,.3)}
+.header-wrap{
+display:flex;align-items:center;justify-content:space-between;
+max-width:1120px;margin:0 auto;padding:0 1.5rem;height:62px;gap:.75rem;
+}
+.logo-link{text-decoration:none;display:flex;flex-direction:column;gap:.05rem}
+.logo-main{font-family:var(–ff-display);font-size:1.15rem;color:#fff;letter-spacing:-.01em}
+.logo-sub{font-size:.58rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+
+.main-nav{display:flex;align-items:center;gap:.1rem}
+.main-nav a{
+font-size:.75rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+color:rgba(255,255,255,.6);text-decoration:none;
+padding:.35rem .65rem;border-radius:5px;transition:all .2s;white-space:nowrap;
+}
+.main-nav a:hover{color:#fff;background:rgba(255,255,255,.1)}
+.nav-sep{width:1px;height:18px;background:rgba(255,255,255,.15);margin:0 .35rem;flex-shrink:0}
+
+.pnav-lei   {color:#7dd3fc!important}
+.pnav-reg   {color:#6ee7b7!important}
+.pnav-conf  {color:#fdba74!important}
+.pnav-tit   {color:#c4b5fd!important}
+
+.btn-nav{
+background:var(–wa);color:#fff!important;
+padding:.4rem 1rem!important;border-radius:6px!important;
+font-weight:700!important;
+}
+.btn-nav:hover{background:#1aad54!important}
+
+/* ═══ PROMO TICKER ═══ */
+.promo-ticker{
+background:linear-gradient(90deg,#c2410c,#ea580c);
+color:#fff;text-align:center;
+font-size:.8rem;font-weight:600;padding:.45rem 1rem;
+margin-top:62px;letter-spacing:.01em;
+}
+.promo-ticker span{opacity:.8;font-weight:400}
+
+/* ═══════════════════════════════════════════
+HERO
+═══════════════════════════════════════════ */
+.hero{
+background:var(–lei);
+padding:4.5rem 1.5rem 5rem;
+position:relative;overflow:hidden;
+}
+.hero::after{
+content:’’;position:absolute;
+inset:0;
+background:
+radial-gradient(ellipse 55% 60% at 90% 10%,rgba(91,33,182,.22) 0%,transparent 65%),
+radial-gradient(ellipse 35% 45% at 5% 85%,rgba(6,95,70,.25) 0%,transparent 60%),
+radial-gradient(ellipse 45% 35% at 50% 50%,rgba(15,23,42,.0) 0%,transparent 100%);
+pointer-events:none;
+}
+.hero-inner{
+max-width:1120px;margin:0 auto;
+display:grid;grid-template-columns:1fr;gap:3rem;
+position:relative;z-index:1;
+}
+@media(min-width:900px){.hero-inner{grid-template-columns:1.1fr .9fr;align-items:center}}
+
+.hero-badge{
+display:inline-flex;align-items:center;gap:.5rem;
+background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);
+color:rgba(255,255,255,.75);font-size:.7rem;font-weight:700;
+letter-spacing:.1em;text-transform:uppercase;
+padding:.35rem .9rem;border-radius:100px;margin-bottom:1.4rem;
+}
+.pulse{
+width:6px;height:6px;border-radius:50%;background:var(–wa);
+animation:pulse-anim 2s ease infinite;
+}
+@keyframes pulse-anim{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.6)}}
+
+.hero h1{color:#fff;margin-bottom:1.1rem;font-style:italic}
+.hero h1 em{font-style:normal;color:#93c5fd}
+.hero-desc{
+font-size:1rem;color:rgba(255,255,255,.7);
+line-height:1.75;max-width:520px;margin-bottom:2rem;
+}
+
+.hero-ctas{display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:2.5rem}
+
+/* Pillar mini-badges */
+.pillar-badges{display:flex;flex-wrap:wrap;gap:.5rem}
+.pb{
+display:flex;align-items:center;gap:.35rem;
+font-size:.72rem;font-weight:600;
+padding:.3rem .75rem;border-radius:100px;
+border:1px solid rgba(255,255,255,.15);
+text-decoration:none;transition:all .2s;
+}
+.pb:hover{background:rgba(255,255,255,.1);transform:translateY(-1px)}
+.pb-lei {color:#7dd3fc}.pb-reg{color:#6ee7b7}.pb-conf{color:#fdba74}.pb-tit{color:#c4b5fd}
+
+/* Hero right: diagnostic teaser card */
+.hero-card{
+background:rgba(255,255,255,.06);
+border:1px solid rgba(255,255,255,.12);
+border-radius:16px;padding:1.75rem;
+backdrop-filter:blur(10px);
+}
+.hero-card-title{
+font-family:var(–ff-display);font-size:1.2rem;color:#fff;margin-bottom:.5rem;
+}
+.hero-card-sub{font-size:.82rem;color:rgba(255,255,255,.6);margin-bottom:1.4rem;line-height:1.6}
+.criteria-list{list-style:none;display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.4rem}
+.criteria-list li{
+display:flex;align-items:flex-start;gap:.6rem;
+font-size:.8rem;color:rgba(255,255,255,.75);line-height:1.5;
+}
+.crit-icon{
+flex-shrink:0;width:20px;height:20px;border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+font-size:.65rem;font-weight:700;
+}
+.ci-1{background:rgba(125,211,252,.2);color:#7dd3fc}
+.ci-2{background:rgba(110,231,183,.2);color:#6ee7b7}
+.ci-3{background:rgba(253,186,116,.2);color:#fdba74}
+
+/* ═══════════════════════════════════════════
+SECTION SHARED
+═══════════════════════════════════════════ */
+.section{padding:5rem 1.5rem}
+.section-bg{background:var(–bg)}
+.section-dark{background:var(–lei)}
+.section-header{margin-bottom:3rem}
+.section-header.center{text-align:center}
+.section-header.center .eyebrow{justify-content:center}
+.section-header.center p{max-width:600px;margin:0 auto}
+.section-header h2{margin-bottom:.75rem}
+.section-header p{margin-top:.5rem}
+
+/* ═══════════════════════════════════════════
+DIAGNÓSTICO — WIDGET CENTRAL
+═══════════════════════════════════════════ */
+#diagnostico{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%)}
+
+.diag-wrapper{
+max-width:760px;margin:0 auto;
+background:rgba(255,255,255,.04);
+border:1px solid rgba(255,255,255,.12);
+border-radius:20px;overflow:hidden;
+}
+
+/* progress bar */
+.diag-progress{
+height:4px;background:rgba(255,255,255,.1);position:relative;
+}
+.diag-progress-fill{
+height:100%;background:linear-gradient(90deg,#6ee7b7,#7dd3fc);
+transition:width .5s ease;width:0%;
+}
+
+.diag-body{padding:2.5rem}
+
+/* step */
+.diag-step{display:none}
+.diag-step.active{display:block;animation:fadeSlideIn .35s ease both}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+.step-num{
+font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+color:rgba(255,255,255,.4);margin-bottom:.5rem;
+}
+.diag-step h3{
+font-family:var(–ff-display);font-size:1.4rem;color:#fff;
+margin-bottom:.6rem;font-style:italic;
+}
+.diag-step .step-desc{
+font-size:.875rem;color:rgba(255,255,255,.65);line-height:1.7;margin-bottom:1.75rem;
+}
+
+.diag-options{display:flex;flex-direction:column;gap:.65rem}
+.diag-opt{
+display:flex;align-items:center;gap:.9rem;
+background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.12);
+border-radius:10px;padding:1rem 1.25rem;cursor:pointer;
+transition:all .2s;color:#fff;
+}
+.diag-opt:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3)}
+.diag-opt.selected{border-color:#7dd3fc;background:rgba(125,211,252,.1)}
+.diag-opt input{accent-color:#7dd3fc;width:16px;height:16px;flex-shrink:0}
+.opt-label{font-size:.88rem;font-weight:500;line-height:1.4}
+.opt-sub{font-size:.75rem;color:rgba(255,255,255,.5);margin-top:.15rem}
+
+/* titulares input */
+.tit-input-wrap{margin-bottom:1.5rem}
+.tit-input-label{
+display:block;font-size:.82rem;color:rgba(255,255,255,.7);margin-bottom:.4rem;font-weight:500;
+}
+.tit-input{
+width:100%;padding:.85rem 1rem;border-radius:8px;
+background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.18);
+color:#fff;font-size:.95rem;font-family:var(–ff-body);
+outline:none;transition:border-color .2s;
+}
+.tit-input:focus{border-color:#7dd3fc}
+.tit-input::placeholder{color:rgba(255,255,255,.3)}
+.tit-hint{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:.4rem;line-height:1.5}
+
+/* sensitive checkboxes */
+.sens-grid{
+display:grid;grid-template-columns:1fr 1fr;gap:.5rem;
+margin-top:.5rem;
+}
+@media(max-width:540px){.sens-grid{grid-template-columns:1fr}}
+.sens-item{
+display:flex;align-items:center;gap:.5rem;
+background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+border-radius:7px;padding:.6rem .8rem;cursor:pointer;
+transition:all .2s;
+}
+.sens-item:hover{background:rgba(255,255,255,.09)}
+.sens-item input{accent-color:#fdba74;flex-shrink:0}
+.sens-item label{font-size:.77rem;color:rgba(255,255,255,.75);cursor:pointer;line-height:1.3}
+
+.diag-nav{
+display:flex;justify-content:space-between;align-items:center;
+margin-top:2rem;padding-top:1.5rem;
+border-top:1px solid rgba(255,255,255,.08);
+}
+.diag-back{
+font-size:.82rem;color:rgba(255,255,255,.45);
+background:none;border:none;cursor:pointer;font-family:var(–ff-body);
+padding:.5rem 0;transition:color .2s;
+}
+.diag-back:hover{color:rgba(255,255,255,.8)}
+.btn-diag{
+background:#7dd3fc;color:var(–lei);
+font-weight:700;padding:.75rem 1.75rem;border-radius:8px;
+border:none;cursor:pointer;font-size:.9rem;font-family:var(–ff-body);
+transition:all .2s;
+}
+.btn-diag:hover{background:#bae6fd;transform:translateY(-1px)}
+.btn-diag:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+/* ═══ RESULTADO ═══ */
+#diag-result{display:none;padding:2.5rem;animation:fadeSlideIn .4s ease both}
+
+.result-header{
+display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.75rem;
+padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,.1);
+}
+.result-icon{
+width:52px;height:52px;border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+font-size:1.4rem;flex-shrink:0;
+}
+.ri-green{background:rgba(110,231,183,.2);border:2px solid #6ee7b7}
+.ri-orange{background:rgba(253,186,116,.2);border:2px solid #fdba74}
+.ri-red{background:rgba(239,68,68,.2);border:2px solid #f87171}
+
+.result-header h3{
+font-family:var(–ff-display);font-size:1.3rem;color:#fff;
+margin-bottom:.3rem;font-style:italic;
+}
+.result-header p{font-size:.82rem;color:rgba(255,255,255,.6);line-height:1.6}
+
+/* criteria summary */
+.crit-summary{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.75rem}
+.crit-row{
+display:flex;align-items:center;justify-content:space-between;gap:.75rem;
+background:rgba(255,255,255,.04);border-radius:8px;padding:.7rem 1rem;
+font-size:.8rem;
+}
+.crit-row-label{color:rgba(255,255,255,.7);flex:1}
+.crit-badge{
+font-size:.68rem;font-weight:700;padding:.2rem .7rem;border-radius:100px;
+letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;
+}
+.cb-ok{background:rgba(110,231,183,.2);color:#6ee7b7;border:1px solid rgba(110,231,183,.3)}
+.cb-nok{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.25)}
+
+/* recommended modules */
+.modules-title{
+font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+color:rgba(255,255,255,.4);margin-bottom:.75rem;
+}
+.modules-grid{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
+@media(max-width:480px){.modules-grid{grid-template-columns:1fr}}
+
+.mod-card{
+border-radius:10px;padding:1rem;border:1.5px solid;transition:transform .2s;
+}
+.mod-card:hover{transform:translateY(-2px)}
+.mod-card-top{display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem}
+.mod-card-icon{font-size:1.1rem}
+.mod-card-name{font-size:.82rem;font-weight:700;color:#fff}
+.mod-card-desc{font-size:.73rem;line-height:1.5;color:rgba(255,255,255,.6)}
+.mod-price{
+display:inline-block;margin-top:.6rem;
+font-size:.72rem;font-weight:700;padding:.2rem .6rem;border-radius:100px;
+}
+
+.mc-basic  {border-color:rgba(125,211,252,.3);background:rgba(125,211,252,.06)}
+.mc-docs   {border-color:rgba(110,231,183,.3);background:rgba(110,231,183,.06)}
+.mc-audit  {border-color:rgba(253,186,116,.3);background:rgba(253,186,116,.06)}
+.mc-tit    {border-color:rgba(196,181,253,.3);background:rgba(196,181,253,.06)}
+.mc-jur    {border-color:rgba(249,168,212,.3);background:rgba(249,168,212,.06)}
+.mc-estat  {border-color:rgba(254,240,138,.3);background:rgba(254,240,138,.06)}
+
+.mp-basic  {background:rgba(125,211,252,.15);color:#7dd3fc}
+.mp-docs   {background:rgba(110,231,183,.15);color:#6ee7b7}
+.mp-audit  {background:rgba(253,186,116,.15);color:#fdba74}
+.mp-tit    {background:rgba(196,181,253,.15);color:#c4b5fd}
+.mp-jur    {background:rgba(249,168,212,.15);color:#f9a8d4}
+.mp-estat  {background:rgba(254,240,138,.15);color:#fef08a}
+
+.result-ctas{
+display:flex;flex-wrap:wrap;gap:.75rem;
+margin-top:1.75rem;padding-top:1.5rem;
+border-top:1px solid rgba(255,255,255,.08);
+}
+
+/* ═══════════════════════════════════════════
+OS 4 PILARES — MÓDULOS
+═══════════════════════════════════════════ */
+#pilares{background:var(–white)}
+
+.pilares-nav{
+display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:2.5rem;
+}
+.pnav-btn{
+display:flex;align-items:center;gap:.5rem;
+padding:.5rem 1rem;border-radius:8px;border:2px solid var(–border);
+background:var(–white);font-size:.78rem;font-weight:700;
+cursor:pointer;transition:all .2s;font-family:var(–ff-body);
+text-decoration:none;color:var(–ink);
+}
+.pnav-btn:hover,.pnav-btn.active{color:#fff}
+.pnav-lei:hover,.pnav-lei.active  {background:var(–lei);border-color:var(–lei)}
+.pnav-reg:hover,.pnav-reg.active  {background:var(–regras);border-color:var(–regras)}
+.pnav-cf:hover,.pnav-cf.active    {background:var(–conf);border-color:var(–conf)}
+.pnav-ti:hover,.pnav-ti.active    {background:var(–tit);border-color:var(–tit)}
+
+.pilares-panels{position:relative}
+
+.pilar-panel{
+display:none;
+animation:fadeSlideIn .3s ease both;
+}
+.pilar-panel.active{display:grid;grid-template-columns:1fr;gap:2rem}
+@media(min-width:860px){.pilar-panel.active{grid-template-columns:1.2fr .8fr}}
+
+.pilar-main{}
+.pilar-tag{
+font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem;
+}
+.pilar-tag::before{content:’’;width:16px;height:2px;background:currentColor}
+.pilar-main h2{margin-bottom:.75rem}
+.pilar-main .pilar-intro{
+font-size:.95rem;color:var(–muted);line-height:1.75;margin-bottom:1.5rem;
+}
+
+.pilar-deliverables{
+display:grid;grid-template-columns:1fr 1fr;gap:.5rem;
+margin-bottom:1.5rem;
+}
+@media(max-width:500px){.pilar-deliverables{grid-template-columns:1fr}}
+.del{
+display:flex;align-items:flex-start;gap:.5rem;
+font-size:.82rem;color:var(–ink);padding:.5rem;
+background:var(–bg);border-radius:7px;line-height:1.4;
+}
+.del-check{flex-shrink:0;font-size:.9rem}
+
+.pilar-laws{
+background:var(–bg);border-radius:12px;padding:1.25rem;
+margin-top:1rem;
+}
+.pilar-laws h4{
+font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+margin-bottom:.75rem;color:var(–muted);
+}
+.law-item{
+display:flex;align-items:center;justify-content:space-between;
+font-size:.8rem;padding:.4rem 0;border-bottom:1px solid var(–border);
+}
+.law-item:last-child{border:none}
+.law-name{font-weight:600;color:var(–ink)}
+.law-num{color:var(–muted);font-size:.72rem}
+
+/* subdomain chip */
+.subdomain-chip{
+display:inline-flex;align-items:center;gap:.4rem;
+font-size:.72rem;font-weight:600;font-family:monospace;
+background:var(–bg);border:1px solid var(–border);
+border-radius:6px;padding:.35rem .75rem;color:var(–muted);
+margin-top:.75rem;
+}
+
+/* pilar sidebar */
+.pilar-side{}
+.side-card{
+border-radius:14px;padding:1.5rem;margin-bottom:1.25rem;
+border:1.5px solid var(–border);
+}
+.side-card h4{
+font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+margin-bottom:.9rem;
+}
+
+.accordion-item{border-bottom:1px solid var(–border)}
+.accordion-item:last-child{border:none}
+.accordion-trigger{
+display:flex;align-items:center;justify-content:space-between;
+width:100%;background:none;border:none;
+padding:.7rem 0;cursor:pointer;text-align:left;
+font-family:var(–ff-body);transition:all .2s;gap:.5rem;
+}
+.accordion-trigger-text{font-size:.85rem;font-weight:600;color:var(–ink)}
+.accordion-trigger:hover .accordion-trigger-text{color:var(–conf)}
+.accordion-icon{
+flex-shrink:0;width:22px;height:22px;border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+font-size:1rem;font-weight:700;
+background:var(–bg);color:var(–muted);
+transition:transform .3s,background .2s;
+}
+.accordion-item.open .accordion-icon{transform:rotate(45deg)}
+.accordion-body{
+display:none;font-size:.82rem;color:var(–muted);
+padding-bottom:.9rem;line-height:1.65;
+}
+.accordion-item.open .accordion-body{display:block}
+
+/* ═══════════════════════════════════════════
+PLANOS
+═══════════════════════════════════════════ */
+#planos{background:var(–bg)}
+
+.plans-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(225px,1fr));
+gap:1.25rem;
+align-items:start;
+}
+.plan-card{
+background:var(–white);border-radius:16px;
+border:2px solid var(–border);padding:1.75rem 1.5rem;
+position:relative;transition:all .25s;
+display:flex;flex-direction:column;
+}
+.plan-card:hover{transform:translateY(-4px);box-shadow:var(–shadow-lg)}
+.plan-card.featured{
+border-color:var(–tit);
+box-shadow:0 0 0 4px rgba(91,33,182,.08);
+}
+.featured-badge{
+position:absolute;top:-13px;left:50%;transform:translateX(-50%);
+background:var(–tit);color:#fff;
+font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+padding:.25rem .9rem;border-radius:100px;white-space:nowrap;
+}
+.plan-name{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(–muted);margin-bottom:.4rem}
+.plan-price{
+font-family:var(–ff-display);font-size:2.1rem;color:var(–ink);line-height:1;margin-bottom:.3rem;
+}
+.plan-price sup{font-size:.9rem;vertical-align:super;font-family:var(–ff-body)}
+.plan-price small{font-family:var(–ff-body);font-size:.78rem;font-weight:400;color:var(–muted)}
+.plan-size{font-size:.78rem;color:var(–muted);margin-bottom:1.1rem}
+
+.plan-divider{height:1px;background:var(–border);margin:1rem 0}
+
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:.5rem;flex:1}
+.plan-features li{
+display:flex;align-items:flex-start;gap:.45rem;
+font-size:.78rem;color:var(–ink);line-height:1.4;
+}
+.fi{flex-shrink:0;font-size:.85rem}
+.fi-y{color:#10b981}.fi-n{color:#cbd5e1}.fi-p{color:var(–gold)}
+
+.plan-cta{
+display:block;text-align:center;margin-top:1.5rem;
+padding:.7rem;border-radius:8px;font-weight:700;font-size:.83rem;
+text-decoration:none;border:2px solid;transition:all .2s;cursor:pointer;
+}
+.pc-ess{border-color:var(–muted);color:var(–muted)}.pc-ess:hover{background:var(–muted);color:#fff}
+.pc-pro{background:var(–tit);border-color:var(–tit);color:#fff}.pc-pro:hover{background:#4c1d95}
+.pc-emp{border-color:var(–conf);color:var(–conf)}.pc-emp:hover{background:var(–conf);color:#fff}
+.pc-ent{border-color:var(–lei);color:var(–lei)}.pc-ent:hover{background:var(–lei);color:#fff}
+
+.promo-callout{
+background:linear-gradient(135deg,#fff7ed,#fef3c7);
+border:2px solid #fb923c;border-radius:14px;
+padding:1.5rem 2rem;margin-top:2rem;
+display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1.25rem;
+}
+.promo-callout h3{font-family:var(–ff-display);font-size:1.15rem;color:var(–conf);margin-bottom:.25rem}
+.promo-callout p{font-size:.82rem;color:#92400e;line-height:1.55}
+.promo-callout .big-price{
+font-family:var(–ff-display);font-size:2.4rem;color:var(–conf);
+white-space:nowrap;line-height:1;
+}
+.promo-callout .big-price small{font-family:var(–ff-body);font-size:.8rem;font-weight:400;color:#92400e}
+
+.trust-strip{
+display:flex;flex-wrap:wrap;gap:1.25rem;
+margin-top:1.75rem;background:var(–white);border-radius:10px;
+padding:1.1rem 1.5rem;border:1px solid var(–border);
+}
+.trust-item{
+display:flex;align-items:center;gap:.45rem;
+font-size:.78rem;color:var(–muted);
+}
+.trust-item strong{color:var(–ink)}
+
+/* ═══════════════════════════════════════════
+SUBDOMINIOS / ARQUITETURA
+═══════════════════════════════════════════ */
+#arquitetura{background:var(–white)}
+
+.arch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem}
+.arch-card{
+border-radius:12px;border:2px solid var(–border);
+padding:1.5rem;transition:all .25s;text-decoration:none;display:block;
+}
+.arch-card:hover{transform:translateY(-3px);box-shadow:var(–shadow)}
+.arch-url{
+font-size:.7rem;font-family:monospace;font-weight:700;letter-spacing:.02em;
+padding:.3rem .6rem;border-radius:5px;display:inline-block;margin-bottom:1rem;
+}
+.arch-card h4{font-size:.95rem;font-weight:700;margin-bottom:.5rem;color:var(–ink)}
+.arch-card p{font-size:.78rem;color:var(–muted);line-height:1.6;margin:0}
+.arch-list{list-style:none;margin-top:.75rem;display:flex;flex-direction:column;gap:.3rem}
+.arch-list li{font-size:.75rem;color:var(–muted);display:flex;gap:.35rem;align-items:baseline}
+.arch-list li::before{content:‘→’;flex-shrink:0;color:var(–border)}
+
+.ac-lei   {border-top:4px solid #3b82f6} .ac-lei   .arch-url{background:var(–lei-lt);color:#1d4ed8}
+.ac-reg   {border-top:4px solid #10b981} .ac-reg   .arch-url{background:var(–regras-lt);color:#065f46}
+.ac-conf  {border-top:4px solid #ea580c} .ac-conf  .arch-url{background:var(–conf-lt);color:#c2410c}
+.ac-tit   {border-top:4px solid #7c3aed} .ac-tit   .arch-url{background:var(–tit-lt);color:#5b21b6}
+.ac-main  {border-top:4px solid var(–muted)} .ac-main .arch-url{background:var(–bg);color:var(–muted)}
+
+/* ═══════════════════════════════════════════
+COMO FUNCIONA
+═══════════════════════════════════════════ */
+#como-funciona{background:var(–bg)}
+
+.timeline-v{
+position:relative;
+max-width:680px;margin:0 auto;
+padding-left:3rem;
+}
+.timeline-v::before{
+content:’’;position:absolute;left:16px;top:6px;bottom:0;
+width:2px;
+background:linear-gradient(to bottom,#3b82f6,#10b981,#ea580c,#7c3aed,#f59e0b);
+}
+.tv-step{margin-bottom:2.75rem;position:relative}
+.tv-step:last-child{margin-bottom:0}
+.tv-dot{
+position:absolute;left:-3rem;top:2px;
+width:32px;height:32px;border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+font-size:.85rem;
+border:2px solid var(–white);
+box-shadow:0 0 0 2px currentColor;
+}
+.tvd-1{background:#dbeafe;color:#1d4ed8;box-shadow:0 0 0 2px #3b82f6}
+.tvd-2{background:#d1fae5;color:#065f46;box-shadow:0 0 0 2px #10b981}
+.tvd-3{background:#ffedd5;color:#c2410c;box-shadow:0 0 0 2px #ea580c}
+.tvd-4{background:#ede9fe;color:#5b21b6;box-shadow:0 0 0 2px #7c3aed}
+.tvd-5{background:#fef3c7;color:#92400e;box-shadow:0 0 0 2px #f59e0b}
+
+.tv-step h3{font-size:.97rem;font-weight:700;color:var(–ink);margin-bottom:.35rem}
+.tv-step p{font-size:.85rem;color:var(–muted);line-height:1.7;max-width:520px}
+.tv-step .step-tag{
+font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+color:var(–muted);margin-bottom:.25rem;
+}
+
+/* ═══════════════════════════════════════════
+DIFERENCIAIS
+═══════════════════════════════════════════ */
+#diferenciais{background:var(–lei)}
+#diferenciais .eyebrow{color:#93c5fd}
+#diferenciais h2{color:#fff}
+#diferenciais .section-header p{color:rgba(255,255,255,.6)}
+
+.dif-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.25rem}
+.dif-card{
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.1);
+border-radius:12px;padding:1.5rem;transition:all .25s;
+}
+.dif-card:hover{background:rgba(255,255,255,.09);transform:translateY(-2px)}
+.dif-ic{font-size:1.75rem;margin-bottom:.75rem}
+.dif-card h4{font-size:.92rem;font-weight:700;color:#fff;margin-bottom:.4rem}
+.dif-card p{font-size:.8rem;color:rgba(255,255,255,.6);line-height:1.65;margin:0}
+
+/* ═══════════════════════════════════════════
+QUEM SOMOS
+═══════════════════════════════════════════ */
+#sobre{background:var(–white)}
+
+.equipe-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin-top:.5rem}
+.eq-card{
+border:1px solid var(–border);border-radius:12px;
+padding:1.5rem;text-align:center;transition:all .25s;
+}
+.eq-card:hover{box-shadow:var(–shadow);transform:translateY(-2px)}
+.eq-ic{font-size:2rem;margin-bottom:.75rem}
+.eq-card h4{font-size:.95rem;font-weight:700;color:var(–ink);margin-bottom:.2rem}
+.eq-card .eq-role{font-size:.75rem;color:var(–muted);margin-bottom:.9rem}
+.eq-items{list-style:none;text-align:left}
+.eq-items li{
+font-size:.78rem;color:var(–muted);
+padding:.28rem 0;border-bottom:1px solid var(–bg);
+display:flex;gap:.4rem;align-items:baseline;
+}
+.eq-items li::before{content:’·’;color:var(–conf);flex-shrink:0}
+
+.quote-block{
+margin-top:3rem;text-align:center;
+background:var(–bg);border-radius:14px;padding:2rem;
+border-left:4px solid var(–conf);
+}
+.quote-block blockquote{
+font-family:var(–ff-display);font-style:italic;
+font-size:1.1rem;color:var(–ink);line-height:1.65;max-width:580px;margin:0 auto;
+}
+.quote-block cite{
+display:block;margin-top:.75rem;
+font-size:.72rem;color:var(–muted);font-style:normal;
+}
+
+/* ═══════════════════════════════════════════
+FAQ
+═══════════════════════════════════════════ */
+#faq{background:var(–bg)}
+
+.faq-wrap{max-width:740px;margin:0 auto}
+.faq-item{
+background:var(–white);border-radius:10px;
+border:1px solid var(–border);margin-bottom:.6rem;overflow:hidden;
+}
+.faq-q{
+display:flex;justify-content:space-between;align-items:center;gap:.75rem;
+padding:1rem 1.25rem;cursor:pointer;transition:background .2s;
+}
+.faq-q:hover{background:var(–bg)}
+.faq-q-text{font-weight:600;font-size:.875rem;color:var(–ink);line-height:1.4}
+.faq-ic{flex-shrink:0;font-size:1.1rem;color:var(–muted);transition:transform .3s}
+.faq-item.open .faq-ic{transform:rotate(45deg)}
+.faq-a{
+display:none;padding:.25rem 1.25rem 1.1rem;
+font-size:.84rem;color:var(–muted);line-height:1.7;
+}
+.faq-item.open .faq-a{display:block}
+
+/* ═══════════════════════════════════════════
+CTA FINAL
+═══════════════════════════════════════════ */
+#cta-final{
+background:linear-gradient(135deg,#5b21b6 0%,#4338ca 50%,#1e3a8a 100%);
+padding:5rem 1.5rem;text-align:center;
+}
+#cta-final .eyebrow{color:#c4b5fd;justify-content:center;display:flex}
+#cta-final h2{color:#fff;margin-bottom:.75rem}
+#cta-final p{color:rgba(255,255,255,.7);max-width:500px;margin:0 auto 2.25rem}
+.cta-buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:.75rem;margin-bottom:1.25rem}
+.offer-tag{
+display:inline-block;
+background:rgba(234,88,12,.3);border:1px solid rgba(234,88,12,.4);
+color:#fed7aa;font-size:.78rem;font-weight:600;
+padding:.45rem 1.25rem;border-radius:100px;
+}
+
+/* ═══════════════════════════════════════════
+FOOTER
+═══════════════════════════════════════════ */
+footer{background:var(–lei);color:rgba(255,255,255,.55);padding:3rem 1.5rem 1.75rem}
+.footer-grid{
+max-width:1120px;margin:0 auto;
+display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+gap:2.5rem;margin-bottom:2.5rem;
+}
+footer h5{color:#fff;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.9rem}
+footer a{color:rgba(255,255,255,.5);text-decoration:none;display:block;font-size:.8rem;padding:.18rem 0;transition:color .2s}
+footer a:hover{color:#fff}
+.footer-logo{font-family:var(–ff-display);font-size:1.05rem;color:#fff;margin-bottom:.4rem}
+.footer-tagline{font-size:.72rem;margin-bottom:.75rem}
+.footer-cnpj{font-size:.65rem;opacity:.35;line-height:1.6}
+.footer-bottom{
+max-width:1120px;margin:0 auto;
+border-top:1px solid rgba(255,255,255,.08);
+padding-top:1.25rem;
+display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem;
+font-size:.72rem;
+}
+.footer-laws{display:flex;flex-wrap:wrap;gap:.5rem}
+.fl{background:rgba(255,255,255,.06);border-radius:4px;padding:.18rem .55rem;font-size:.64rem}
+
+/* ═══ WHATSAPP FLOAT ═══ */
+.wa-float{
+position:fixed;bottom:1.75rem;right:1.75rem;z-index:999;
+width:58px;height:58px;border-radius:50%;background:var(–wa);color:#fff;
+display:flex;align-items:center;justify-content:center;font-size:1.5rem;
+text-decoration:none;
+box-shadow:0 4px 20px rgba(37,211,102,.45);transition:all .25s;
+}
+.wa-float:hover{transform:scale(1.1);box-shadow:0 8px 32px rgba(37,211,102,.65)}
+.wa-badge{
+position:absolute;top:-4px;right:-4px;
+background:var(–conf);color:#fff;
+font-size:.5rem;font-weight:700;border-radius:100px;
+padding:.12rem .38rem;border:2px solid #fff;letter-spacing:0;
+}
+
+/* ═══ SCROLL REVEAL ═══ */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .55s ease,transform .55s ease}
+.reveal.visible{opacity:1;transform:none}
+.rd1{transition-delay:.08s}.rd2{transition-delay:.16s}.rd3{transition-delay:.24s}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:700px){
+.main-nav .nav-group{display:none}
+.plans-grid{grid-template-columns:1fr}
+.pillar-badges{gap:.4rem}
+}
+</style>
+
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+
+<header id="header">
+  <div class="header-wrap">
+    <a href="#" class="logo-link">
+      <span class="logo-main">4 Pilares LGPD</span>
+      <span class="logo-sub">Lei · Regras · Conformidade · Titular</span>
+    </a>
+    <nav class="main-nav">
+      <a href="#pilares" class="pnav-lei">Lei</a>
+      <a href="#pilares" class="pnav-reg">Regras</a>
+      <a href="#pilares" class="pnav-conf">Conformidade</a>
+      <a href="#pilares" class="pnav-tit">Titular</a>
+      <div class="nav-sep"></div>
+      <div class="nav-group" style="display:flex;gap:.1rem">
+        <a href="#planos">Planos</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <a href="https://wa.me/5563984381782?text=Quero%20contratar%20DPO%20por%20R%24299" target="_blank" class="btn-nav">Contratar</a>
+    </nav>
+  </div>
+</header>
+
+<div class="promo-ticker">
+  🔥 PROMOÇÃO LANÇAMENTO — Plano Básico ANPD <strong>R$ 150/mês</strong> por 12 meses (50% OFF · normal R$299/mês) &nbsp;<span>· Válida até 31/03/2026 · Exclusivo Agentes de Pequeno Porte</span>
+</div>
+
+<!-- ═══ HERO ═══ -->
+
+<section class="hero">
+  <div class="hero-inner container">
+    <div>
+      <div class="hero-badge"><span class="pulse"></span> Consultoria LGPD · Palmas-TO · 100% Remoto</div>
+      <h1><em>4 Pilares LGPD</em> —<br>Adequação Completa à Proteção de Dados</h1>
+      <p class="hero-desc">Solução corporativa baseada em 4 pilares fundamentais: Lei, Regras, Conformidade e Direitos do Titular. DPO certificado · suporte jurídico e técnico · adequação em 30–90 dias.</p>
+      <div class="hero-ctas">
+        <a href="checkout.html" class="btn btn-green btn-lg">🔍 Fazer Diagnóstico Gratuito</a>
+        <a href="#planos" class="btn btn-outline-white">Ver Planos</a>
+      </div>
+      <div class="pillar-badges">
+        <a href="#pilares" class="pb pb-lei" onclick="activePilar('lei')">🏛️ Lei</a>
+        <a href="#pilares" class="pb pb-reg" onclick="activePilar('regras')">📋 Regras</a>
+        <a href="#pilares" class="pb pb-conf" onclick="activePilar('conformidade')">✅ Conformidade</a>
+        <a href="#pilares" class="pb pb-tit" onclick="activePilar('titular')">👤 Titular</a>
+      </div>
+    </div>
+    <div>
+      <div class="hero-card">
+        <div class="hero-card-title">Sua empresa precisa de DPO?</div>
+        <p class="hero-card-sub">Descubra em 3 perguntas baseadas na Resolução CD/ANPD nº 2/2022.</p>
+        <ul class="criteria-list">
+          <li>
+            <div class="crit-icon ci-1">1</div>
+            <span>Receita bruta anual de até <strong style="color:#fff">R$ 78 milhões</strong></span>
+          </li>
+          <li>
+            <div class="crit-icon ci-2">2</div>
+            <span>Trata dados de até <strong style="color:#fff">50 mil titulares</strong>/ano</span>
+          </li>
+          <li>
+            <div class="crit-icon ci-3">3</div>
+            <span>Não trata <strong style="color:#fff">dados sensíveis</strong> em larga escala</span>
+          </li>
+        </ul>
+        <a href="checkout.html" class="btn btn-green" style="width:100%;justify-content:center;">Iniciar Diagnóstico →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ DIAGNÓSTICO ═══ -->
+
+<section class="section" id="diagnostico">
+  <div class="container">
+    <div class="section-header center">
+      <div class="eyebrow" style="color:#93c5fd;justify-content:center">Diagnóstico Inteligente</div>
+      <h2 style="color:#fff">Sua empresa tem obrigação legal de ter DPO?</h2>
+      <p style="color:rgba(255,255,255,.65)">3 perguntas baseadas nos critérios da Resolução CD/ANPD nº 2/2022 para Agentes de Tratamento de Pequeno Porte</p>
+    </div>
+
+```
+<div class="diag-wrapper">
+  <div class="diag-progress"><div class="diag-progress-fill" id="diagProgress"></div></div>
+  <div class="diag-body" id="diagBody">
+
+    <!-- STEP 1: RECEITA -->
+    <div class="diag-step active" id="step1">
+      <div class="step-num">Critério 1 de 3 — Receita Bruta (Art. 2º, I da Res. ANPD 2/2022)</div>
+      <h3>Qual a receita bruta anual da sua empresa no Brasil?</h3>
+      <p class="step-desc">Considere o faturamento bruto no último ano-calendário, excluindo vendas canceladas e descontos incondicionais.</p>
+      <div class="diag-options">
+        <label class="diag-opt" onclick="selectOpt(this,'receita','ate_78m')">
+          <input type="radio" name="receita" value="ate_78m">
+          <div>
+            <div class="opt-label">✅ Até R$ 78 milhões/ano</div>
+            <div class="opt-sub">ME, EPP, MEI, Simples Nacional ou qualquer porte com faturamento nesse limite</div>
+          </div>
+        </label>
+        <label class="diag-opt" onclick="selectOpt(this,'receita','acima_78m')">
+          <input type="radio" name="receita" value="acima_78m">
+          <div>
+            <div class="opt-label">❌ Acima de R$ 78 milhões/ano</div>
+            <div class="opt-sub">Médias e grandes empresas com faturamento superior ao limite</div>
+          </div>
+        </label>
+        <label class="diag-opt" onclick="selectOpt(this,'receita','nao_sei')">
+          <input type="radio" name="receita" value="nao_sei">
+          <div>
+            <div class="opt-label">⚠️ Não sei / prefiro não informar</div>
+            <div class="opt-sub">Podemos ajudar a verificar após o diagnóstico</div>
+          </div>
+        </label>
+      </div>
+      <div class="diag-nav">
+        <span></span>
+        <button class="btn-diag" onclick="goStep(2)" id="btn-step1" disabled>Próximo →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: TITULARES -->
+    <div class="diag-step" id="step2">
+      <div class="step-num">Critério 2 de 3 — Volume de Titulares (Art. 2º, II da Res. ANPD 2/2022)</div>
+      <h3>Quantos titulares de dados sua empresa tratou no último ano?</h3>
+      <p class="step-desc">Inclua: clientes (PF), colaboradores, fornecedores PF, leads, usuários digitais. <strong style="color:#7dd3fc">Exclua</strong>: contatos comerciais B2B (e-mail/telefone corporativo de pessoas jurídicas).</p>
+
+      <div class="tit-input-wrap">
+        <label class="tit-input-label">Estimativa de titulares tratados/ano</label>
+        <input type="number" class="tit-input" id="titInput" placeholder="ex: 1200" min="0"
+          oninput="checkTitInput()">
+        <div class="tit-hint">
+          💡 <strong>Como calcular:</strong> clientes PF + funcionários + fornecedores PF + leads ativos + usuários do site/app
+        </div>
+      </div>
+
+      <div class="diag-options" style="margin-top:.5rem">
+        <label class="diag-opt" id="tit-opt-1" onclick="selectTit('ate_50k',this)">
+          <input type="radio" name="titulares" value="ate_50k">
+          <div>
+            <div class="opt-label">✅ Até 50.000 titulares/ano</div>
+            <div class="opt-sub">Dentro do limite para Agente de Pequeno Porte</div>
+          </div>
+        </label>
+        <label class="diag-opt" id="tit-opt-2" onclick="selectTit('acima_50k',this)">
+          <input type="radio" name="titulares" value="acima_50k">
+          <div>
+            <div class="opt-label">❌ Mais de 50.000 titulares/ano</div>
+            <div class="opt-sub">Acima do limite — obrigações completas se aplicam</div>
+          </div>
+        </label>
+      </div>
+
+      <div class="diag-nav">
+        <button class="diag-back" onclick="goStep(1)">← Voltar</button>
+        <button class="btn-diag" onclick="goStep(3)" id="btn-step2" disabled>Próximo →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: DADOS SENSÍVEIS -->
+    <div class="diag-step" id="step3">
+      <div class="step-num">Critério 3 de 3 — Dados Sensíveis (Art. 2º, III da Res. ANPD 2/2022)</div>
+      <h3>Sua empresa trata dados sensíveis em larga escala?</h3>
+      <p class="step-desc">Dados sensíveis (Art. 5º, II LGPD) são protegidos com maior rigor. Selecione os tipos que sua empresa trata e indique a escala.</p>
+
+      <div style="margin-bottom:1.25rem">
+        <div class="tit-input-label" style="margin-bottom:.6rem">Tipos de dados sensíveis tratados (marque os aplicáveis):</div>
+        <div class="sens-grid">
+          <label class="sens-item"><input type="checkbox" name="sens" value="racial"> <label>Origem racial ou étnica</label></label>
+          <label class="sens-item"><input type="checkbox" name="sens" value="religiao"> <label>Convicção religiosa</label></label>
+          <label class="sens-item"><input type="checkbox" name="sens" value="politica"> <label>Opinião política</label></label>
+          <label class="sens-item"><input type="checkbox" name="sens" value="sindicato"> <label>Filiação sindical/política</label></label>
+          <label class="sens-item"><input type="checkbox" name="sens" value="saude"> <label>Dados de saúde</label></label>
+          <label class="sens-item"><input type="checkbox" name="sens" value="sexual"> <label>Vida sexual</label></label>
+          <label class="sens-item"><input type="checkbox" name="sens" value="genetico"> <label>Dados genéticos</label></label>
+          <label class="sens-item"><input type="checkbox" name="sens" value="biometrico"> <label>Dados biométricos</label></label>
+          <label class="sens-item"><input type="checkbox" name="sens" value="menor"> <label>Crianças/adolescentes</label></label>
+        </div>
+      </div>
+
+      <div class="diag-options" id="sens-scale-opts">
+        <label class="diag-opt" onclick="selectOpt(this,'escala','nao_aplica')">
+          <input type="radio" name="escala" value="nao_aplica">
+          <div>
+            <div class="opt-label">✅ Não tratamos dados sensíveis</div>
+            <div class="opt-sub">Nenhuma das categorias acima se aplica ao nosso negócio</div>
+          </div>
+        </label>
+        <label class="diag-opt" onclick="selectOpt(this,'escala','reduzida')">
+          <input type="radio" name="escala" value="reduzida">
+          <div>
+            <div class="opt-label">⚠️ Tratamos em escala reduzida</div>
+            <div class="opt-sub">Apenas para obrigação legal (ex: ASO/saúde em folha de pagamento) · &lt;5% dos titulares · sem uso secundário</div>
+          </div>
+        </label>
+        <label class="diag-opt" onclick="selectOpt(this,'escala','larga')">
+          <input type="radio" name="escala" value="larga">
+          <div>
+            <div class="opt-label">❌ Tratamos em larga escala</div>
+            <div class="opt-sub">Atividade principal · &gt;5% dos titulares · compartilhamento ou analytics envolvido</div>
+          </div>
+        </label>
+      </div>
+
+      <div class="diag-nav">
+        <button class="diag-back" onclick="goStep(2)">← Voltar</button>
+        <button class="btn-diag" onclick="calcResult()" id="btn-step3" disabled>Ver Resultado →</button>
+      </div>
+    </div>
+
+  </div><!-- /diag-body -->
+
+  <!-- RESULTADO -->
+  <div id="diag-result">
+    <div class="result-header">
+      <div class="result-icon" id="resIcon">🏆</div>
+      <div>
+        <h3 id="resTitle">Resultado</h3>
+        <p id="resDesc"></p>
+      </div>
+    </div>
+
+    <div class="crit-summary">
+      <div class="crit-row">
+        <span class="crit-row-label">Critério 1 — Receita bruta ≤ R$ 78M</span>
+        <span class="crit-badge" id="res-crit1">—</span>
+      </div>
+      <div class="crit-row">
+        <span class="crit-row-label">Critério 2 — Titulares ≤ 50 mil/ano</span>
+        <span class="crit-badge" id="res-crit2">—</span>
+      </div>
+      <div class="crit-row">
+        <span class="crit-row-label">Critério 3 — Sem dados sensíveis em larga escala</span>
+        <span class="crit-badge" id="res-crit3">—</span>
+      </div>
+    </div>
+
+    <div id="res-modules-wrap">
+      <div class="modules-title">📦 Módulos recomendados para sua empresa</div>
+      <div class="modules-grid" id="resModules"></div>
+    </div>
+
+    <div class="result-ctas">
+      <a href="https://wa.me/5563984381782?text=Fiz%20o%20diagn%C3%B3stico%20e%20quero%20saber%20mais" target="_blank" class="btn btn-green">💬 Falar com Especialista</a>
+      <a href="#planos" class="btn btn-outline-white" onclick="closeDiag()">Ver Todos os Planos</a>
+      <button class="btn btn-outline-white" onclick="resetDiag()" style="font-size:.8rem">↩ Refazer Diagnóstico</button>
+    </div>
+  </div>
+
+</div><!-- /diag-wrapper -->
+```
+
+  </div>
+</section>
+
+<!-- ═══ OS 4 PILARES ═══ -->
+
+<section class="section" id="pilares">
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow" style="color:var(--conf)">Nossa Metodologia</div>
+      <h2>Os 4 Pilares da Proteção de Dados</h2>
+      <p>Navegue por cada pilar para entender o que entregamos e como se relaciona com sua legislação.</p>
+    </div>
+
+```
+<div class="pilares-nav">
+  <button class="pnav-btn pnav-lei active" onclick="activePilar('lei',this)">🏛️ Pilar 1 — Lei</button>
+  <button class="pnav-btn pnav-reg"  onclick="activePilar('regras',this)">📋 Pilar 2 — Regras</button>
+  <button class="pnav-btn pnav-cf"   onclick="activePilar('conformidade',this)">✅ Pilar 3 — Conformidade</button>
+  <button class="pnav-btn pnav-ti"   onclick="activePilar('titular',this)">👤 Pilar 4 — Titular</button>
+</div>
+
+<div class="pilares-panels">
+
+  <!-- LEI -->
+  <div class="pilar-panel active" id="panel-lei">
+    <div class="pilar-main">
+      <div class="pilar-tag" style="color:#3b82f6">Pilar 1</div>
+      <h2>Lei — Base Legal e Legislação</h2>
+      <p class="pilar-intro">Compreensão profunda das três leis que regem a proteção de dados no Brasil. Mapeamos obrigações, identificamos bases legais e monitoramos atualizações regulatórias continuamente.</p>
+      <div class="pilar-deliverables">
+        <div class="del"><span class="del-check" style="color:#3b82f6">✓</span> Análise de aplicabilidade legal</div>
+        <div class="del"><span class="del-check" style="color:#3b82f6">✓</span> Identificação de bases legais</div>
+        <div class="del"><span class="del-check" style="color:#3b82f6">✓</span> Mapeamento de obrigações regulatórias</div>
+        <div class="del"><span class="del-check" style="color:#3b82f6">✓</span> Monitoramento legislativo contínuo</div>
+        <div class="del"><span class="del-check" style="color:#3b82f6">✓</span> Adequação às obrigações simplificadas (ANPD)</div>
+        <div class="del"><span class="del-check" style="color:#3b82f6">✓</span> Orientação sobre Estatuto Digital (menores)</div>
+      </div>
+      <div class="pilar-laws">
+        <h4>Legislação coberta</h4>
+        <div class="law-item"><span class="law-name">Lei 13.709/2018 — LGPD</span><span class="law-num">Proteção de dados pessoais</span></div>
+        <div class="law-item"><span class="law-name">Lei 12.965/2014 — Marco Civil</span><span class="law-num">Direitos digitais na internet</span></div>
+        <div class="law-item"><span class="law-name">Lei 15.211/2025 — Estatuto Digital</span><span class="law-num">Proteção de crianças e adolescentes</span></div>
+        <div class="law-item"><span class="law-name">Res. CD/ANPD nº 2/2022</span><span class="law-num">Agentes de Pequeno Porte</span></div>
+      </div>
+      <div class="subdomain-chip">🔗 lei.sajodiagnos.club</div>
+    </div>
+    <div class="pilar-side">
+      <div class="side-card" style="border-color:#dbeafe">
+        <h4 style="color:#1d4ed8">FAQ — Pilar Lei</h4>
+        <div class="accordion-item open">
+          <button class="accordion-trigger" onclick="toggleAcc(this)">
+            <span class="accordion-trigger-text">Toda empresa precisa de DPO?</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">A LGPD exige a indicação de DPO para controladores de dados. Agentes de Pequeno Porte têm obrigações simplificadas, mas ainda devem indicar um encarregado — nossa ferramenta de diagnóstico te diz exatamente seu caso.</div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="toggleAcc(this)">
+            <span class="accordion-trigger-text">O Estatuto Digital me afeta?</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">Se sua empresa coleta, processa ou compartilha dados de pessoas menores de 18 anos, a Lei 15.211/2025 se aplica com obrigações adicionais reforçadas — inclusive medidas técnicas específicas e base legal própria.</div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="toggleAcc(this)">
+            <span class="accordion-trigger-text">Quais são as multas da LGPD?</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">Até 2% do faturamento, limitado a R$ 50 milhões por infração. Além das multas, a ANPD pode determinar bloqueio de dados, suspensão de banco de dados e divulgação pública da infração.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGRAS -->
+  <div class="pilar-panel" id="panel-regras">
+    <div class="pilar-main">
+      <div class="pilar-tag" style="color:#10b981">Pilar 2</div>
+      <h2>Regras — Governança e Processos</h2>
+      <p class="pilar-intro">Implementação de regras, políticas e procedimentos para tratamento adequado de dados pessoais. Toda a documentação técnica e jurídica que sua empresa precisa.</p>
+      <div class="pilar-deliverables">
+        <div class="del"><span class="del-check" style="color:#10b981">✓</span> Política de Privacidade e Termos de Uso</div>
+        <div class="del"><span class="del-check" style="color:#10b981">✓</span> RIPD — Relatório de Impacto</div>
+        <div class="del"><span class="del-check" style="color:#10b981">✓</span> ROPA — Registro de Operações</div>
+        <div class="del"><span class="del-check" style="color:#10b981">✓</span> LIA — Legítimo Interesse</div>
+        <div class="del"><span class="del-check" style="color:#10b981">✓</span> DIA — Data Impact Assessment</div>
+        <div class="del"><span class="del-check" style="color:#10b981">✓</span> Contratos DPA/NDA com operadores</div>
+        <div class="del"><span class="del-check" style="color:#10b981">✓</span> Matriz de responsabilidades</div>
+        <div class="del"><span class="del-check" style="color:#10b981">✓</span> POPs — Procedimentos Operacionais</div>
+      </div>
+      <div class="subdomain-chip">🔗 regras.sajodiagnos.club</div>
+    </div>
+    <div class="pilar-side">
+      <div class="side-card" style="border-color:#d1fae5">
+        <h4 style="color:#065f46">FAQ — Pilar Regras</h4>
+        <div class="accordion-item open">
+          <button class="accordion-trigger" onclick="toggleAcc(this)">
+            <span class="accordion-trigger-text">O que é RIPD e quando é obrigatório?</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">O Relatório de Impacto à Proteção de Dados (RIPD) é exigido quando o tratamento pode gerar riscos às liberdades dos titulares. Para Agentes de Pequeno Porte, é obrigatório apenas quando houver alto risco.</div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="toggleAcc(this)">
+            <span class="accordion-trigger-text">Preciso de contrato DPA com fornecedores?</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">Sim, se seus fornecedores processam dados pessoais em seu nome (operadores). O Acordo de Processamento de Dados (DPA) é exigido pela LGPD e deve especificar obrigações de segurança e confidencialidade.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFORMIDADE -->
+  <div class="pilar-panel" id="panel-conformidade">
+    <div class="pilar-main">
+      <div class="pilar-tag" style="color:var(--conf)">Pilar 3</div>
+      <h2>Conformidade — Certificação e DPO</h2>
+      <p class="pilar-intro">Garantia de que sua empresa está em conformidade com as leis e melhores práticas. DPO certificado registrado na ANPD, auditorias e melhoria contínua.</p>
+      <div class="pilar-deliverables">
+        <div class="del"><span class="del-check" style="color:var(--conf)">✓</span> DPO certificado registrado ANPD</div>
+        <div class="del"><span class="del-check" style="color:var(--conf)">✓</span> Auditorias periódicas (GAP Analysis)</div>
+        <div class="del"><span class="del-check" style="color:var(--conf)">✓</span> Assessment de maturidade</div>
+        <div class="del"><span class="del-check" style="color:var(--conf)">✓</span> Planos de ação corretiva</div>
+        <div class="del"><span class="del-check" style="color:var(--conf)">✓</span> Treinamentos e capacitação</div>
+        <div class="del"><span class="del-check" style="color:var(--conf)">✓</span> Programa de governança em privacidade</div>
+      </div>
+      <div class="subdomain-chip">🔗 conformidade.sajodiagnos.club</div>
+    </div>
+    <div class="pilar-side">
+      <div class="side-card" style="border-color:var(--conf-lt)">
+        <h4 style="color:var(--conf)">FAQ — Pilar Conformidade</h4>
+        <div class="accordion-item open">
+          <button class="accordion-trigger" onclick="toggleAcc(this)">
+            <span class="accordion-trigger-text">O DPO precisa ser funcionário da empresa?</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">Não. A LGPD permite que o DPO seja uma pessoa natural ou jurídica externa à empresa. Nosso serviço oferece DPO as a Service — certificado, registrado na ANPD e com procuração para representar sua empresa.</div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="toggleAcc(this)">
+            <span class="accordion-trigger-text">Com que frequência são as auditorias?</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">Depende do plano contratado: Profissional (1/ano), Empresarial (2/ano), Enterprise (trimestral). O plano Essencial e Básico ANPD não incluem auditoria formal, mas incluem monitoramento contínuo.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TITULAR -->
+  <div class="pilar-panel" id="panel-titular">
+    <div class="pilar-main">
+      <div class="pilar-tag" style="color:var(--tit)">Pilar 4</div>
+      <h2>Titular — Direitos e Transparência</h2>
+      <p class="pilar-intro">Estrutura completa para garantir os direitos dos titulares de dados e transparência no tratamento. Canal de atendimento, gestão de requisições e portal de privacidade.</p>
+      <div class="pilar-deliverables">
+        <div class="del"><span class="del-check" style="color:var(--tit)">✓</span> Canal de atendimento titulares</div>
+        <div class="del"><span class="del-check" style="color:var(--tit)">✓</span> Gestão de requisições ANPD</div>
+        <div class="del"><span class="del-check" style="color:var(--tit)">✓</span> Portal de privacidade público</div>
+        <div class="del"><span class="del-check" style="color:var(--tit)">✓</span> Gestão de incidentes de segurança</div>
+        <div class="del"><span class="del-check" style="color:var(--tit)">✓</span> Notificações obrigatórias à ANPD</div>
+        <div class="del"><span class="del-check" style="color:var(--tit)">✓</span> Workflow de resposta (acesso, exclusão, correção)</div>
+      </div>
+      <div class="subdomain-chip">🔗 titular.sajodiagnos.club</div>
+    </div>
+    <div class="pilar-side">
+      <div class="side-card" style="border-color:var(--tit-lt)">
+        <h4 style="color:var(--tit)">FAQ — Pilar Titular</h4>
+        <div class="accordion-item open">
+          <button class="accordion-trigger" onclick="toggleAcc(this)">
+            <span class="accordion-trigger-text">Em quanto tempo devo responder ao titular?</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">A LGPD determina resposta em prazo razoável. A ANPD orienta até 15 dias úteis para a maioria das requisições. Nosso workflow garante que nenhuma solicitação fique sem resposta dentro do prazo legal.</div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger" onclick="toggleAcc(this)">
+            <span class="accordion-trigger-text">O que fazer em caso de vazamento de dados?</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-body">A LGPD exige comunicação à ANPD e aos titulares em prazo razoável (entendido como 2 dias úteis para incidentes graves). Nosso serviço inclui protocolo de resposta a incidentes e suporte na comunicação obrigatória.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /pilares-panels -->
+```
+
+  </div>
+</section>
+
+<!-- ═══ ARQUITETURA DE SUBDOMÍNIOS ═══ -->
+
+<section class="section section-bg" id="arquitetura">
+  <div class="container">
+    <div class="section-header center reveal">
+      <div class="eyebrow" style="color:var(--tit)">Arquitetura Modular</div>
+      <h2>Estrutura de Subdomínios</h2>
+      <p>Cada pilar tem uma área dedicada — navegação direta ao conteúdo que você precisa.</p>
+    </div>
+    <div class="arch-grid">
+      <div class="arch-card ac-main reveal">
+        <div class="arch-url">sajodiagnos.club</div>
+        <h4>Site Principal</h4>
+        <p>Portal central com diagnóstico, planos e apresentação da metodologia.</p>
+        <ul class="arch-list">
+          <li>Diagnóstico gratuito</li>
+          <li>Tabela de planos</li>
+          <li>Checkout e contratação</li>
+        </ul>
+      </div>
+      <div class="arch-card ac-lei reveal rd1">
+        <div class="arch-url">lei.sajodiagnos.club</div>
+        <h4>Pilar LEI</h4>
+        <p>Repositório legislativo completo com textos, atualizações e guias.</p>
+        <ul class="arch-list">
+          <li>LGPD completa + comentada</li>
+          <li>Marco Civil da Internet</li>
+          <li>Estatuto Digital (Lei 15.211)</li>
+          <li>Atualizações regulatórias</li>
+        </ul>
+      </div>
+      <div class="arch-card ac-reg reveal rd2">
+        <div class="arch-url">regras.sajodiagnos.club</div>
+        <h4>Pilar REGRAS</h4>
+        <p>Biblioteca de modelos, templates e frameworks de governança.</p>
+        <ul class="arch-list">
+          <li>Biblioteca de políticas</li>
+          <li>Modelos RIPD, ROPA, LIA, DIA</li>
+          <li>Templates DPA/NDA</li>
+          <li>POPs e procedimentos</li>
+        </ul>
+      </div>
+      <div class="arch-card ac-conf reveal rd1">
+        <div class="arch-url">conformidade.sajodiagnos.club</div>
+        <h4>Pilar CONFORMIDADE</h4>
+        <p>Portal DPO, auditorias e ferramentas de assessment.</p>
+        <ul class="arch-list">
+          <li>Portal DPO cliente</li>
+          <li>GAP Analysis self-service</li>
+          <li>Relatórios de auditoria</li>
+          <li>Certificações obtidas</li>
+        </ul>
+      </div>
+      <div class="arch-card ac-tit reveal rd2">
+        <div class="arch-url">titular.sajodiagnos.club</div>
+        <h4>Pilar TITULAR</h4>
+        <p>Portal público de privacidade e canal de requisições dos titulares.</p>
+        <ul class="arch-list">
+          <li>Canal de requisições público</li>
+          <li>Exercício de direitos LGPD</li>
+          <li>FAQ para titulares</li>
+          <li>Política de privacidade</li>
+        </ul>
+      </div>
+      <div class="arch-card reveal rd3" style="border-top:4px solid var(--gold)">
+        <div class="arch-url" style="background:#fef3c7;color:#92400e">painel.sajodiagnos.club</div>
+        <h4>Painel do Cliente</h4>
+        <p>Área restrita para acompanhamento em tempo real dos serviços.</p>
+        <ul class="arch-list">
+          <li>Status de adequação</li>
+          <li>Documentos gerados</li>
+          <li>Chamados e SLA</li>
+          <li>Treinamentos realizados</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PLANOS ═══ -->
+
+<section class="section" id="planos">
+  <div class="container">
+    <div class="section-header center reveal">
+      <div class="eyebrow" style="color:var(--tit)">Transparência Total</div>
+      <h2>Planos Baseados nos 4 Pilares</h2>
+      <p>Todos os planos incluem os 4 pilares — a diferença está na profundidade e escala dos serviços.</p>
+    </div>
+
+```
+<div class="plans-grid">
+  <!-- BÁSICO ANPD -->
+  <div class="plan-card reveal">
+    <div class="plan-name">Básico ANPD</div>
+    <div style="display:flex;align-items:baseline;gap:.4rem;margin-bottom:.1rem">
+      <div class="plan-price"><sup>R$</sup>150<small>/mês*</small></div>
+      <span style="font-size:.75rem;color:var(--muted);text-decoration:line-through">R$299</span>
+    </div>
+    <div style="display:inline-block;background:#fff7ed;border:1px solid #fb923c;color:#c2410c;font-size:.65rem;font-weight:700;padding:.15rem .6rem;border-radius:100px;margin-bottom:.4rem">🔥 50% OFF por 12 meses</div>
+    <div class="plan-size">Agentes de Pequeno Porte · Após 12 meses: R$299/mês</div>
+    <div class="plan-divider"></div>
+    <ul class="plan-features">
+      <li><span class="fi fi-y">✓</span> DPO certificado registrado ANPD</li>
+      <li><span class="fi fi-y">✓</span> Obrigações mínimas Res. ANPD 2/2022</li>
+      <li><span class="fi fi-y">✓</span> Política de Privacidade simplificada</li>
+      <li><span class="fi fi-y">✓</span> RIPD e ROPA simplificados</li>
+      <li><span class="fi fi-y">✓</span> Canal básico de titulares</li>
+      <li><span class="fi fi-y">✓</span> Treinamento 4h/ano</li>
+      <li><span class="fi fi-y">✓</span> Suporte e-mail (48h úteis)</li>
+      <li><span class="fi fi-n">✗</span> Compliance avançado</li>
+      <li><span class="fi fi-n">✗</span> Assessoria jurídica/regulatória</li>
+      <li><span class="fi fi-n">✗</span> Certificação e auditorias</li>
+    </ul>
+    <a href="checkout.html" class="plan-cta pc-ess">Contratar Promoção</a>
+    <div style="font-size:.67rem;color:var(--muted);margin-top:.5rem;text-align:center;line-height:1.4">*Exclusivo Agentes Pequeno Porte<br>Qualificação obrigatória em 7 dias</div>
+  </div>
+
+  <!-- ESSENCIAL COMPLETO -->
+  <div class="plan-card reveal rd1">
+    <div class="plan-name">Essencial Completo</div>
+    <div class="plan-price"><sup>R$</sup>997<small>/mês</small></div>
+    <div class="plan-size">Até 10 colaboradores · 12 meses</div>
+    <div class="plan-divider"></div>
+    <ul class="plan-features">
+      <li><span class="fi fi-y">✓</span> DPO dedicado registrado ANPD</li>
+      <li><span class="fi fi-y">✓</span> <strong>Compliance completo</strong> (4 pilares)</li>
+      <li><span class="fi fi-y">✓</span> Assessoria <strong>regulatória e jurídica</strong></li>
+      <li><span class="fi fi-y">✓</span> <strong>Certificação</strong> de conformidade</li>
+      <li><span class="fi fi-y">✓</span> Política, RIPD, ROPA completos</li>
+      <li><span class="fi fi-y">✓</span> Canal + Workflow titulares</li>
+      <li><span class="fi fi-y">✓</span> <strong>Treinamentos</strong> online (2×/ano)</li>
+      <li><span class="fi fi-y">✓</span> Suporte e-mail (48h úteis)</li>
+      <li><span class="fi fi-n">✗</span> Auditoria formal</li>
+      <li><span class="fi fi-n">✗</span> Estatuto Digital</li>
+    </ul>
+    <a href="checkout.html?plano=essencial" class="plan-cta pc-ess">Contratar</a>
+  </div>
+
+  <!-- PROFISSIONAL -->
+  <div class="plan-card featured reveal rd2">
+    <div class="featured-badge">⭐ Mais Popular</div>
+    <div class="plan-name">Profissional</div>
+    <div class="plan-price"><sup>R$</sup>1.997<small>/mês</small></div>
+    <div class="plan-size">11–50 colaboradores · 12 meses</div>
+    <div class="plan-divider"></div>
+    <ul class="plan-features">
+      <li><span class="fi fi-y">✓</span> Tudo do Essencial Completo</li>
+      <li><span class="fi fi-y">✓</span> DPO dedicado + backup</li>
+      <li><span class="fi fi-y">✓</span> RIPD, ROPA e LIA</li>
+      <li><span class="fi fi-y">✓</span> Todas as políticas e contratos DPA</li>
+      <li><span class="fi fi-y">✓</span> Portal completo titulares</li>
+      <li><span class="fi fi-y">✓</span> 4 treinamentos + 1 presencial (8h)</li>
+      <li><span class="fi fi-y">✓</span> Suporte WhatsApp (24h úteis)</li>
+      <li><span class="fi fi-y">✓</span> <strong>1 auditoria/ano</strong></li>
+      <li><span class="fi fi-y">✓</span> <strong>5h assessoria jurídica</strong> inclusa</li>
+      <li><span class="fi fi-n">✗</span> Estatuto Digital (+R$1.500)</li>
+    </ul>
+    <a href="checkout.html?plano=profissional" class="plan-cta pc-pro">Contratar</a>
+  </div>
+
+  <!-- EMPRESARIAL -->
+  <div class="plan-card reveal rd3">
+    <div class="plan-name">Empresarial</div>
+    <div class="plan-price"><sup>R$</sup>3.997<small>/mês</small></div>
+    <div class="plan-size">51–200 colaboradores · 12 meses</div>
+    <div class="plan-divider"></div>
+    <ul class="plan-features">
+      <li><span class="fi fi-y">✓</span> Tudo do Profissional</li>
+      <li><span class="fi fi-y">✓</span> DPO + backup registrado ANPD</li>
+      <li><span class="fi fi-y">✓</span> RIPD, ROPA, LIA e DIA</li>
+      <li><span class="fi fi-y">✓</span> Treinamentos ilimitados</li>
+      <li><span class="fi fi-y">✓</span> Suporte prioritário (4h)</li>
+      <li><span class="fi fi-y">✓</span> <strong>2 auditorias/ano</strong></li>
+      <li><span class="fi fi-y">✓</span> <strong>15h assessoria jurídica</strong> inclusa</li>
+      <li><span class="fi fi-y">✓</span> <strong>Estatuto Digital</strong> incluso</li>
+      <li><span class="fi fi-y">✓</span> Contratos DPA customizados</li>
+      <li><span class="fi fi-y">✓</span> Certificação empresarial</li>
+    </ul>
+    <a href="checkout.html?plano=empresarial" class="plan-cta pc-emp">Contratar</a>
+  </div>
+
+  <!-- ENTERPRISE -->
+  <div class="plan-card reveal">
+    <div class="plan-name">Enterprise</div>
+    <div class="plan-price" style="font-size:1.3rem;padding-top:.3rem">Sob<br>Consulta</div>
+    <div class="plan-size">200+ colaboradores</div>
+    <div class="plan-divider"></div>
+    <ul class="plan-features">
+      <li><span class="fi fi-y">✓</span> DPO Full Time dedicado</li>
+      <li><span class="fi fi-y">✓</span> Compliance e certificação completos</li>
+      <li><span class="fi fi-y">✓</span> Todos os relatórios customizados</li>
+      <li><span class="fi fi-y">✓</span> Múltiplos canais titulares</li>
+      <li><span class="fi fi-y">✓</span> Treinamentos ilimitados + presenciais</li>
+      <li><span class="fi fi-y">✓</span> Suporte 24/7 dedicado</li>
+      <li><span class="fi fi-y">✓</span> Auditorias trimestrais</li>
+      <li><span class="fi fi-y">✓</span> Jurídico ilimitado</li>
+      <li><span class="fi fi-y">✓</span> Estatuto Digital completo</li>
+      <li><span class="fi fi-y">✓</span> SLA customizado</li>
+    </ul>
+    <a href="https://wa.me/5563984381782?text=Interesse%20no%20Enterprise" target="_blank" class="plan-cta pc-ent">Consultar</a>
+  </div>
+</div>
+
+<div class="promo-callout reveal">
+  <div>
+    <h3>🔥 Promoção Lançamento — Agente de Pequeno Porte</h3>
+    <p>50% de desconto por <strong>12 meses</strong> no Plano Básico ANPD para empresas qualificadas conforme Resolução CD/ANPD nº 2/2022.<br>Válida até 31/03/2026 · Contrato 12 meses · Preço normal: R$299/mês</p>
+  </div>
+  <div style="text-align:center">
+    <div style="font-size:.7rem;color:#92400e;text-decoration:line-through;margin-bottom:.1rem">De R$299/mês</div>
+    <div class="big-price"><sup style="font-size:1rem">R$</sup>150<small>/mês</small></div>
+    <div style="font-size:.7rem;color:#92400e;margin-top:.2rem">por 12 meses</div>
+    <a href="checkout.html" class="btn btn-green" style="display:inline-flex;margin-top:.75rem">Contratar Agora</a>
+  </div>
+</div>
+
+<div class="trust-strip reveal">
+  <div class="trust-item">🔒 <strong>Sem taxa de adesão</strong></div>
+  <div class="trust-item">✅ <strong>7 dias</strong> garantia ou dinheiro de volta</div>
+  <div class="trust-item">📅 Contratos de <strong>12 ou 24 meses</strong></div>
+  <div class="trust-item">🔄 Cancelamento sem multa após fidelidade</div>
+  <div class="trust-item">📍 Foro: <strong>Palmas-TO</strong></div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- ═══ COMO FUNCIONA ═══ -->
+
+<section class="section section-bg" id="como-funciona">
+  <div class="container">
+    <div class="section-header center reveal">
+      <div class="eyebrow" style="color:var(--conf)">Processo</div>
+      <h2>5 Etapas de Adequação</h2>
+      <p>Da contratação à governança contínua em 30–90 dias.</p>
+    </div>
+    <div class="timeline-v">
+      <div class="tv-step reveal">
+        <div class="tv-dot tvd-1">📝</div>
+        <div class="step-tag">Etapa 1</div>
+        <h3>Contratação e Onboarding</h3>
+        <p>Assinatura digital do contrato, liberação do painel, envio das credenciais e formulário de qualificação ANPD. Kickoff em até 48h.</p>
+      </div>
+      <div class="tv-step reveal rd1">
+        <div class="tv-dot tvd-2">🔍</div>
+        <div class="step-tag">Etapa 2</div>
+        <h3>Diagnóstico e GAP Analysis</h3>
+        <p>Mapeamento dos fluxos de dados, bases legais existentes, vulnerabilidades e nível de maturidade. Entregamos relatório completo com prioridades.</p>
+      </div>
+      <div class="tv-step reveal">
+        <div class="tv-dot tvd-3">📋</div>
+        <div class="step-tag">Etapa 3</div>
+        <h3>Documentação e Planejamento</h3>
+        <p>Elaboração de toda documentação: Política de Privacidade, RIPD, ROPA, Termos, Contratos DPA e demais instrumentos conforme seu plano.</p>
+      </div>
+      <div class="tv-step reveal rd1">
+        <div class="tv-dot tvd-4">⚡</div>
+        <div class="step-tag">Etapa 4</div>
+        <h3>Implementação e Treinamento</h3>
+        <p>Implementação das medidas, configuração do canal de titulares, registro do DPO na ANPD e treinamentos com sua equipe.</p>
+      </div>
+      <div class="tv-step reveal">
+        <div class="tv-dot tvd-5">🔄</div>
+        <div class="step-tag">Etapa 5</div>
+        <h3>Governança Contínua</h3>
+        <p>Monitoramento permanente, auditorias periódicas, atualizações legislativas e suporte contínuo. Sua empresa permanece em conformidade.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ DIFERENCIAIS ═══ -->
+
+<section class="section section-dark" id="diferenciais">
+  <div class="container">
+    <div class="section-header center reveal">
+      <div class="eyebrow">Por que nos escolher</div>
+      <h2>Diferenciais 4 Pilares LGPD</h2>
+      <p>O que nos distingue no mercado de consultoria em proteção de dados.</p>
+    </div>
+    <div class="dif-grid">
+      <div class="dif-card reveal"><div class="dif-ic">🏛️</div><h4>Metodologia 4 Pilares</h4><p>Abordagem única e estruturada. Cada pilar representa uma dimensão real da adequação — não é só um nome.</p></div>
+      <div class="dif-card reveal rd1"><div class="dif-ic">💰</div><h4>Melhor Custo-Benefício</h4><p>DPO certificado a partir de R$ 299/mês. Democratizamos o acesso à conformidade LGPD para empresas de todos os portes.</p></div>
+      <div class="dif-card reveal rd2"><div class="dif-ic">⚡</div><h4>Adequação em 30–90 dias</h4><p>Processos ágeis e equipe especializada garantem adequação no menor tempo possível com máxima qualidade.</p></div>
+      <div class="dif-card reveal"><div class="dif-ic">🔒</div><h4>Privacidade Total</h4><p>NÃO acessamos seus dados pessoais. Trabalhamos exclusivamente com arquitetura, fluxos e documentação.</p></div>
+      <div class="dif-card reveal rd1"><div class="dif-ic">👥</div><h4>Equipe Multidisciplinar</h4><p>Direito + TI + Academia integrados. Jurídico, técnico e governança em uma só solução coesa.</p></div>
+      <div class="dif-card reveal rd2"><div class="dif-ic">🌐</div><h4>Atendimento Nacional</h4><p>100% remoto em todo o Brasil. Sede em Palmas-TO, clientes em qualquer estado com a mesma qualidade.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SOBRE ═══ -->
+
+<section class="section" id="sobre">
+  <div class="container">
+    <div class="section-header center reveal">
+      <div class="eyebrow" style="color:var(--regras)">Quem Somos</div>
+      <h2>Expertise Multidisciplinar</h2>
+      <p>Já auxiliamos mais de 100 organizações na adequação às leis brasileiras de proteção de dados.</p>
+    </div>
+    <div class="equipe-grid">
+      <div class="eq-card reveal">
+        <div class="eq-ic">⚖️</div>
+        <h4>Coordenação Acadêmica</h4>
+        <div class="eq-role">Dr. João Pedro Pereira Passos — Fundador</div>
+        <ul class="eq-items">
+          <li>Doutor em Biotecnologia (Rede BIONORTE - UFT/UFPA)</li>
+          <li>Mestre em Planejamento Tático</li>
+          <li>Professor Universitário — Direito Digital (UNITOP)</li>
+          <li>Pesquisador UFT — Tocantins</li>
+          <li>Livro: "Direito Digital" (Ed. Fórum) — em publicação</li>
+          <li>ORCID: 0000-0001-7181-4587</li>
+        </ul>
+      </div>
+      <div class="eq-card reveal rd1">
+        <div class="eq-ic">📜</div>
+        <h4>Equipe Jurídica</h4>
+        <div class="eq-role">Escritório de Advocacia Vinculado · OAB-TO</div>
+        <ul class="eq-items">
+          <li>Defesa em processos ANPD</li>
+          <li>Litígios judiciais LGPD</li>
+          <li>Due diligence M&A — proteção de dados</li>
+          <li>Pareceres técnicos especializados</li>
+          <li>Contratos DPA/NDA</li>
+          <li>Assessoria regulatória</li>
+        </ul>
+      </div>
+      <div class="eq-card reveal rd2">
+        <div class="eq-ic">💻</div>
+        <h4>Equipe de TI</h4>
+        <div class="eq-role">Especialistas em Segurança da Informação</div>
+        <ul class="eq-items">
+          <li>Arquitetura de segurança</li>
+          <li>Implementação técnica LGPD</li>
+          <li>Criptografia e controles de acesso</li>
+          <li>Testes de vulnerabilidade</li>
+          <li>Gestão de incidentes</li>
+          <li>Adequação de sistemas</li>
+        </ul>
+      </div>
+    </div>
+    <div class="quote-block reveal">
+      <blockquote>"Nossa missão é democratizar o acesso à conformidade legal em proteção de dados, oferecendo soluções completas, ágeis e com o melhor custo-benefício do mercado."</blockquote>
+      <cite>CNPJ: 58.551.044/0001-90 · 4 PILARES LGPD "LEI-REGRAS-CONFORMIDADE-TITULAR DOS DADOS" · Palmas-TO</cite>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ ═══ -->
+
+<section class="section section-bg" id="faq">
+  <div class="container">
+    <div class="section-header center reveal">
+      <div class="eyebrow" style="color:var(--tit)">Dúvidas</div>
+      <h2>Perguntas Frequentes</h2>
+      <p>As questões mais comuns sobre LGPD, DPO e nossos serviços.</p>
+    </div>
+    <div class="faq-wrap">
+      <div class="faq-item open reveal">
+        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Minha empresa é obrigada a ter um DPO?</span><span class="faq-ic">+</span></div>
+        <div class="faq-a">A LGPD exige a indicação de um Encarregado (DPO) para todos os controladores de dados. Agentes de Pequeno Porte (Res. ANPD 2/2022) têm obrigações simplificadas mas ainda precisam indicar o cargo. Nosso diagnóstico gratuito identifica exatamente o que se aplica à sua empresa com base nos 3 critérios ANPD.</div>
+      </div>
+      <div class="faq-item reveal rd1">
+        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">O que é Agente de Tratamento de Pequeno Porte?</span><span class="faq-ic">+</span></div>
+        <div class="faq-a">É a empresa que atende SIMULTANEAMENTE 3 critérios da Res. ANPD 2/2022: (1) receita bruta anual ≤ R$ 78M; (2) trata dados de ≤ 50.000 titulares/ano; (3) não trata dados sensíveis em larga escala. Esses agentes têm obrigações simplificadas e acesso a planos com preço reduzido.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Quais são as multas da LGPD para quem não se adequar?</span><span class="faq-ic">+</span></div>
+        <div class="faq-a">Até 2% do faturamento bruto no Brasil, limitado a R$ 50 milhões por infração. A ANPD também pode determinar bloqueio/eliminação de dados, suspensão do banco de dados e publicização da infração. Os riscos reputacionais e ações de titulares são adicionais às sanções administrativas.</div>
+      </div>
+      <div class="faq-item reveal rd1">
+        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">O DPO pode ser externo (terceirizado)?</span><span class="faq-ic">+</span></div>
+        <div class="faq-a">Sim. A LGPD permite DPO pessoa jurídica ou natural externo à empresa. Nosso serviço é "DPO as a Service" — profissional certificado, registrado na ANPD, com procuração para representar sua empresa junto à autoridade regulatória e aos titulares.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Em quanto tempo minha empresa ficará adequada?</span><span class="faq-ic">+</span></div>
+        <div class="faq-a">30 a 90 dias dependendo do porte e complexidade. Pequenas empresas com operações simples ficam adequadas em 30–45 dias. Médias empresas com múltiplos fluxos de dados levam 60–90 dias. Após a adequação inicial, o serviço mantém conformidade continuamente.</div>
+      </div>
+      <div class="faq-item reveal rd1">
+        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Vocês acessam nossos dados de clientes?</span><span class="faq-ic">+</span></div>
+        <div class="faq-a">Não. Trabalhamos exclusivamente com arquitetura, fluxos e processos — nunca com os dados pessoais em si. Você não precisa nos fornecer registros de clientes ou históricos. Isso está expressamente previsto no contrato (cláusula 6.7 / 10.4).</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">A Lei 15.211/2025 (Estatuto Digital) me afeta?</span><span class="faq-ic">+</span></div>
+        <div class="faq-a">Sim, se sua empresa coleta ou processa dados de pessoas menores de 18 anos em qualquer contexto digital — apps, sites, formulários online, e-commerce. A lei impõe obrigações reforçadas com base legal própria e medidas técnicas específicas de proteção.</div>
+      </div>
+      <div class="faq-item reveal rd1">
+        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Posso cancelar antes do prazo de fidelidade?</span><span class="faq-ic">+</span></div>
+        <div class="faq-a">Nos primeiros 7 dias: devolução integral, sem qualquer ônus (CDC Art. 49). Após os 7 dias, aplicam-se multas rescisórias proporcionais conforme o plano (50% das parcelas vincendas no plano regular; fórmula específica para promoção). Após o período de fidelidade: cancelamento livre com aviso prévio de 60 dias.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA FINAL ═══ -->
+
+<section id="cta-final">
+  <div class="container">
+    <div class="eyebrow">Comece agora</div>
+    <h2>Proteja sua empresa com<br>os 4 Pilares da Conformidade</h2>
+    <p>Lei · Regras · Conformidade · Titular</p>
+    <div class="cta-buttons">
+      <a href="#diagnostico" class="btn btn-green btn-lg">🔍 Diagnóstico Gratuito</a>
+      <a href="https://wa.me/5563984381782?text=Quero%20contratar%20DPO%20por%20R%24299" target="_blank" class="btn btn-outline-white btn-lg">💬 WhatsApp</a>
+      <a href="#planos" class="btn btn-outline-white">Ver Planos</a>
+    </div>
+    <div class="offer-tag">🔥 Plano Básico ANPD R$150/mês — 50% OFF por 12 meses · Oferta até 31/03/2026</div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">4 Pilares LGPD</div>
+      <div class="footer-tagline">Lei · Regras · Conformidade · Titular</div>
+      <div class="footer-cnpj">CNPJ: 58.551.044/0001-90<br>4 PILARES LGPD "LEI-REGRAS-CONFORMIDADE-<br>TITULAR DOS DADOS" · Palmas-TO</div>
+    </div>
+    <div>
+      <h5>Os 4 Pilares</h5>
+      <a href="#pilares" onclick="activePilar('lei')">🏛️ Pilar Lei</a>
+      <a href="#pilares" onclick="activePilar('regras')">📋 Pilar Regras</a>
+      <a href="#pilares" onclick="activePilar('conformidade')">✅ Pilar Conformidade</a>
+      <a href="#pilares" onclick="activePilar('titular')">👤 Pilar Titular</a>
+    </div>
+    <div>
+      <h5>Planos</h5>
+      <a href="#planos">Básico ANPD (R$299)</a>
+      <a href="#planos">Essencial</a>
+      <a href="#planos">Profissional</a>
+      <a href="#planos">Empresarial</a>
+      <a href="#planos">Enterprise</a>
+    </div>
+    <div>
+      <h5>Contato</h5>
+      <a href="https://wa.me/5563984381782" target="_blank">📱 (63) 98438-1782</a>
+      <a href="/cdn-cgi/l/email-protection#8ae9e5e4feebfee5caf9ebe0e5eee3ebede4e5f9a4e9e6ffe8">📧 <span class="__cf_email__" data-cfemail="ec8f8382988d9883ac9f8d868388858d8b82839fc28f80998e">[email&#160;protected]</span></a>
+      <a href="#faq">❓ FAQ</a>
+      <a href="#diagnostico">🔍 Diagnóstico</a>
+      <a href="https://painel.sajodiagnos.club" target="_blank">🔑 Área do Cliente</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 4 Pilares LGPD · Todos os direitos reservados</span>
+    <div class="footer-laws">
+      <span class="fl">Lei 13.709/2018</span>
+      <span class="fl">Lei 12.965/2014</span>
+      <span class="fl">Lei 15.211/2025</span>
+      <span class="fl">Res. ANPD 2/2022</span>
+    </div>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOAT -->
+
+<a href="https://wa.me/5563984381782?text=Quero%20contratar%20DPO%20por%20R%24299" target="_blank" class="wa-float" title="Fale no WhatsApp">
+  <span class="wa-badge">R$299</span>
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+  </svg>
+</a>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+
+/* ═══ HEADER SCROLL ═══ */
+window.addEventListener(‘scroll’,()=>{
+document.getElementById(‘header’).classList.toggle(‘scrolled’,window.scrollY>20);
+});
+
+/* ═══ SCROLL REVEAL ═══ */
+const revObs=new IntersectionObserver(entries=>{
+entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add(‘visible’);revObs.unobserve(e.target)}});
+},{threshold:.1,rootMargin:‘0px 0px -30px 0px’});
+document.querySelectorAll(’.reveal’).forEach(el=>revObs.observe(el));
+
+/* ═══ PILARES NAVIGATION ═══ */
+function activePilar(name,btn){
+document.querySelectorAll(’.pilar-panel’).forEach(p=>p.classList.remove(‘active’));
+document.querySelectorAll(’.pnav-btn’).forEach(b=>b.classList.remove(‘active’));
+const panel=document.getElementById(‘panel-’+name);
+if(panel) panel.classList.add(‘active’);
+if(btn) btn.classList.add(‘active’);
+else{
+const map={‘lei’:0,‘regras’:1,‘conformidade’:2,‘titular’:3};
+const btns=document.querySelectorAll(’.pnav-btn’);
+if(btns[map[name]]) btns[map[name]].classList.add(‘active’);
+}
+}
+
+/* ═══ ACCORDION ═══ */
+function toggleAcc(trigger){
+const item=trigger.closest(’.accordion-item’);
+item.classList.toggle(‘open’);
+}
+
+/* ═══ FAQ ═══ */
+function toggleFaq(trigger){
+const item=trigger.closest(’.faq-item’);
+const wasOpen=item.classList.contains(‘open’);
+document.querySelectorAll(’.faq-item’).forEach(i=>i.classList.remove(‘open’));
+if(!wasOpen) item.classList.add(‘open’);
+}
+
+/* ═══════════════════════════════════════════
+DIAGNÓSTICO
+═══════════════════════════════════════════ */
+let diagAnswers={receita:null,titulares:null,titCount:0,escala:null};
+
+function updateProgress(step){
+const pct={1:8,2:42,3:76,result:100};
+document.getElementById(‘diagProgress’).style.width=(pct[step]||0)+’%’;
+}
+
+function showStep(n){
+document.querySelectorAll(’.diag-step’).forEach(s=>s.classList.remove(‘active’));
+const s=document.getElementById(‘step’+n);
+if(s) s.classList.add(‘active’);
+document.getElementById(‘diag-result’).style.display=‘none’;
+document.getElementById(‘diagBody’).style.display=‘block’;
+updateProgress(n);
+}
+
+function goStep(n){
+if(n===2 && !diagAnswers.receita) return;
+if(n===3 && !diagAnswers.titulares) return;
+showStep(n);
+}
+
+function selectOpt(label,field,val){
+const parent=label.closest(’.diag-options’);
+parent.querySelectorAll(’.diag-opt’).forEach(o=>o.classList.remove(‘selected’));
+label.classList.add(‘selected’);
+label.querySelector(‘input’).checked=true;
+diagAnswers[field]=val;
+// enable next
+if(field===‘receita’) document.getElementById(‘btn-step1’).disabled=false;
+if(field===‘escala’)  document.getElementById(‘btn-step3’).disabled=false;
+}
+
+function checkTitInput(){
+const val=parseInt(document.getElementById(‘titInput’).value)||0;
+diagAnswers.titCount=val;
+// auto-select radio
+const opt1=document.getElementById(‘tit-opt-1’);
+const opt2=document.getElementById(‘tit-opt-2’);
+if(val>0 && val<=50000){
+opt1.classList.add(‘selected’);opt1.querySelector(‘input’).checked=true;
+opt2.classList.remove(‘selected’);
+diagAnswers.titulares=‘ate_50k’;
+} else if(val>50000){
+opt2.classList.add(‘selected’);opt2.querySelector(‘input’).checked=true;
+opt1.classList.remove(‘selected’);
+diagAnswers.titulares=‘acima_50k’;
+}
+document.getElementById(‘btn-step2’).disabled=!(diagAnswers.titulares);
+}
+
+function selectTit(val,label){
+const parent=label.closest(’.diag-options’);
+parent.querySelectorAll(’.diag-opt’).forEach(o=>o.classList.remove(‘selected’));
+label.classList.add(‘selected’);
+label.querySelector(‘input’).checked=true;
+diagAnswers.titulares=val;
+document.getElementById(‘btn-step2’).disabled=false;
+}
+
+/* ── MODULES CATALOGUE ── */
+const MODULES=[
+{id:‘basic’,icon:‘🏛️’,name:‘DPO Básico ANPD’,desc:‘Obrigações mínimas para Agentes de Pequeno Porte — Res. ANPD 2/2022’,price:‘R$150/mês (promoção)’,cls:‘mc-basic’,pcls:‘mp-basic’,when:()=>true},
+{id:‘docs’,icon:‘📋’,name:‘Compliance Completo’,desc:‘DPO + Compliance + Regulatório + Jurídico + Treinamentos + Certificação’,price:‘R$997/mês’,cls:‘mc-docs’,pcls:‘mp-docs’,when:()=>true},
+{id:‘tit’,icon:‘👤’,name:‘Portal do Titular’,desc:‘Canal de requisições, workflow e portal público de privacidade’,price:‘Incluído no plano’,cls:‘mc-tit’,pcls:‘mp-tit’,when:()=>true},
+{id:‘audit’,icon:‘✅’,name:‘Auditoria & GAP Analysis’,desc:‘Auditoria formal de conformidade e planos de ação corretiva’,price:‘A partir do Profissional’,cls:‘mc-audit’,pcls:‘mp-audit’,when:(a)=>a.receita===‘acima_78m’||a.titulares===‘acima_50k’},
+{id:‘jur’,icon:‘⚖️’,name:‘Assessoria Jurídica/Regulatória’,desc:‘Horas de suporte jurídico especializado LGPD/ANPD’,price:‘A partir do Profissional’,cls:‘mc-jur’,pcls:‘mp-jur’,when:(a)=>a.titulares===‘acima_50k’||a.escala===‘larga’},
+{id:‘estat’,icon:‘👶’,name:‘Estatuto Digital (Lei 15.211)’,desc:‘Adequação específica à proteção de dados de menores de 18 anos’,price:‘Incluído no Empresarial+’,cls:‘mc-estat’,pcls:‘mp-estat’,when:(a)=>a.escala===‘larga’&&document.querySelector(‘input[value=“menor”]’)?.checked},
+];
+
+function calcResult(){
+if(!diagAnswers.escala) return;
+
+const a=diagAnswers;
+const r1=a.receita===‘ate_78m’||a.receita===‘nao_sei’;
+const r2=a.titulares===‘ate_50k’;
+const r3=a.escala!==‘larga’;
+const isPPT=r1&&r2&&r3;
+const isPartial=(r1||r2||r3)&&!(r1&&r2&&r3);
+
+// update criteria badges
+const setB=(id,ok)=>{
+const el=document.getElementById(id);
+el.textContent=ok?‘✅ Atende’:‘❌ Não atende’;
+el.className=’crit-badge ’+(ok?‘cb-ok’:‘cb-nok’);
+};
+setB(‘res-crit1’,r1);setB(‘res-crit2’,r2);setB(‘res-crit3’,r3);
+
+// result header
+const icon=document.getElementById(‘resIcon’);
+const title=document.getElementById(‘resTitle’);
+const desc=document.getElementById(‘resDesc’);
+
+if(isPPT){
+icon.className=‘result-icon ri-green’;icon.textContent=‘🏆’;
+title.textContent=‘Sua empresa é Agente de Pequeno Porte!’;
+desc.textContent=‘Você se qualifica para obrigações simplificadas e para o Plano Básico ANPD a R$ 299/mês. Temos a solução ideal para sua empresa.’;
+} else if(isPartial){
+icon.className=‘result-icon ri-orange’;icon.textContent=‘⚠️’;
+title.textContent=‘Obrigações parciais — verificação necessária’;
+desc.textContent=‘Sua empresa não se enquadra em todos os critérios de Pequeno Porte. Recomendamos planos com maior cobertura para garantir conformidade total.’;
+} else {
+icon.className=‘result-icon ri-red’;icon.textContent=‘🔴’;
+title.textContent=‘Obrigações completas — LGPD integral’;
+desc.textContent=‘Sua empresa possui obrigações completas da LGPD. Recomendamos os planos Profissional ou Empresarial para conformidade total e proteção jurídica.’;
+}
+
+// modules
+const mods=MODULES.filter(m=>m.when(a));
+const grid=document.getElementById(‘resModules’);
+grid.innerHTML=mods.map(m=>`<div class="mod-card ${m.cls}"> <div class="mod-card-top"> <span class="mod-card-icon">${m.icon}</span> <span class="mod-card-name">${m.name}</span> </div> <div class="mod-card-desc">${m.desc}</div> <span class="mod-price ${m.pcls}">${m.price}</span> </div>`).join(’’);
+
+// show result
+document.getElementById(‘diagBody’).style.display=‘none’;
+document.getElementById(‘diag-result’).style.display=‘block’;
+updateProgress(‘result’);
+}
+
+function resetDiag(){
+diagAnswers={receita:null,titulares:null,titCount:0,escala:null};
+document.getElementById(‘titInput’).value=’’;
+document.querySelectorAll(’.diag-opt’).forEach(o=>o.classList.remove(‘selected’));
+document.querySelectorAll(’.diag-opt input’).forEach(i=>i.checked=false);
+document.querySelectorAll(’.sens-item input’).forEach(i=>i.checked=false);
+document.getElementById(‘btn-step1’).disabled=true;
+document.getElementById(‘btn-step2’).disabled=true;
+document.getElemen
