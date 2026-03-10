@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4 Pilares LGPD — Arquitetura & Painel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   RESET & VARS
+══════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:15px}
+body{font-family:'DM Sans',sans-serif;background:#060b14;color:#dde4ef;min-height:100vh;display:flex;overflow-x:hidden}
+
+:root{
+–lei:#1d4ed8;    –lei-b:#bfdbfe;  –lei-dk:#0f1f5a;
+–reg:#059669;    –reg-b:#a7f3d0;  –reg-dk:#053d2b;
+–conf:#ea580c;   –conf-b:#fed7aa; –conf-dk:#5a1b02;
+–tit:#7c3aed;    –tit-b:#ddd6fe;  –tit-dk:#2e1065;
+–wa:#25d366;
+–bg:#060b14;
+–s1:#0c1525;
+–s2:#111d30;
+–s3:#17263d;
+–bd:rgba(255,255,255,.065);
+–bdh:rgba(255,255,255,.13);
+–tx:#dde4ef; –tx2:#8899b4; –tx3:#4a5a70;
+–ok:#10b981; –warn:#f59e0b; –err:#ef4444;
+–ff-d:‘Syne’,sans-serif;
+–ff-b:‘Bebas Neue’,cursive;
+–ff-m:‘JetBrains Mono’,monospace;
+–r:10px;
+–sw:256px;
+}
+
+/* ══════════════════════════════════════════
+SIDEBAR
+══════════════════════════════════════════ */
+#sb{
+width:var(–sw);min-height:100vh;background:var(–s1);
+border-right:1px solid var(–bd);display:flex;flex-direction:column;
+flex-shrink:0;position:fixed;left:0;top:0;bottom:0;z-index:300;overflow-y:auto;
+}
+.sb-logo{padding:1.1rem 1.25rem;border-bottom:1px solid var(–bd)}
+.sb-logo-mark{
+font-family:var(–ff-b);font-size:1.4rem;letter-spacing:.04em;
+background:linear-gradient(90deg,var(–lei-b),var(–tit-b));
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+display:flex;align-items:center;gap:.5rem;
+}
+.sb-logo-live{
+width:7px;height:7px;border-radius:50%;background:var(–wa);
+animation:blink 2s ease infinite;-webkit-text-fill-color:transparent;
+display:inline-block;
+}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(37,211,102,.5)}60%{box-shadow:0 0 0 6px transparent}}
+.sb-logo-sub{font-size:.6rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(–tx3);margin-top:.25rem}
+
+.sb-client{padding:.85rem 1.25rem;border-bottom:1px solid var(–bd);background:rgba(255,255,255,.015)}
+.sb-cl{font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(–tx3);margin-bottom:.3rem}
+.sb-cn{font-size:.8rem;font-weight:600;color:var(–tx)}
+.sb-cp{
+display:inline-flex;align-items:center;gap:.3rem;margin-top:.3rem;
+font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+background:rgba(124,58,237,.18);color:var(–tit-b);
+border:1px solid rgba(124,58,237,.28);padding:.15rem .55rem;border-radius:100px;
+}
+
+.sb-nav{flex:1;padding:.6rem 0}
+.sb-section{margin-bottom:.2rem}
+.sb-sl{font-size:.54rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(–tx3);padding:.4rem 1.2rem}
+
+.sb-a{
+display:flex;align-items:center;gap:.6rem;padding:.52rem 1.2rem;
+cursor:pointer;font-size:.78rem;font-weight:500;color:var(–tx2);
+transition:all .15s;position:relative;border:none;background:none;width:100%;text-align:left;
+text-decoration:none;
+}
+.sb-a:hover{color:var(–tx);background:rgba(255,255,255,.035)}
+.sb-a.on{color:#fff;background:rgba(255,255,255,.06)}
+.sb-a.on::before{content:’’;position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:0 2px 2px 0}
+.sb-a.on.p1::before{background:var(–lei)} .sb-a.p1.on{color:var(–lei-b)}
+.sb-a.on.p2::before{background:var(–reg)} .sb-a.p2.on{color:var(–reg-b)}
+.sb-a.on.p3::before{background:var(–conf)} .sb-a.p3.on{color:var(–conf-b)}
+.sb-a.on.p4::before{background:var(–tit)} .sb-a.p4.on{color:var(–tit-b)}
+.sb-a.on.pa::before{background:var(–wa)}
+
+.sb-ic{width:17px;font-size:.9rem;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.sb-badge{
+margin-left:auto;font-size:.58rem;font-weight:700;
+padding:.1rem .42rem;border-radius:100px;
+}
+.b-r{background:rgba(239,68,68,.18);color:#fca5a5;border:1px solid rgba(239,68,68,.28)}
+.b-o{background:rgba(245,158,11,.18);color:#fcd34d;border:1px solid rgba(245,158,11,.28)}
+.b-g{background:rgba(16,185,129,.18);color:#6ee7b7;border:1px solid rgba(16,185,129,.28)}
+
+.sb-bot{padding:.85rem 1.25rem;border-top:1px solid var(–bd);display:flex;flex-direction:column;gap:.3rem}
+.sb-bta{
+display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:var(–tx3);
+cursor:pointer;padding:.28rem 0;transition:color .15s;text-decoration:none;
+}
+.sb-bta:hover{color:var(–tx)}
+
+/* ══════════════════════════════════════════
+MAIN
+══════════════════════════════════════════ */
+#main{margin-left:var(–sw);flex:1;min-height:100vh;display:flex;flex-direction:column}
+
+.topbar{
+height:50px;background:var(–s1);border-bottom:1px solid var(–bd);
+display:flex;align-items:center;justify-content:space-between;
+padding:0 1.75rem;position:sticky;top:0;z-index:100;gap:1rem;
+}
+.tb-bc{display:flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(–tx3)}
+.tb-bc strong{color:var(–tx);font-weight:600}
+.tb-r{display:flex;align-items:center;gap:.65rem}
+.tb-status{
+display:flex;align-items:center;gap:.35rem;font-size:.68rem;font-weight:700;
+background:rgba(16,185,129,.1);color:var(–ok);border:1px solid rgba(16,185,129,.2);
+padding:.25rem .7rem;border-radius:100px;
+}
+.tb-status::before{content:’’;width:5px;height:5px;border-radius:50%;background:currentColor}
+.tb-btn{
+width:30px;height:30px;border-radius:7px;background:var(–s2);border:1px solid var(–bd);
+display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.85rem;
+transition:background .15s;position:relative;
+}
+.tb-btn:hover{background:var(–s3)}
+.tb-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:var(–err);border:1.5px solid var(–s1)}
+.tb-av{
+width:30px;height:30px;border-radius:50%;
+background:linear-gradient(135deg,var(–tit),var(–lei));
+display:flex;align-items:center;justify-content:center;
+font-size:.7rem;font-weight:700;color:#fff;cursor:pointer;
+}
+
+#content{padding:1.75rem;flex:1}
+
+/* ══════════════════════════════════════════
+PAGES
+══════════════════════════════════════════ */
+.pg{display:none;animation:fi .22s ease both}
+.pg.on{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* ══════════════════════════════════════════
+ARQUITETURA — MAPA VISUAL
+══════════════════════════════════════════ */
+.arq-wrap{
+background:var(–s1);border:1px solid var(–bd);border-radius:14px;
+overflow:hidden;margin-bottom:1.5rem;
+}
+.arq-head{
+padding:1.5rem 2rem;border-bottom:1px solid var(–bd);
+background:linear-gradient(135deg,rgba(15,23,42,.9),rgba(11,17,32,.9));
+display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+}
+.arq-title{
+font-family:var(–ff-b);font-size:2rem;letter-spacing:.06em;
+background:linear-gradient(90deg,#e2e8f0,var(–tx2));
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+line-height:1;
+}
+.arq-sub{font-size:.78rem;color:var(–tx2);margin-top:.4rem;line-height:1.6;max-width:520px}
+.arq-legend{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center}
+.arq-leg-item{
+display:flex;align-items:center;gap:.4rem;
+font-size:.65rem;font-weight:600;color:var(–tx2);
+}
+.arq-leg-dot{width:10px;height:10px;border-radius:2px}
+
+/* Canvas principal da arquitetura */
+.arq-canvas{
+padding:2.5rem 2rem;
+background:
+radial-gradient(circle at 20% 50%, rgba(29,78,216,.06) 0%, transparent 50%),
+radial-gradient(circle at 80% 50%, rgba(124,58,237,.06) 0%, transparent 50%),
+radial-gradient(circle at 50% 20%, rgba(5,150,105,.04) 0%, transparent 40%),
+radial-gradient(circle at 50% 80%, rgba(234,88,12,.04) 0%, transparent 40%),
+repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.015) 39px,rgba(255,255,255,.015) 40px),
+repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.015) 39px,rgba(255,255,255,.015) 40px);
+position:relative;overflow:hidden;
+}
+
+/* SVG Connections */
+.arq-svg{
+position:absolute;inset:0;width:100%;height:100%;
+pointer-events:none;overflow:visible;
+}
+
+/* Nodes */
+.arq-grid{
+display:grid;
+grid-template-columns:1fr 260px 1fr;
+grid-template-rows:auto auto auto;
+gap:1.5rem 1.25rem;
+position:relative;z-index:2;
+min-height:500px;
+}
+
+/* NÚCLEO CENTRAL */
+.node-nucleo{
+grid-column:2;grid-row:2;
+display:flex;flex-direction:column;align-items:center;
+}
+.nucleo-card{
+background:linear-gradient(135deg,var(–s3),var(–s2));
+border:2px solid rgba(255,255,255,.15);
+border-radius:16px;padding:1.25rem 1.5rem;text-align:center;
+position:relative;width:100%;
+box-shadow:0 0 60px rgba(255,255,255,.04),0 0 30px rgba(29,78,216,.08),inset 0 1px 0 rgba(255,255,255,.08);
+transition:transform .2s,box-shadow .2s;cursor:default;
+}
+.nucleo-card:hover{transform:scale(1.02);box-shadow:0 0 80px rgba(255,255,255,.07)}
+.nucleo-ic{font-size:1.6rem;margin-bottom:.5rem}
+.nucleo-name{font-family:var(–ff-b);font-size:1.1rem;letter-spacing:.08em;color:#fff;margin-bottom:.25rem}
+.nucleo-sub{font-size:.65rem;color:var(–tx2);line-height:1.5}
+.nucleo-tags{display:flex;gap:.35rem;justify-content:center;flex-wrap:wrap;margin-top:.65rem}
+.nucleo-tag{
+font-size:.6rem;font-weight:700;padding:.15rem .55rem;border-radius:100px;
+background:rgba(255,255,255,.07);color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.1);
+}
+
+/* Pilar nodes */
+.node-p{display:flex;flex-direction:column;align-items:stretch;gap:.5rem}
+.pilar-node{
+border-radius:12px;border:1px solid var(–bd);
+overflow:hidden;cursor:pointer;
+transition:transform .2s,box-shadow .2s,border-color .2s;
+}
+.pilar-node:hover{transform:translateY(-3px)}
+
+.pn-head{
+padding:1rem 1.1rem .75rem;
+display:flex;align-items:center;gap:.75rem;
+}
+.pn-num{
+font-family:var(–ff-b);font-size:1.8rem;letter-spacing:.04em;
+line-height:1;opacity:.25;flex-shrink:0;
+}
+.pn-info{flex:1}
+.pn-label{font-size:.56rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.2rem}
+.pn-title{font-family:var(–ff-d);font-size:.95rem;font-weight:700;color:#fff;line-height:1.2}
+
+.pn-lei{background:linear-gradient(135deg,rgba(29,78,216,.18),rgba(29,78,216,.06))}
+.pn-lei:hover{box-shadow:0 8px 40px rgba(29,78,216,.25);border-color:rgba(29,78,216,.35)}
+.pn-lei .pn-num,.pn-lei .pn-label{color:var(–lei-b)}
+
+.pn-reg{background:linear-gradient(135deg,rgba(5,150,105,.18),rgba(5,150,105,.06))}
+.pn-reg:hover{box-shadow:0 8px 40px rgba(5,150,105,.25);border-color:rgba(5,150,105,.35)}
+.pn-reg .pn-num,.pn-reg .pn-label{color:var(–reg-b)}
+
+.pn-conf{background:linear-gradient(135deg,rgba(234,88,12,.18),rgba(234,88,12,.06))}
+.pn-conf:hover{box-shadow:0 8px 40px rgba(234,88,12,.25);border-color:rgba(234,88,12,.35)}
+.pn-conf .pn-num,.pn-conf .pn-label{color:var(–conf-b)}
+
+.pn-tit{background:linear-gradient(135deg,rgba(124,58,237,.18),rgba(124,58,237,.06))}
+.pn-tit:hover{box-shadow:0 8px 40px rgba(124,58,237,.25);border-color:rgba(124,58,237,.35)}
+.pn-tit .pn-num,.pn-tit .pn-label{color:var(–tit-b)}
+
+/* Módulos dentro de cada pilar node */
+.pn-mods{
+padding:.5rem .9rem .85rem;
+display:flex;flex-direction:column;gap:.28rem;
+border-top:1px solid rgba(255,255,255,.05);
+}
+.pn-mod{
+display:flex;align-items:center;gap:.5rem;
+font-size:.7rem;color:var(–tx2);padding:.22rem 0;
+border-bottom:1px solid rgba(255,255,255,.03);
+}
+.pn-mod:last-child{border:none}
+.pn-mod-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.pn-mod-name{flex:1}
+.pn-mod-tag{
+font-size:.58rem;font-weight:700;padding:.1rem .4rem;border-radius:100px;
+white-space:nowrap;
+}
+.mod-ok{background:rgba(16,185,129,.15);color:#6ee7b7}
+.mod-on{background:rgba(245,158,11,.15);color:#fcd34d}
+.mod-nd{background:rgba(255,255,255,.06);color:var(–tx3)}
+
+/* Posições dos nós no grid */
+.n-lei{grid-column:1;grid-row:1}
+.n-reg{grid-column:3;grid-row:1}
+.n-conf{grid-column:3;grid-row:3}
+.n-tit{grid-column:1;grid-row:3}
+.n-nuc{grid-column:2;grid-row:2;display:flex;align-items:center}
+
+/* Obrigatórios visuais - linha de conexão horizontal e vertical */
+.arq-connections{
+position:absolute;inset:0;pointer-events:none;z-index:1;
+}
+
+/* Setas de obrigatoriedade */
+.req-arrow{
+position:absolute;display:flex;align-items:center;
+font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+color:rgba(255,255,255,.25);gap:.3rem;
+}
+.req-arrow::before,.req-arrow::after{
+content:’’;height:1px;background:rgba(255,255,255,.1);
+}
+.req-arrow.h::before,.req-arrow.h::after{width:40px}
+.req-arrow.v{flex-direction:column}
+.req-arrow.v::before,.req-arrow.v::after{height:40px;width:1px;background:rgba(255,255,255,.1)}
+
+/* Obrigatoriedade badge */
+.obrig-badge{
+display:inline-flex;align-items:center;gap:.3rem;
+background:rgba(239,68,68,.12);color:#fca5a5;
+border:1px solid rgba(239,68,68,.25);
+font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+padding:.2rem .65rem;border-radius:100px;
+}
+
+/* ══════════════════════════════════════════
+MODULAR TABLE — detalhamento
+══════════════════════════════════════════ */
+.mod-table-wrap{
+background:var(–s1);border:1px solid var(–bd);border-radius:14px;
+overflow:hidden;margin-bottom:1.5rem;
+}
+.mt-head{
+display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+border-bottom:1px solid var(–bd);
+}
+.mt-h-cell{
+padding:1rem 1.25rem;border-right:1px solid var(–bd);cursor:pointer;
+transition:background .15s;display:flex;align-items:center;gap:.6rem;
+}
+.mt-h-cell:last-child{border-right:none}
+.mt-h-cell:hover,.mt-h-cell.on{background:rgba(255,255,255,.04)}
+.mt-h-num{font-family:var(–ff-b);font-size:1.4rem;opacity:.3}
+.mt-h-info{flex:1}
+.mt-h-label{font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.mt-h-name{font-size:.8rem;font-weight:700;color:#fff}
+.c-lei{color:var(–lei-b)} .c-reg{color:var(–reg-b)} .c-conf{color:var(–conf-b)} .c-tit{color:var(–tit-b)}
+
+.mt-body{padding:0}
+.mt-panel{display:none;padding:1.25rem}
+.mt-panel.on{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+@media(max-width:900px){.mt-panel.on{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.mt-head{grid-template-columns:1fr 1fr}.mt-panel.on{grid-template-columns:1fr}}
+
+.mod-block{
+background:var(–s2);border:1px solid var(–bd);border-radius:var(–r);
+padding:1rem;transition:all .18s;cursor:default;
+}
+.mod-block:hover{background:var(–s3);border-color:var(–bdh)}
+.mb-ic{font-size:1.3rem;margin-bottom:.5rem}
+.mb-name{font-size:.82rem;font-weight:700;color:#fff;margin-bottom:.25rem}
+.mb-desc{font-size:.7rem;color:var(–tx2);line-height:1.55;margin-bottom:.6rem}
+.mb-bot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.3rem}
+.mb-tipo{font-size:.58rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(–tx3)}
+.mb-status{font-size:.62rem;font-weight:700;padding:.15rem .5rem;border-radius:100px}
+.mbs-ok{background:rgba(16,185,129,.15);color:#6ee7b7}
+.mbs-on{background:rgba(245,158,11,.15);color:#fcd34d}
+.mbs-nd{background:rgba(255,255,255,.06);color:var(–tx3)}
+.mbs-req{background:rgba(239,68,68,.12);color:#fca5a5}
+
+/* OBRIGATÓRIO indicator */
+.obr-flag{
+display:inline-flex;align-items:center;gap:.25rem;
+font-size:.58rem;font-weight:700;color:#fca5a5;
+background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);
+padding:.1rem .45rem;border-radius:100px;margin-top:.3rem;
+}
+
+/* ══════════════════════════════════════════
+FLUXO OBRIGATÓRIO
+══════════════════════════════════════════ */
+.flow-wrap{
+background:var(–s1);border:1px solid var(–bd);border-radius:14px;
+overflow:hidden;margin-bottom:1.5rem;
+}
+.flow-head{padding:1.1rem 1.5rem;border-bottom:1px solid var(–bd);display:flex;align-items:center;justify-content:space-between}
+.flow-title{font-family:var(–ff-d);font-size:.9rem;font-weight:700;color:#fff}
+.flow-sub{font-size:.7rem;color:var(–tx2);margin-top:.15rem}
+.flow-body{padding:1.25rem;overflow-x:auto}
+.flow-steps{
+display:flex;align-items:stretch;gap:0;min-width:600px;
+}
+.flow-step{
+flex:1;display:flex;flex-direction:column;align-items:center;
+position:relative;
+}
+.flow-step:not(:last-child)::after{
+content:‘→’;position:absolute;right:-10px;top:22px;
+font-size:1rem;color:var(–tx3);z-index:2;
+}
+.fs-dot{
+width:44px;height:44px;border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+font-size:1.1rem;flex-shrink:0;border:2px solid;
+margin-bottom:.5rem;position:relative;z-index:1;
+}
+.fs-lei{background:rgba(29,78,216,.15);border-color:rgba(29,78,216,.3)}
+.fs-reg{background:rgba(5,150,105,.15);border-color:rgba(5,150,105,.3)}
+.fs-conf{background:rgba(234,88,12,.15);border-color:rgba(234,88,12,.3)}
+.fs-tit{background:rgba(124,58,237,.15);border-color:rgba(124,58,237,.3)}
+.fs-anpd{background:rgba(245,158,11,.15);border-color:rgba(245,158,11,.3)}
+.fs-name{font-size:.72rem;font-weight:700;color:#fff;text-align:center;margin-bottom:.2rem}
+.fs-desc{font-size:.63rem;color:var(–tx2);text-align:center;line-height:1.5;padding:0 .3rem}
+.fs-tag{font-size:.58rem;font-weight:700;margin-top:.3rem;padding:.1rem .4rem;border-radius:100px;text-align:center}
+
+/* ══════════════════════════════════════════
+CARDS E WIDGETS
+══════════════════════════════════════════ */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+@media(max-width:1100px){.g4{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+.card{background:var(–s2);border:1px solid var(–bd);border-radius:var(–r);padding:1.25rem}
+.card-sm{padding:.85rem 1rem}
+.ct{
+font-family:var(–ff-d);font-size:.72rem;font-weight:700;
+letter-spacing:.05em;text-transform:uppercase;color:var(–tx2);
+margin-bottom:.9rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem;
+}
+.ct span{font-size:.63rem;font-weight:400;text-transform:none;color:var(–tx3)}
+
+.stat{
+background:var(–s2);border:1px solid var(–bd);border-radius:var(–r);
+padding:1rem 1.25rem;position:relative;overflow:hidden;
+transition:transform .18s;
+}
+.stat:hover{transform:translateY(-2px)}
+.stat::after{content:’’;position:absolute;top:0;left:0;right:0;height:2px}
+.sl{background:var(–lei)} .sr{background:var(–reg)} .sc{background:var(–conf)} .st{background:var(–tit)} .sg{background:var(–wa)}
+.stat-lbl{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(–tx3);margin-bottom:.45rem}
+.stat-val{font-family:var(–ff-d);font-size:1.9rem;font-weight:800;color:#fff;line-height:1;margin-bottom:.25rem}
+.stat-sub{font-size:.7rem;color:var(–tx2)}
+.stat-trend{
+display:inline-flex;align-items:center;gap:.2rem;font-size:.62rem;font-weight:700;
+padding:.1rem .42rem;border-radius:100px;margin-top:.35rem;
+}
+.tu{background:rgba(16,185,129,.12);color:#6ee7b7}
+.tw{background:rgba(245,158,11,.12);color:#fcd34d}
+.td{background:rgba(239,68,68,.12);color:#fca5a5}
+
+.pb{height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;margin-top:.35rem}
+.pbf{height:100%;border-radius:3px;transition:width 1.2s ease}
+
+.alert{
+display:flex;align-items:flex-start;gap:.7rem;padding:.8rem .95rem;
+border-radius:8px;margin-bottom:1.1rem;border:1px solid;font-size:.78rem;line-height:1.55;
+}
+.a-w{background:rgba(245,158,11,.07);border-color:rgba(245,158,11,.22);color:#fcd34d}
+.a-e{background:rgba(239,68,68,.07);border-color:rgba(239,68,68,.22);color:#fca5a5}
+.a-ok{background:rgba(16,185,129,.07);border-color:rgba(16,185,129,.22);color:#6ee7b7}
+.a-ic{flex-shrink:0}
+
+.btn{
+display:inline-flex;align-items:center;gap:.4rem;padding:.48rem 1.05rem;border-radius:7px;
+font-family:‘DM Sans’,sans-serif;font-size:.76rem;font-weight:600;
+cursor:pointer;transition:all .15s;border:1px solid transparent;text-decoration:none;white-space:nowrap;
+}
+.bp{background:var(–tit);color:#fff}.bp:hover{background:#6d28d9}
+.bg{background:transparent;color:var(–tx2);border-color:var(–bd)}.bg:hover{background:var(–s3);color:var(–tx)}
+.bs{padding:.35rem .72rem;font-size:.7rem}
+
+.tag{
+display:inline-flex;align-items:center;gap:.25rem;
+font-size:.6rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+padding:.16rem .55rem;border-radius:100px;border:1px solid;
+}
+.t-lei{color:var(–lei-b);border-color:rgba(29,78,216,.3);background:rgba(29,78,216,.12)}
+.t-reg{color:var(–reg-b);border-color:rgba(5,150,105,.3);background:rgba(5,150,105,.12)}
+.t-conf{color:var(–conf-b);border-color:rgba(234,88,12,.3);background:rgba(234,88,12,.12)}
+.t-tit{color:var(–tit-b);border-color:rgba(124,58,237,.3);background:rgba(124,58,237,.12)}
+.t-ok{color:#6ee7b7;border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.1)}
+.t-w{color:#fcd34d;border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.1)}
+.t-e{color:#fca5a5;border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.1)}
+.t-gray{color:var(–tx3);border-color:var(–bd);background:var(–s3)}
+
+/* Timeline */
+.tl{display:flex;flex-direction:column}
+.tl-i{display:flex;gap:.8rem;padding:.6rem 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.tl-i:last-child{border:none}
+.tl-d{width:27px;height:27px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;flex-shrink:0;margin-top:.1rem}
+.tl-b{flex:1}
+.tl-t{font-size:.78rem;font-weight:500;color:var(–tx);line-height:1.4}
+.tl-m{font-size:.67rem;color:var(–tx3);margin-top:.15rem}
+
+/* Checklist */
+.cl{display:flex;flex-direction:column;gap:.35rem}
+.cl-i{
+display:flex;align-items:center;gap:.6rem;padding:.5rem .7rem;
+border-radius:7px;border:1px solid var(–bd);cursor:pointer;transition:all .15s;
+}
+.cl-i:hover{background:rgba(255,255,255,.025)}
+.cl-i.ck{opacity:.5}
+.cl-c{
+width:17px;height:17px;border-radius:50%;border:2px solid var(–bd);
+display:flex;align-items:center;justify-content:center;
+flex-shrink:0;font-size:.6rem;transition:all .18s;
+}
+.cl-i.ck .cl-c{background:var(–ok);border-color:var(–ok);color:#fff}
+.cl-tx{font-size:.77rem;color:var(–tx);flex:1}
+.cl-i.ck .cl-tx{text-decoration:line-through;color:var(–tx3)}
+
+/* SLA bars */
+.sla-g{display:flex;flex-direction:column;gap:.55rem}
+.sla-i{display:flex;align-items:center;gap:.7rem}
+.sla-l{font-size:.7rem;color:var(–tx2);width:140px;flex-shrink:0}
+.sla-b{flex:1;height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden}
+.sla-f{height:100%;border-radius:2px}
+.sla-v{font-size:.63rem;font-family:var(–ff-m);color:var(–tx3);width:30px;text-align:right;flex-shrink:0}
+
+/* Tables */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.77rem}
+thead th{
+font-family:var(–ff-d);font-size:.6rem;font-weight:700;
+letter-spacing:.1em;text-transform:uppercase;color:var(–tx3);
+padding:.55rem .8rem;border-bottom:1px solid var(–bd);text-align:left;
+}
+tbody td{padding:.65rem .8rem;border-bottom:1px solid rgba(255,255,255,.03);color:var(–tx2);vertical-align:middle}
+tbody tr:hover td{background:rgba(255,255,255,.018);color:var(–tx)}
+tbody tr:last-child td{border:none}
+.td-n{color:var(–tx);font-weight:500}
+.td-m{font-family:var(–ff-m);font-size:.7rem;color:var(–tx3)}
+
+/* Doc row */
+.dr{display:flex;align-items:center;gap:.8rem;padding:.65rem .8rem;border-radius:7px;transition:background .15s;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.025)}
+.dr:hover{background:rgba(255,255,255,.025)}
+.dr:last-child{border:none}
+.di{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.di-lei{background:rgba(29,78,216,.12);border:1px solid rgba(29,78,216,.22)}
+.di-reg{background:rgba(5,150,105,.12);border:1px solid rgba(5,150,105,.22)}
+.di-conf{background:rgba(234,88,12,.12);border:1px solid rgba(234,88,12,.22)}
+.di-tit{background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.22)}
+.dn{font-size:.78rem;font-weight:500;color:var(–tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dm{font-size:.66rem;color:var(–tx3);margin-top:.1rem}
+
+/* Req item */
+.ri{
+display:flex;align-items:center;gap:.7rem;padding:.65rem;
+background:var(–s3);border-radius:8px;border:1px solid var(–bd);
+margin-bottom:.45rem;cursor:pointer;transition:border-color .15s;
+}
+.ri:hover{border-color:var(–bdh)}
+.ri:last-child{margin-bottom:0}
+.ri-ic{width:30px;height:30px;border-radius:7px;background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.22);display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0}
+.ri-info{flex:1;min-width:0}
+.ri-n{font-size:.76rem;font-weight:500;color:var(–tx)}
+.ri-t{font-size:.64rem;color:var(–tx3);margin-top:.1rem}
+
+/* Modal */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:500;display:none;align-items:center;justify-content:center;padding:1.5rem}
+.mo.open{display:flex}
+.md{background:var(–s1);border:1px solid var(–bdh);border-radius:14px;width:100%;max-width:500px;max-height:88vh;overflow-y:auto;animation:scIn .18s ease both}
+@keyframes scIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+.mh{padding:1.1rem 1.4rem;border-bottom:1px solid var(–bd);display:flex;align-items:center;justify-content:space-between}
+.mh h3{font-family:var(–ff-d);font-size:.95rem;font-weight:700;color:#fff}
+.mc-btn{background:none;border:none;color:var(–tx3);cursor:pointer;font-size:1.1rem;padding:.2rem;transition:color .15s}
+.mc-btn:hover{color:#fff}
+.mb{padding:1.4rem}
+.ff{margin-bottom:.85rem}
+.fl{display:block;font-size:.68rem;font-weight:600;color:var(–tx2);letter-spacing:.04em;margin-bottom:.3rem}
+.fi,.fs,.fta{
+width:100%;padding:.55rem .8rem;border-radius:7px;
+background:var(–s3);border:1px solid var(–bd);
+color:var(–tx);font-family:‘DM Sans’,sans-serif;font-size:.78rem;
+outline:none;transition:border-color .15s;
+}
+.fi:focus,.fs:focus,.fta:focus{border-color:rgba(124,58,237,.45)}
+.fta{resize:vertical;min-height:75px}
+.f-row{display:flex;gap:.55rem;justify-content:flex-end;margin-top:.4rem}
+
+/* Page header */
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.6rem;flex-wrap:wrap;gap:1rem}
+.ph h1{font-family:var(–ff-d);font-size:1.3rem;font-weight:700;color:#fff;letter-spacing:-.02em;margin-bottom:.2rem}
+.ph p{font-size:.78rem;color:var(–tx2);line-height:1.6}
+.ph-a{display:flex;align-items:center;gap:.55rem}
+
+/* Pilar page header stripe */
+.pilar-hdr{border-radius:var(–r);padding:1.4rem;margin-bottom:1.6rem;border:1px solid var(–bd);position:relative;overflow:hidden}
+.pilar-hdr::before{content:’’;position:absolute;right:-2rem;top:-2rem;width:110px;height:110px;border-radius:50%;opacity:.06}
+.ph-lei{background:linear-gradient(135deg,rgba(29,78,216,.1),transparent)}
+.ph-lei::before{background:var(–lei)}
+.ph-reg{background:linear-gradient(135deg,rgba(5,150,105,.1),transparent)}
+.ph-reg::before{background:var(–reg)}
+.ph-conf{background:linear-gradient(135deg,rgba(234,88,12,.1),transparent)}
+.ph-conf::before{background:var(–conf)}
+.ph-tit{background:linear-gradient(135deg,rgba(124,58,237,.1),transparent)}
+.ph-tit::before{background:var(–tit)}
+.ph-tag{font-size:.56rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:.35rem;margin-bottom:.4rem}
+.ph-tag::before{content:’’;width:12px;height:2px;background:currentColor;border-radius:1px}
+.ph-ttl{font-family:var(–ff-d);font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:.3rem}
+.ph-dsc{font-size:.78rem;color:var(–tx2);line-height:1.6;max-width:540px}
+.ph-acts{display:flex;gap:.55rem;flex-wrap:wrap;margin-top:.9rem}
+
+/* Progress ring SVG */
+.pr circle{fill:none;stroke-width:5.5;stroke-linecap:round}
+.pr .bg{stroke:rgba(255,255,255,.05)}
+
+/* Module card */
+.mc{background:var(–s2);border:1px solid var(–bd);border-radius:var(–r);padding:1rem;cursor:pointer;transition:all .18s}
+.mc:hover{border-color:var(–bdh);transform:translateY(-2px);background:var(–s3)}
+.mc-ic{font-size:1.3rem;margin-bottom:.5rem}
+.mc-n{font-size:.82rem;font-weight:700;color:#fff;margin-bottom:.22rem}
+.mc-d{font-size:.7rem;color:var(–tx3);line-height:1.5}
+.mc-bot{margin-top:.6rem;display:flex;align-items:center;justify-content:space-between}
+
+/* Lei accordion */
+.lc{background:var(–s2);border:1px solid var(–bd);border-radius:var(–r);overflow:hidden;margin-bottom:.75rem}
+.lc-h{padding:.9rem 1.1rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background .15s;gap:.7rem}
+.lc-h:hover{background:rgba(255,255,255,.02)}
+.lc-hl{display:flex;align-items:center;gap:.7rem}
+.lc-num{font-family:var(–ff-m);font-size:.65rem;padding:.18rem .5rem;border-radius:5px;background:rgba(29,78,216,.12);color:var(–lei-b);border:1px solid rgba(29,78,216,.22);white-space:nowrap}
+.lc-n{font-size:.82rem;font-weight:600;color:#fff}
+.lc-s{font-size:.68rem;color:var(–tx3);margin-top:.08rem}
+.lc-b{display:none;padding:.9rem 1.1rem;border-top:1px solid var(–bd)}
+.lc.open .lc-b{display:block}
+.la{font-size:.76rem;color:var(–tx2);padding:.55rem .8rem;background:var(–s3);border-radius:7px;border-left:3px solid var(–lei);margin-bottom:.45rem;line-height:1.65}
+.la:last-child{margin-bottom:0}
+.la strong{color:var(–lei-b)}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:10px}
+
+@media(max-width:900px){#sb{transform:translateX(-100%);transition:transform .22s}#sb.open{transform:translateX(0)}#main{margin-left:0}#content{padding:1.25rem}}
+</style>
+
+</head>
+<body>
+
+<!-- ══════════════════════ SIDEBAR ══════════════════════ -->
+
+<nav id="sb">
+  <div class="sb-logo">
+    <div class="sb-logo-mark"><span style="-webkit-text-fill-color:initial;width:8px;height:8px;border-radius:50%;background:var(--wa);display:inline-block;animation:blink 2s infinite;flex-shrink:0"></span>4 PILARES LGPD</div>
+    <div class="sb-logo-sub">Painel de Controle</div>
+  </div>
+  <div class="sb-client">
+    <div class="sb-cl">Cliente</div>
+    <div class="sb-cn">Empresa Exemplo Ltda</div>
+    <div class="sb-cp">⭐ Essencial Completo</div>
+  </div>
+  <div class="sb-nav">
+
+```
+<div class="sb-section">
+  <button class="sb-a pa on" onclick="nav('overview',this)"><span class="sb-ic">🏠</span> Visão Geral</button>
+  <button class="sb-a pa" onclick="nav('arq',this)"><span class="sb-ic">🗺️</span> Arquitetura Modular</button>
+</div>
+
+<div class="sb-section">
+  <div class="sb-sl">⬡ 4 Pilares Obrigatórios</div>
+  <button class="sb-a p1" onclick="nav('lei',this)"><span class="sb-ic">🏛️</span> Pilar 1 — Lei <span class="sb-badge b-g">OK</span></button>
+  <button class="sb-a p2" onclick="nav('regras',this)"><span class="sb-ic">📋</span> Pilar 2 — Regras <span class="sb-badge b-o">3</span></button>
+  <button class="sb-a p3" onclick="nav('conformidade',this)"><span class="sb-ic">✅</span> Pilar 3 — Conformidade <span class="sb-badge b-o">1</span></button>
+  <button class="sb-a p4" onclick="nav('titular',this)"><span class="sb-ic">👤</span> Pilar 4 — Titular <span class="sb-badge b-r">2</span></button>
+</div>
+
+<div class="sb-section">
+  <div class="sb-sl">Operacional</div>
+  <button class="sb-a" onclick="nav('docs',this)"><span class="sb-ic">📁</span> Documentos</button>
+  <button class="sb-a" onclick="nav('treino',this)"><span class="sb-ic">🎓</span> Treinamentos</button>
+  <button class="sb-a" onclick="nav('chamados',this)"><span class="sb-ic">💬</span> Chamados <span class="sb-badge b-r">1</span></button>
+</div>
+
+<div class="sb-section">
+  <div class="sb-sl">Jurídico</div>
+  <button class="sb-a" onclick="nav('contrato',this)"><span class="sb-ic">📜</span> Contrato & Plano</button>
+  <button class="sb-a" onclick="nav('procuracao',this)"><span class="sb-ic">⚖️</span> Procuração DPO <span class="sb-badge b-r">!</span></button>
+</div>
+```
+
+  </div>
+  <div class="sb-bot">
+    <a href="https://wa.me/5563984381782" target="_blank" class="sb-bta"><span>💬</span> WhatsApp Suporte</a>
+    <div class="sb-bta" onclick="openModal('incidente')"><span>🚨</span> Notificar Incidente</div>
+    <div class="sb-bta"><span>🔑</span> Sair</div>
+  </div>
+</nav>
+
+<!-- ══════════════════════ MAIN ══════════════════════ -->
+
+<div id="main">
+  <div class="topbar">
+    <div class="tb-bc"><span>Painel</span><span>›</span><strong id="bc">Visão Geral</strong></div>
+    <div class="tb-r">
+      <div class="tb-status">Conformidade Ativa</div>
+      <div class="tb-btn" onclick="nav('chamados')">🔔<div class="tb-dot"></div></div>
+      <div class="tb-av" title="Empresa Exemplo">EE</div>
+    </div>
+  </div>
+
+  <div id="content">
+
+  <!-- ══════════════════════════════════════════
+       PAGE: VISÃO GERAL
+  ══════════════════════════════════════════ -->
+
+  <div class="pg on" id="pg-overview">
+    <div class="ph">
+      <div><h1>Visão Geral — 4 Pilares</h1><p>Status consolidado · DPO ativo · Atualizado 07/03/2026</p></div>
+      <div class="ph-a">
+        <button class="btn bg bs" onclick="openModal('relatorio')">📊 Relatório</button>
+        <button class="btn bp bs" onclick="nav('arq')">🗺️ Ver Arquitetura</button>
+      </div>
+    </div>
+
+```
+<div class="alert a-e"><span class="a-ic">🚨</span><div><strong>2 requisições vencidas (Pilar 4).</strong> Responda imediatamente — risco de notificação à ANPD. <button class="btn bg bs" onclick="nav('titular')" style="margin-left:.5rem">Ver →</button></div></div>
+<div class="alert a-w"><span class="a-ic">⚠️</span><div><strong>Procuração DPO pendente.</strong> Envie o documento assinado para docs@sajodiagnos.club em até 15 dias. <button class="btn bg bs" onclick="nav('procuracao')" style="margin-left:.5rem">Instruções</button></div></div>
+
+<div class="g4" style="margin-bottom:1.4rem">
+  <div class="stat sg"><div class="stat-lbl">Conformidade Geral</div><div class="stat-val">67<span style="font-size:.9rem;opacity:.5">%</span></div><div class="pb"><div class="pbf" style="width:67%;background:linear-gradient(90deg,var(--lei),var(--tit))"></div></div><div class="stat-trend tu">▲ +12% este mês</div></div>
+  <div class="stat st"><div class="stat-lbl">Requisições Abertas</div><div class="stat-val">2</div><div class="stat-sub">2 vencidas · 0 no prazo</div><div class="stat-trend td">⚠ Ação necessária</div></div>
+  <div class="stat sr"><div class="stat-lbl">Documentos Ativos</div><div class="stat-val">8</div><div class="stat-sub">de 12 previstos no plano</div><div class="stat-trend tw">3 pendentes</div></div>
+  <div class="stat sc"><div class="stat-lbl">Próxima Auditoria</div><div class="stat-val" style="font-size:1.2rem;padding-top:.2rem">Mar/27</div><div class="stat-sub">12 meses de contrato</div><div class="stat-trend tu">Agendada</div></div>
+</div>
+
+<!-- 4 PILARES STATUS -->
+<div style="margin-bottom:1.4rem">
+  <div style="font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3);margin-bottom:.75rem">STATUS DOS 4 PILARES OBRIGATÓRIOS</div>
+  <div class="g4">
+    <div onclick="nav('lei')" style="background:var(--s2);border:1px solid var(--bd);border-top:2px solid var(--lei);border-radius:var(--r);padding:1rem;cursor:pointer;transition:all .18s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem"><span style="font-family:var(--ff-d);font-size:.8rem;font-weight:700;color:#fff">🏛️ LEI</span><span style="font-family:var(--ff-m);font-size:.82rem;color:var(--lei-b);font-weight:600">88%</span></div>
+      <div class="pb"><div class="pbf" style="width:88%;background:var(--lei)"></div></div>
+      <div style="font-size:.67rem;color:var(--tx3);margin-top:.4rem">7 de 8 itens concluídos</div>
+    </div>
+    <div onclick="nav('regras')" style="background:var(--s2);border:1px solid var(--bd);border-top:2px solid var(--reg);border-radius:var(--r);padding:1rem;cursor:pointer;transition:all .18s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem"><span style="font-family:var(--ff-d);font-size:.8rem;font-weight:700;color:#fff">📋 REGRAS</span><span style="font-family:var(--ff-m);font-size:.82rem;color:var(--reg-b);font-weight:600">58%</span></div>
+      <div class="pb"><div class="pbf" style="width:58%;background:var(--reg)"></div></div>
+      <div style="font-size:.67rem;color:var(--tx3);margin-top:.4rem">7 de 12 documentos</div>
+    </div>
+    <div onclick="nav('conformidade')" style="background:var(--s2);border:1px solid var(--bd);border-top:2px solid var(--conf);border-radius:var(--r);padding:1rem;cursor:pointer;transition:all .18s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem"><span style="font-family:var(--ff-d);font-size:.8rem;font-weight:700;color:#fff">✅ CONFORMIDADE</span><span style="font-family:var(--ff-m);font-size:.82rem;color:var(--conf-b);font-weight:600">72%</span></div>
+      <div class="pb"><div class="pbf" style="width:72%;background:var(--conf)"></div></div>
+      <div style="font-size:.67rem;color:var(--tx3);margin-top:.4rem">DPO ativo · Auditoria pendente</div>
+    </div>
+    <div onclick="nav('titular')" style="background:var(--s2);border:1px solid var(--bd);border-top:2px solid var(--tit);border-radius:var(--r);padding:1rem;cursor:pointer;transition:all .18s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem"><span style="font-family:var(--ff-d);font-size:.8rem;font-weight:700;color:#fff">👤 TITULAR</span><span style="font-family:var(--ff-m);font-size:.82rem;color:var(--tit-b);font-weight:600">42%</span></div>
+      <div class="pb"><div class="pbf" style="width:42%;background:var(--tit)"></div></div>
+      <div style="font-size:.67rem;color:var(--tx3);margin-top:.4rem">2 requisições vencidas</div>
+    </div>
+  </div>
+</div>
+
+<div class="g2">
+  <div class="card"><div class="ct">Atividade Recente <span>7 dias</span></div>
+    <div class="tl">
+      <div class="tl-i"><div class="tl-d" style="background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.25)">✅</div><div class="tl-b"><div class="tl-t">Política de Privacidade entregue</div><div class="tl-m">04/03/2026 · Pilar 2</div><span class="tag t-reg" style="margin-top:.25rem;display:inline-flex">Documento</span></div></div>
+      <div class="tl-i"><div class="tl-d" style="background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.25)">👤</div><div class="tl-b"><div class="tl-t">Nova req: Acesso — Maria Silva</div><div class="tl-m">03/03/2026 · Pilar 4</div><span class="tag t-e" style="margin-top:.25rem;display:inline-flex">Vencida</span></div></div>
+      <div class="tl-i"><div class="tl-d" style="background:rgba(29,78,216,.12);border:1px solid rgba(29,78,216,.25)">🏛️</div><div class="tl-b"><div class="tl-t">Monitor legislativo: sem alterações</div><div class="tl-m">02/03/2026 · Pilar 1</div><span class="tag t-ok" style="margin-top:.25rem;display:inline-flex">OK</span></div></div>
+      <div class="tl-i"><div class="tl-d" style="background:rgba(234,88,12,.12);border:1px solid rgba(234,88,12,.25)">🎓</div><div class="tl-b"><div class="tl-t">Treinamento LGPD: 3 certificados</div><div class="tl-m">28/02/2026 · Pilar 3</div><span class="tag t-conf" style="margin-top:.25rem;display:inline-flex">Treinamento</span></div></div>
+    </div>
+  </div>
+  <div class="card"><div class="ct">Próximas Ações</div>
+    <div class="cl">
+      <div class="cl-i"><div class="cl-c"></div><div class="cl-tx">Enviar Procuração DPO assinada</div><span class="tag t-e">Urgente</span></div>
+      <div class="cl-i"><div class="cl-c"></div><div class="cl-tx">Responder req. #002 — Maria Silva</div><span class="tag t-tit">P4</span></div>
+      <div class="cl-i"><div class="cl-c"></div><div class="cl-tx">Responder req. #003 — João Souza</div><span class="tag t-tit">P4</span></div>
+      <div class="cl-i"><div class="cl-c"></div><div class="cl-tx">Elaborar ROPA — Registro de Operações</div><span class="tag t-reg">P2</span></div>
+      <div class="cl-i"><div class="cl-c"></div><div class="cl-tx">Kickoff com DPO (reunião)</div><span class="tag t-conf">P3</span></div>
+      <div class="cl-i ck"><div class="cl-c">✓</div><div class="cl-tx">Política de Privacidade publicada</div><span class="tag t-ok">Feito</span></div>
+      <div class="cl-i ck"><div class="cl-c">✓</div><div class="cl-tx">Formulário ANPD preenchido</div><span class="tag t-ok">Feito</span></div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       PAGE: ARQUITETURA MODULAR
+  ══════════════════════════════════════════ -->
+
+  <div class="pg" id="pg-arq">
+    <div class="ph">
+      <div>
+        <h1>Arquitetura Conceitual Modular</h1>
+        <p>Estrutura obrigatória dos 4 pilares · Módulos, dependências e fluxo de conformidade LGPD</p>
+      </div>
+      <div class="ph-a">
+        <button class="btn bg bs">📥 Exportar PDF</button>
+        <button class="btn bp bs">📊 Ver Painel →</button>
+      </div>
+    </div>
+
+```
+<!-- MAPA VISUAL -->
+<div class="arq-wrap">
+  <div class="arq-head">
+    <div>
+      <div class="arq-title">4 PILARES LGPD</div>
+      <div style="font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--tx3);margin-top:.3rem">ARQUITETURA CONCEITUAL MODULAR OBRIGATÓRIA</div>
+      <div class="arq-sub">Sistema integrado de conformidade com a LGPD baseado em 4 pilares interdependentes e obrigatórios. Cada pilar contém módulos específicos que se comunicam entre si, com o DPO como eixo central e a ANPD como autoridade regulatória.</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.5rem;align-items:flex-end">
+      <div class="obrig-badge">🔴 OBRIGATÓRIO — TODOS OS 4 PILARES</div>
+      <div class="arq-legend">
+        <div class="arq-leg-item"><div class="arq-leg-dot" style="background:var(--ok)"></div>Módulo ativo</div>
+        <div class="arq-leg-item"><div class="arq-leg-dot" style="background:var(--warn)"></div>Em andamento</div>
+        <div class="arq-leg-item"><div class="arq-leg-dot" style="background:var(--tx3)"></div>Pendente</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arq-canvas">
+    <div class="arq-grid">
+
+      <!-- PILAR 1 — LEI (top-left) -->
+      <div class="n-lei">
+        <div class="pilar-node pn-lei" onclick="nav('lei')">
+          <div class="pn-head">
+            <div class="pn-num">01</div>
+            <div class="pn-info">
+              <div class="pn-label">Pilar 1</div>
+              <div class="pn-title">🏛️ LEI</div>
+              <div style="font-size:.67rem;color:var(--tx2);margin-top:.2rem">Legislação e Bases Legais</div>
+            </div>
+            <span class="tag t-ok">88%</span>
+          </div>
+          <div class="pn-mods">
+            <div class="pn-mod"><div class="pn-mod-dot" style="background:var(--ok)"></div><span class="pn-mod-name">Análise LGPD (Lei 13.709)</span><span class="pn-mod-tag mod-ok">✓</span></div>
+            <div class="pn-mod"><div class="pn-mod-dot" style="background:var(--ok)"></div><span class="pn-mod-name">Marco Civil Internet</span><span class="pn-mod-tag mod-ok">✓</span></div>
+            <div class="pn-mod"><div class="pn-mod-dot" style="background:var(--warn)"></div><span class="pn-mod-name">Estatuto Digital (Lei 15.211)</span><span class="pn-mod-tag mod-on">Em análise</span></div>
+            <div class="pn-mod"><div class="pn-mod-dot" style="background:var(--ok)"></div><span class="pn-mod-name">Monitor Regulatório ANPD</span><span class="pn-mod-tag mod-ok">Ativo</span></div>
+            <div class="pn-mod"><div class="pn-mod-dot" style="background:var(--ok)"></div><span class="pn-mod-name">Identificação Bases Legais</span><span class="pn-mod-tag mod-ok">✓</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PILAR 2 — REGRAS (top-right) -->
+      <div class="n-reg">
+        <div class="pilar-node pn-reg" onclick="nav('regras')">
+          <div class="pn-head">
+            <div class="pn-num">02</div>
+            <div class="pn-info">
+              <div class="pn-label">Pilar 2</div>
+              <div class="pn-title">📋 REGRAS</div>
+              <div style="font-size:.67rem;color:var(--tx2);margin-top:.2rem">Documentação e Governança</div>
+            </div>
+            <span class="tag t-w">58%</span>
+          </div>
+          <div class="pn-mods">
+            <div class="pn-mod"><div class="pn-mod-dot" style="background:var(--ok)"></div><span class="pn-mod-name">Política de Privacidade</span><span class="pn-mod-tag mod-ok">✓ Publicada</span></div>
+            <div class="pn-mod"><div class="pn-mod-dot" style="background:var(--ok)"></div><span class="pn-mod-name">Termos de Uso</span><span class="pn-mod-tag mod-ok">✓</span></div>
+            <div class="pn-mod"><div class="pn-mod-dot" style="background:var(--ok)"></div><span class="pn-mod-name">RIPD — Relatório de Impacto</span><span class="pn-mod-tag mod-ok">✓</span></div>
+            <div class="pn-mod"><div class="pn-mod-dot" style="background:var(--warn)"></div><span class="pn-mod-name">ROPA — Registro de Operações</span><span class="pn-mod-tag mod-on">45%</span></div>
+            <div class="pn-mod"><div class="pn-mod-dot" style="background:var(--warn)"></div><span class="pn-mod-name">Contratos DPA</span><span class="pn-mod-tag mod-on">Aguardando</span></div>
+            <div class="pn-mod"><div class="pn-mod-dot" style="background:var(--tx3)"></div><span class="pn-mod-name">POP Segurança de Dados</span><span class="pn-mod-tag mod-nd">Pendente</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NÚCLEO CENTRAL -->
+      <div class="n-nuc">
+        <div style="width:100%">
+          <div class="nucleo-card">
+            <div class="nucleo-ic">⚙️</div>
+            <div class="nucleo-name">NÚCLEO CENTRAL</div>
+            <div class="nucleo-sub">DPO 4 Pilares LGPD<br>Empresa Exemplo Ltda<br>CNPJ 58.551.044/0001-90</div>
+            <div class="nucleo-tags">
+              <span class="nucleo-tag">ANPD</span>
+              <span class="nucleo-tag">DPO Registrado</span>
+              <span class="nucleo-tag">Plano Essencial</span>
+            </div>
+          </div>
+          <!-- Setas de conexão -->
+          <div style="display:flex;justify-content:space-between;padding:.6rem .5rem;margin-top:.3rem">
+            <div style="font-size:.58rem;color:var(--tx3);text-align:center;flex:1">← P1</div>
+            <div style="font-size:.58rem;color:rgba(255,255,255,.15);text-align:center;flex:1">↔</div>
+            <div style="font-size:.58rem;color:var(--tx3);text-align:center;flex:1">P2 →</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:.0rem .5rem;margin-bottom:.3rem">
+            <div style="font-size:.58rem;color:var(--tx3);text-align:center;flex:1">← P4</div>
+            <div style="font-size:.58rem;color:rgba(255,255,255,.15);text-align:center;flex:1">↕</div>
+            <div style="font-size:.58rem;color:var(--tx3);text-align:center;flex:1">P3 →</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PILAR 4 — TITULAR (bottom-left) -->
+      <div class="n-tit">
+        <div class="pilar-node pn-tit" onclick="nav('titular')">
+          <div class="pn-head">
+            <div class="pn-num">04</div>
+            <div class="pn-info">
+              <div class="pn-label">Pilar 4</div>
+              <div class="pn-title">👤 TITULAR</div>
+              <div style="font-size:.67rem;color:var(--tx2);margin-top:.2rem">Direitos e Transparência</div>
+            </div>
+            <span class="tag t-e">42%</span>
+          </div>
+          <div class="pn-mods">
+            <div class="pn-mod"><div class="pn-mod-dot" style="background:var(--ok)"></div><span class="pn-mod-name">Canal de Requisições</span><span class="pn-mod-tag mod-ok">Ativo</span></div>
+            <div class="pn-mod"><div class="pn-mod-dot" style="background:var(--ok)"></div><span class="pn-mod-name">Portal Público Privacidade</span><span class="pn-mod-tag mod-ok">Online</span></div>
+            <div class="pn-mod"><div class="pn-mod-dot" style="background:var(--tx3)"></div><span class="pn-mod-name">Workflow SLA 15 dias úteis</span><span class="pn-mod-tag" style="background:rgba(239,68,68,.15);color:#fca5a5">2 atrasadas</span></div>
+            <div class="pn-mod"><div class="pn-mod-dot" style="background:var(--ok)"></div><span class="pn-mod-name">Protocolo Incidentes (ANPD)</span><span class="pn-mod-tag mod-ok">✓</span></div>
+            <div class="pn-mod"><div class="pn-mod-dot" style="background:var(--tx3)"></div><span class="pn-mod-name">Art. 18 — 8 direitos</span><span class="pn-mod-tag mod-on">Parcial</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PILAR 3 — CONFORMIDADE (bottom-right) -->
+      <div class="n-conf">
+        <div class="pilar-node pn-conf" onclick="nav('conformidade')">
+          <div class="pn-head">
+            <div class="pn-num">03</div>
+            <div class="pn-info">
+              <div class="pn-label">Pilar 3</div>
+              <div class="pn-title">✅ CONFORMIDADE</div>
+              <div style="font-size:.67rem;color:var(--tx2);margin-top:.2rem">DPO, Auditoria, Certificação</div>
+            </div>
+            <span class="tag t-w">72%</span>
+          </div>
+          <div class="pn-mods">
+            <div class="pn-mod"><div class="pn-mod-dot" style="background:var(--ok)"></div><span class="pn-mod-name">DPO Registrado ANPD</span><span class="pn-mod-tag mod-ok">✓</span></div>
+            <div class="pn-mod"><div class="pn-mod-dot" style="background:var(--tx3)"></div><span class="pn-mod-name">Procuração DPO</span><span class="pn-mod-tag" style="background:rgba(239,68,68,.15);color:#fca5a5">Pendente</span></div>
+            <div class="pn-mod"><div class="pn-mod-dot" style="background:var(--ok)"></div><span class="pn-mod-name">GAP Analysis</span><span class="pn-mod-tag mod-ok">✓</span></div>
+            <div class="pn-mod"><div class="pn-mod-dot" style="background:var(--warn)"></div><span class="pn-mod-name">Treinamentos Equipe</span><span class="pn-mod-tag mod-on">1/2</span></div>
+            <div class="pn-mod"><div class="pn-mod-dot" style="background:var(--tx3)"></div><span class="pn-mod-name">Auditoria Anual</span><span class="pn-mod-tag mod-nd">Mar/27</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- LEGENDA DE INTERDEPENDÊNCIAS -->
+    <div style="margin-top:1.5rem;padding:1rem 1.25rem;background:rgba(255,255,255,.025);border-radius:10px;border:1px solid var(--bd)">
+      <div style="font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3);margin-bottom:.7rem">INTERDEPENDÊNCIAS OBRIGATÓRIAS</div>
+      <div style="display:flex;gap:1.5rem;flex-wrap:wrap">
+        <div style="font-size:.7rem;color:var(--tx2);display:flex;align-items:center;gap:.5rem"><span style="color:var(--lei-b)">P1 → P2</span> Lei fundamenta as Regras — base legal orienta todos os documentos</div>
+        <div style="font-size:.7rem;color:var(--tx2);display:flex;align-items:center;gap:.5rem"><span style="color:var(--reg-b)">P2 → P3</span> Documentos habilitam a Conformidade — RIPD/ROPA alimentam o DPO</div>
+        <div style="font-size:.7rem;color:var(--tx2);display:flex;align-items:center;gap:.5rem"><span style="color:var(--conf-b)">P3 → P4</span> Conformidade garante os direitos — DPO responde aos titulares</div>
+        <div style="font-size:.7rem;color:var(--tx2);display:flex;align-items:center;gap:.5rem"><span style="color:var(--tit-b)">P4 → P1</span> Titular retroalimenta — requisições podem revelar novas obrigações legais</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TABELA DETALHADA DE MÓDULOS -->
+<div class="mod-table-wrap">
+  <div class="mt-head">
+    <div class="mt-h-cell on" id="mt-tab-lei" onclick="switchMT('lei')">
+      <div class="mt-h-num c-lei">01</div>
+      <div class="mt-h-info"><div class="mt-h-label c-lei">Pilar 1</div><div class="mt-h-name">🏛️ LEI</div></div>
+    </div>
+    <div class="mt-h-cell" id="mt-tab-reg" onclick="switchMT('reg')">
+      <div class="mt-h-num c-reg">02</div>
+      <div class="mt-h-info"><div class="mt-h-label c-reg">Pilar 2</div><div class="mt-h-name">📋 REGRAS</div></div>
+    </div>
+    <div class="mt-h-cell" id="mt-tab-conf" onclick="switchMT('conf')">
+      <div class="mt-h-num c-conf">03</div>
+      <div class="mt-h-info"><div class="mt-h-label c-conf">Pilar 3</div><div class="mt-h-name">✅ CONFORMIDADE</div></div>
+    </div>
+    <div class="mt-h-cell" id="mt-tab-tit" onclick="switchMT('tit')">
+      <div class="mt-h-num c-tit">04</div>
+      <div class="mt-h-info"><div class="mt-h-label c-tit">Pilar 4</div><div class="mt-h-name">👤 TITULAR</div></div>
+    </div>
+  </div>
+  <div class="mt-body">
+
+    <!-- LEI -->
+    <div class="mt-panel on" id="mt-lei">
+      <div class="mod-block">
+        <div class="mb-ic">⚖️</div><div class="mb-name">Análise de Aplicabilidade LGPD</div>
+        <div class="mb-desc">Diagnóstico completo das bases legais conforme Art. 7º e 11 da Lei 13.709/2018. Identifica operações de tratamento e fundamenta juridicamente cada processo.</div>
+        <div class="obr-flag">🔴 Obrigatório</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Lei 13.709/2018</span><span class="mb-status mbs-ok">Concluído</span></div>
+      </div>
+      <div class="mod-block">
+        <div class="mb-ic">🌐</div><div class="mb-name">Marco Civil da Internet</div>
+        <div class="mb-desc">Adequação à Lei 12.965/2014 — logs de acesso (6 meses), responsabilidade civil, privacidade e proteção de dados em plataformas digitais.</div>
+        <div class="obr-flag">🔴 Obrigatório</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Lei 12.965/2014</span><span class="mb-status mbs-ok">Concluído</span></div>
+      </div>
+      <div class="mod-block">
+        <div class="mb-ic">👶</div><div class="mb-name">Estatuto Digital — Lei 15.211</div>
+        <div class="mb-desc">Proteção de dados de crianças e adolescentes. Verificação de aplicabilidade, base legal específica e mecanismos de consentimento parental quando necessário.</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Lei 15.211/2025</span><span class="mb-status mbs-on">Em análise</span></div>
+      </div>
+      <div class="mod-block">
+        <div class="mb-ic">🔍</div><div class="mb-name">Monitor Regulatório ANPD</div>
+        <div class="mb-desc">Acompanhamento contínuo de resoluções, notas técnicas e orientações da ANPD. Alertas automáticos por e-mail em caso de nova norma relevante.</div>
+        <div class="obr-flag">🔴 Obrigatório</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Contínuo</span><span class="mb-status mbs-ok">Ativo</span></div>
+      </div>
+      <div class="mod-block">
+        <div class="mb-ic">📜</div><div class="mb-name">Res. CD/ANPD nº 2/2022</div>
+        <div class="mb-desc">Normas para Agentes de Pequeno Porte. Simplificação das obrigações, critérios de qualificação e tratamento diferenciado pela autoridade regulatória.</div>
+        <div class="obr-flag">🔴 Obrigatório APP</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Res. ANPD 2/2022</span><span class="mb-status mbs-ok">Concluído</span></div>
+      </div>
+      <div class="mod-block">
+        <div class="mb-ic">🏗️</div><div class="mb-name">Mapeamento de Dados (LGPD Art. 37)</div>
+        <div class="mb-desc">Inventário completo dos dados pessoais tratados, categorias, finalidades, bases legais, retenção e destinatários. Insumo obrigatório para o ROPA.</div>
+        <div class="obr-flag">🔴 Obrigatório</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Art. 37 LGPD</span><span class="mb-status mbs-ok">Concluído</span></div>
+      </div>
+    </div>
+
+    <!-- REGRAS -->
+    <div class="mt-panel" id="mt-reg">
+      <div class="mod-block">
+        <div class="mb-ic">📄</div><div class="mb-name">Política de Privacidade</div>
+        <div class="mb-desc">Documento público com linguagem clara e acessível conforme Art. 9º LGPD. Publicada no site, disponível aos titulares, atualizada anualmente.</div>
+        <div class="obr-flag">🔴 Obrigatório</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Art. 9º LGPD</span><span class="mb-status mbs-ok">Publicada</span></div>
+      </div>
+      <div class="mod-block">
+        <div class="mb-ic">📃</div><div class="mb-name">Termos de Uso</div>
+        <div class="mb-desc">Regulamentação das condições de uso do site/aplicação, responsabilidades e integração com cláusulas de proteção de dados pessoais.</div>
+        <div class="obr-flag">🔴 Obrigatório</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Marco Civil + LGPD</span><span class="mb-status mbs-ok">Publicado</span></div>
+      </div>
+      <div class="mod-block">
+        <div class="mb-ic">📊</div><div class="mb-name">RIPD — Relatório de Impacto</div>
+        <div class="mb-desc">Avaliação de riscos de operações de alto risco (Art. 38 LGPD). Documenta ameaças, vulnerabilidades e medidas de mitigação adotadas.</div>
+        <div class="obr-flag">🔴 Obrigatório (alto risco)</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Art. 38 LGPD</span><span class="mb-status mbs-ok">Concluído</span></div>
+      </div>
+      <div class="mod-block">
+        <div class="mb-ic">📑</div><div class="mb-name">ROPA — Registro de Operações</div>
+        <div class="mb-desc">Registro obrigatório de todas as atividades de tratamento (Art. 37). Inclui finalidade, base legal, categorias, retenção e transferências internacionais.</div>
+        <div class="obr-flag">🔴 Obrigatório</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Art. 37 LGPD</span><span class="mb-status mbs-on">Em elaboração (45%)</span></div>
+      </div>
+      <div class="mod-block">
+        <div class="mb-ic">🤝</div><div class="mb-name">Contratos DPA</div>
+        <div class="mb-desc">Data Processing Agreements com operadores e fornecedores terceiros (Art. 39 LGPD). Cláusulas de responsabilidade, segurança e sub-tratamento.</div>
+        <div class="obr-flag">🔴 Obrigatório</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Art. 39 LGPD</span><span class="mb-status mbs-on">Aguardando (20%)</span></div>
+      </div>
+      <div class="mod-block">
+        <div class="mb-ic">🔒</div><div class="mb-name">POP — Segurança de Dados</div>
+        <div class="mb-desc">Procedimentos Operacionais Padrão para gestão segura de dados pessoais, controles de acesso, backup, descarte e resposta a incidentes internos.</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Art. 46 LGPD</span><span class="mb-status mbs-nd">Pendente</span></div>
+      </div>
+    </div>
+
+    <!-- CONFORMIDADE -->
+    <div class="mt-panel" id="mt-conf">
+      <div class="mod-block">
+        <div class="mb-ic">⚖️</div><div class="mb-name">DPO Registrado ANPD</div>
+        <div class="mb-desc">Encarregado de Dados Pessoais (Art. 41 LGPD) formalmente designado e registrado na ANPD. Ponto de contato oficial para titulares e autoridade regulatória.</div>
+        <div class="obr-flag">🔴 Obrigatório</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Art. 41 LGPD</span><span class="mb-status mbs-ok">Ativo</span></div>
+      </div>
+      <div class="mod-block">
+        <div class="mb-ic">📝</div><div class="mb-name">Procuração DPO</div>
+        <div class="mb-desc">Instrumento legal que outorga poderes ao DPO para representar a empresa perante a ANPD, titulares e demais órgãos regulatórios. Exige assinatura com certificado digital ICP-Brasil.</div>
+        <div class="obr-flag">🔴 Obrigatório</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Direito Civil</span><span class="mb-status mbs-req">⚠ Pendente</span></div>
+      </div>
+      <div class="mod-block">
+        <div class="mb-ic">🔍</div><div class="mb-name">GAP Analysis</div>
+        <div class="mb-desc">Diagnóstico inicial de maturidade em privacidade e proteção de dados. Identificação de lacunas, priorização de ações e roadmap de conformidade.</div>
+        <div class="obr-flag">🔴 Obrigatório (início)</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Kickoff</span><span class="mb-status mbs-ok">Concluído</span></div>
+      </div>
+      <div class="mod-block">
+        <div class="mb-ic">🎓</div><div class="mb-name">Treinamentos Obrigatórios</div>
+        <div class="mb-desc">Capacitação de todos os colaboradores que tratam dados pessoais. Abrange fundamentos LGPD, responsabilidades, procedimentos internos e resposta a incidentes.</div>
+        <div class="obr-flag">🔴 Obrigatório</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Art. 50 LGPD</span><span class="mb-status mbs-on">1 de 2 realizados</span></div>
+      </div>
+      <div class="mod-block">
+        <div class="mb-ic">📋</div><div class="mb-name">Medidas de Segurança</div>
+        <div class="mb-desc">Implementação de medidas técnicas e administrativas de segurança (Art. 46 LGPD): criptografia, controle de acesso, logs de auditoria e política de senhas.</div>
+        <div class="obr-flag">🔴 Obrigatório</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Art. 46 LGPD</span><span class="mb-status mbs-on">Em andamento</span></div>
+      </div>
+      <div class="mod-block">
+        <div class="mb-ic">🏆</div><div class="mb-name">Auditoria Anual + Certificação</div>
+        <div class="mb-desc">Auditoria formal de conformidade com emissão de certificado. Avalia todos os 4 pilares, entrega relatório de não-conformidades e plano de ação corretivo.</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Anual</span><span class="mb-status mbs-nd">Mar/2027</span></div>
+      </div>
+    </div>
+
+    <!-- TITULAR -->
+    <div class="mt-panel" id="mt-tit">
+      <div class="mod-block">
+        <div class="mb-ic">📬</div><div class="mb-name">Canal de Requisições</div>
+        <div class="mb-desc">Canal oficial para recebimento de pedidos dos titulares (Art. 18 LGPD). E-mail dedicado, formulário online e protocolo automático de recebimento.</div>
+        <div class="obr-flag">🔴 Obrigatório</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Art. 18 LGPD</span><span class="mb-status mbs-ok">Ativo</span></div>
+      </div>
+      <div class="mod-block">
+        <div class="mb-ic">🌐</div><div class="mb-name">Portal Público de Privacidade</div>
+        <div class="mb-desc">Portal transparente com informações sobre tratamento de dados, políticas, formulários de requisição e contato do DPO. URL: titular.sajodiagnos.club</div>
+        <div class="obr-flag">🔴 Obrigatório</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Art. 9º e 41 LGPD</span><span class="mb-status mbs-ok">Online</span></div>
+      </div>
+      <div class="mod-block">
+        <div class="mb-ic">⚡</div><div class="mb-name">Workflow SLA 15 dias úteis</div>
+        <div class="mb-desc">Processo documentado de triagem, análise e resposta a requisições dentro do prazo legal de 15 dias úteis. Inclui escalonamento e aprovação do DPO.</div>
+        <div class="obr-flag">🔴 Obrigatório</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Art. 18 LGPD</span><span class="mb-status mbs-req">2 vencidas</span></div>
+      </div>
+      <div class="mod-block">
+        <div class="mb-ic">🚨</div><div class="mb-name">Protocolo de Incidentes</div>
+        <div class="mb-desc">Procedimento para identificação, contenção, notificação à ANPD (72h para graves) e comunicação aos titulares afetados em caso de vazamento ou violação.</div>
+        <div class="obr-flag">🔴 Obrigatório</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Art. 48 LGPD</span><span class="mb-status mbs-ok">Configurado</span></div>
+      </div>
+      <div class="mod-block">
+        <div class="mb-ic">📋</div><div class="mb-name">8 Direitos — Art. 18 LGPD</div>
+        <div class="mb-desc">Procedimentos para atender: confirmação, acesso, correção, anonimização, portabilidade, exclusão, informação sobre compartilhamento e revogação de consentimento.</div>
+        <div class="obr-flag">🔴 Obrigatório</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Art. 18 LGPD</span><span class="mb-status mbs-on">Parcial (5/8)</span></div>
+      </div>
+      <div class="mod-block">
+        <div class="mb-ic">📊</div><div class="mb-name">Relatório de Requisições</div>
+        <div class="mb-desc">Dashboard e relatório periódico com estatísticas de requisições: volume, tipos, tempos de resposta e tendências. Insumo para melhoria contínua do programa.</div>
+        <div class="mb-bot" style="margin-top:.5rem"><span class="mb-tipo">Governança</span><span class="mb-status mbs-nd">Pendente</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FLUXO OPERACIONAL OBRIGATÓRIO -->
+<div class="flow-wrap">
+  <div class="flow-head">
+    <div>
+      <div class="flow-title">Fluxo Operacional Obrigatório — Implementação dos 4 Pilares</div>
+      <div class="flow-sub">Sequência recomendada e interdependências para ativação completa do programa</div>
+    </div>
+    <div class="obrig-badge">Ordem de execução</div>
+  </div>
+  <div class="flow-body">
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="fs-dot fs-lei">🏛️</div>
+        <div class="fs-name">1. DIAGNÓSTICO</div>
+        <div class="fs-desc">GAP Analysis + Mapeamento de dados + Bases legais</div>
+        <div class="fs-tag" style="background:rgba(16,185,129,.12);color:#6ee7b7">P1 + P3</div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-dot fs-reg">📋</div>
+        <div class="fs-name">2. DOCUMENTAÇÃO</div>
+        <div class="fs-desc">Política, Termos, RIPD e ROPA elaborados</div>
+        <div class="fs-tag" style="background:rgba(5,150,105,.12);color:var(--reg-b)">P2</div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-dot fs-conf">⚖️</div>
+        <div class="fs-name">3. DPO + PROCURAÇÃO</div>
+        <div class="fs-desc">Designação, registro ANPD e procuração assinada</div>
+        <div class="fs-tag" style="background:rgba(234,88,12,.12);color:var(--conf-b)">P3</div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-dot fs-tit">👤</div>
+        <div class="fs-name">4. CANAL TITULAR</div>
+        <div class="fs-desc">Portal online, SLA 15d, workflows ativos</div>
+        <div class="fs-tag" style="background:rgba(124,58,237,.12);color:var(--tit-b)">P4</div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-dot fs-conf">🎓</div>
+        <div class="fs-name">5. TREINAMENTOS</div>
+        <div class="fs-desc">Capacitação equipe + certificados individuais</div>
+        <div class="fs-tag" style="background:rgba(234,88,12,.12);color:var(--conf-b)">P3</div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-dot fs-anpd">🏆</div>
+        <div class="fs-name">6. CERTIFICAÇÃO</div>
+        <div class="fs-desc">Auditoria formal + relatório + certificado de conformidade</div>
+        <div class="fs-tag" style="background:rgba(245,158,11,.12);color:#fcd34d">P3 + Todos</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUBDOMÍNIOS -->
+<div class="card">
+  <div class="ct">Arquitetura de Subdomínios — sajodiagnos.club</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.75rem">
+    <div style="background:var(--s3);border:1px solid var(--bd);border-radius:8px;padding:.85rem">
+      <div style="font-family:var(--ff-m);font-size:.68rem;color:var(--tx3);margin-bottom:.3rem">sajodiagnos.club</div>
+      <div style="font-size:.78rem;font-weight:600;color:#fff">Site Principal</div>
+      <div style="font-size:.67rem;color:var(--tx2);margin-top:.15rem">Landing page, planos, checkout</div>
+      <span class="tag t-ok" style="margin-top:.45rem;display:inline-flex">Online</span>
+    </div>
+    <div style="background:rgba(29,78,216,.06);border:1px solid rgba(29,78,216,.18);border-radius:8px;padding:.85rem">
+      <div style="font-family:var(--ff-m);font-size:.68rem;color:var(--lei-b);margin-bottom:.3rem">lei.sajodiagnos.club</div>
+      <div style="font-size:.78rem;font-weight:600;color:#fff">Repositório Legislativo</div>
+      <div style="font-size:.67rem;color:var(--tx2);margin-top:.15rem">LGPD, MCI, Estatuto Digital</div>
+      <span class="tag t-lei" style="margin-top:.45rem;display:inline-flex">P1</span>
+    </div>
+    <div style="background:rgba(5,150,105,.06);border:1px solid rgba(5,150,105,.18);border-radius:8px;padding:.85rem">
+      <div style="font-family:var(--ff-m);font-size:.68rem;color:var(--reg-b);margin-bottom:.3rem">regras.sajodiagnos.club</div>
+      <div style="font-size:.78rem;font-weight:600;color:#fff">Biblioteca de Modelos</div>
+      <div style="font-size:.67rem;color:var(--tx2);margin-top:.15rem">RIPD, ROPA, LIA, DIA, DPA</div>
+      <span class="tag t-reg" style="margin-top:.45rem;display:inline-flex">P2</span>
+    </div>
+    <div style="background:rgba(234,88,12,.06);border:1px solid rgba(234,88,12,.18);border-radius:8px;padding:.85rem">
+      <div style="font-family:var(--ff-m);font-size:.68rem;color:var(--conf-b);margin-bottom:.3rem">conformidade.sajodiagnos.club</div>
+      <div style="font-size:.78rem;font-weight:600;color:#fff">Portal DPO</div>
+      <div style="font-size:.67rem;color:var(--tx2);margin-top:.15rem">Auditorias, GAP Analysis, certs.</div>
+      <span class="tag t-conf" style="margin-top:.45rem;display:inline-flex">P3</span>
+    </div>
+    <div style="background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.18);border-radius:8px;padding:.85rem">
+      <div style="font-family:var(--ff-m);font-size:.68rem;color:var(--tit-b);margin-bottom:.3rem">titular.sajodiagnos.club</div>
+      <div style="font-size:.78rem;font-weight:600;color:#fff">Canal do Titular</div>
+      <div style="font-size:.67rem;color:var(--tx2);margin-top:.15rem">Requisições, direitos, privacidade</div>
+      <span class="tag t-tit" style="margin-top:.45rem;display:inline-flex">P4</span>
+    </div>
+    <div style="background:var(--s3);border:1px solid var(--bd);border-radius:8px;padding:.85rem">
+      <div style="font-family:var(--ff-m);font-size:.68rem;color:var(--tx3);margin-bottom:.3rem">painel.sajodiagnos.club</div>
+      <div style="font-size:.78rem;font-weight:600;color:#fff">Painel de Controle</div>
+      <div style="font-size:.67rem;color:var(--tx2);margin-top:.15rem">Esta interface</div>
+      <span class="tag t-ok" style="margin-top:.45rem;display:inline-flex">Ativo</span>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       PAGE: PILAR 1 — LEI
+  ══════════════════════════════════════════ -->
+
+  <div class="pg" id="pg-lei">
+    <div class="pilar-hdr ph-lei">
+      <div class="ph-tag" style="color:var(--lei-b)">Pilar 1 — Base Legal</div>
+      <div class="ph-ttl">🏛️ LEI — Legislação e Obrigações</div>
+      <div class="ph-dsc">Monitoramento das 3 leis federais que regem a proteção de dados no Brasil. Análise de aplicabilidade, identificação de bases legais e monitoramento regulatório ANPD.</div>
+      <div class="ph-acts">
+        <button class="btn bs" style="background:rgba(29,78,216,.18);color:var(--lei-b);border-color:rgba(29,78,216,.28)">📄 Análise Completa</button>
+        <button class="btn bg bs">🔔 Alertas ANPD</button>
+      </div>
+    </div>
+    <div class="alert a-ok"><span class="a-ic">🏛️</span>Monitor legislativo ativo · Nenhuma alteração nas últimas 4 semanas · Último scan: 07/03/2026 08:00</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1rem;margin-bottom:1.4rem">
+      <div class="mc"><div class="mc-ic">⚖️</div><div class="mc-n">Análise LGPD</div><div class="mc-d">Bases legais identificadas · Art. 7º e 11</div><div class="mc-bot"><span class="tag t-ok">100%</span></div></div>
+      <div class="mc"><div class="mc-ic">🌐</div><div class="mc-n">Marco Civil Internet</div><div class="mc-d">Logs, privacidade, responsabilidade</div><div class="mc-bot"><span class="tag t-ok">100%</span></div></div>
+      <div class="mc"><div class="mc-ic">👶</div><div class="mc-n">Estatuto Digital</div><div class="mc-d">Lei 15.211/2025 · Em verificação</div><div class="mc-bot"><span class="tag t-w">60%</span></div></div>
+      <div class="mc"><div class="mc-ic">🔍</div><div class="mc-n">Monitor ANPD</div><div class="mc-d">Alertas em tempo real · D.O.U.</div><div class="mc-bot"><span class="tag t-ok">Contínuo</span></div></div>
+    </div>
+    <div class="lc open"><div class="lc-h" onclick="this.closest('.lc').classList.toggle('open')"><div class="lc-hl"><span class="lc-num">Lei 13.709/2018</span><div><div class="lc-n">LGPD — Lei Geral de Proteção de Dados</div><div class="lc-s">Vigente Set/2020 · ANPD como autoridade regulatória</div></div></div><div style="display:flex;gap:.6rem;align-items:center"><span class="tag t-ok">Aplicável</span><span style="color:var(--tx3)">▼</span></div></div><div class="lc-b"><div class="la"><strong>Art. 7º</strong> — Bases legais: execução de contrato, cumprimento de obrigação legal, legítimo interesse e consentimento.</div><div class="la"><strong>Art. 41</strong> — DPO designado: 4 Pilares LGPD · Registrado ANPD · Procuração: <span style="color:var(--warn)">pendente</span>.</div><div class="la"><strong>Art. 37</strong> — ROPA em elaboração. Previsão: 15/03/2026.</div><div class="la"><strong>Art. 38</strong> — RIPD para operações de alto risco: <span style="color:var(--ok)">✓ Concluído</span>.</div></div></div>
+    <div class="lc"><div class="lc-h" onclick="this.closest('.lc').classList.toggle('open')"><div class="lc-hl"><span class="lc-num">Lei 12.965/2014</span><div><div class="lc-n">Marco Civil da Internet</div><div class="lc-s">Direitos digitais e privacidade na internet</div></div></div><div style="display:flex;gap:.6rem;align-items:center"><span class="tag t-ok">Aplicável</span><span style="color:var(--tx3)">▼</span></div></div><div class="lc-b"><div class="la"><strong>Art. 15</strong> — Logs de acesso guardados por 6 meses. <span style="color:var(--ok)">✓</span></div><div class="la"><strong>Art. 7º, X</strong> — Política de Privacidade publicada com linguagem clara. <span style="color:var(--ok)">✓</span></div></div></div>
+    <div class="lc"><div class="lc-h" onclick="this.closest('.lc').classList.toggle('open')"><div class="lc-hl"><span class="lc-num">Lei 15.211/2025</span><div><div class="lc-n">Estatuto Digital da Criança e Adolescente</div><div class="lc-s">Vigente Jan/2025 · Obrigações reforçadas para menores</div></div></div><div style="display:flex;gap:.6rem;align-items:center"><span class="tag t-w">Verificando</span><span style="color:var(--tx3)">▼</span></div></div><div class="lc-b"><div class="la"><strong>Aplicabilidade em análise.</strong> Questionário enviado em 28/02/2026 ao responsável legal.</div><div class="la"><strong>Se aplicável:</strong> Base legal específica, verificação de idade e consentimento parental obrigatórios.</div></div></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       PAGE: PILAR 2 — REGRAS
+  ══════════════════════════════════════════ -->
+
+  <div class="pg" id="pg-regras">
+    <div class="pilar-hdr ph-reg">
+      <div class="ph-tag" style="color:var(--reg-b)">Pilar 2 — Governança</div>
+      <div class="ph-ttl">📋 REGRAS — Documentos e Processos</div>
+      <div class="ph-dsc">Biblioteca de documentos, políticas, procedimentos e contratos. 8 de 12 documentos previstos elaborados. 3 em elaboração.</div>
+      <div class="ph-acts">
+        <button class="btn bs" style="background:rgba(5,150,105,.18);color:var(--reg-b);border-color:rgba(5,150,105,.28)" onclick="openModal('novo-doc')">+ Solicitar Documento</button>
+        <button class="btn bg bs">📥 Baixar Todos</button>
+      </div>
+    </div>
+    <div class="g4" style="margin-bottom:1.4rem">
+      <div class="stat sr"><div class="stat-lbl">Total Docs</div><div class="stat-val">8</div><div class="stat-sub">de 12 no plano</div></div>
+      <div class="stat sr"><div class="stat-lbl">Publicados</div><div class="stat-val">5</div><div class="stat-sub">ativos e publicados</div></div>
+      <div class="stat sr"><div class="stat-lbl">Em Elaboração</div><div class="stat-val">3</div><div class="stat-sub">prazo até 15/04</div></div>
+      <div class="stat sr"><div class="stat-lbl">Pendentes</div><div class="stat-val">4</div><div class="stat-sub">não iniciados</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1rem;margin-bottom:1.4rem">
+      <div class="mc"><div class="mc-ic">📄</div><div class="mc-n">Política de Privacidade</div><div class="mc-d">Publicada no site · v1.2</div><div class="mc-bot"><span class="tag t-ok">Publicado</span></div></div>
+      <div class="mc"><div class="mc-ic">📃</div><div class="mc-n">Termos de Uso</div><div class="mc-d">Publicado online · v1.0</div><div class="mc-bot"><span class="tag t-ok">Publicado</span></div></div>
+      <div class="mc"><div class="mc-ic">📊</div><div class="mc-n">RIPD</div><div class="mc-d">Operações de alto risco · v1.0</div><div class="mc-bot"><span class="tag t-ok">Aprovado</span></div></div>
+      <div class="mc"><div class="mc-ic">📑</div><div class="mc-n">ROPA</div><div class="mc-d">Registro de Operações · 45%</div><div class="mc-bot"><span class="tag t-w">Em elaboração</span></div></div>
+      <div class="mc"><div class="mc-ic">🤝</div><div class="mc-n">Contratos DPA</div><div class="mc-d">Operadores / fornecedores</div><div class="mc-bot"><span class="tag t-w">Aguardando</span></div></div>
+      <div class="mc"><div class="mc-ic">🔒</div><div class="mc-n">POP Segurança</div><div class="mc-d">Procedimentos operacionais</div><div class="mc-bot"><span class="tag t-gray">Pendente</span></div></div>
+    </div>
+    <div class="card"><div class="ct">Todos os Documentos</div>
+      <div class="tw"><table><thead><tr><th>Documento</th><th>Pilar</th><th>Versão</th><th>Status</th><th>Data</th><th></th></tr></thead>
+      <tbody>
+        <tr><td class="td-n">Política de Privacidade</td><td><span class="tag t-reg">P2</span></td><td class="td-m">v1.2</td><td><span class="tag t-ok">Publicado</span></td><td class="td-m">01/03</td><td><button class="btn bg bs">📥</button></td></tr>
+        <tr><td class="td-n">Termos de Uso</td><td><span class="tag t-reg">P2</span></td><td class="td-m">v1.0</td><td><span class="tag t-ok">Publicado</span></td><td class="td-m">01/03</td><td><button class="btn bg bs">📥</button></td></tr>
+        <tr><td class="td-n">RIPD — RH</td><td><span class="tag t-reg">P2</span></td><td class="td-m">v1.0</td><td><span class="tag t-ok">Aprovado</span></td><td class="td-m">20/02</td><td><button class="btn bg bs">📥</button></td></tr>
+        <tr><td class="td-n">ROPA — Registro de Operações</td><td><span class="tag t-reg">P2</span></td><td class="td-m">v0.4</td><td><span class="tag t-w">Em elaboração</span></td><td class="td-m">—</td><td><button class="btn bg bs" disabled>📥</button></td></tr>
+        <tr><td class="td-n">Análise Bases Legais</td><td><span class="tag t-lei">P1</span></td><td class="td-m">v1.0</td><td><span class="tag t-ok">Entregue</span></td><td class="td-m">15/02</td><td><button class="btn bg bs">📥</button></td></tr>
+        <tr><td class="td-n">GAP Analysis</td><td><span class="tag t-conf">P3</span></td><td class="td-m">v1.0</td><td><span class="tag t-ok">Entregue</span></td><td class="td-m">10/02</td><td><button class="btn bg bs">📥</button></td></tr>
+      </tbody></table></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       PAGE: PILAR 3 — CONFORMIDADE
+  ══════════════════════════════════════════ -->
+
+  <div class="pg" id="pg-conformidade">
+    <div class="pilar-hdr ph-conf">
+      <div class="ph-tag" style="color:var(--conf-b)">Pilar 3 — Certificação</div>
+      <div class="ph-ttl">✅ CONFORMIDADE — DPO, Auditoria e Certificação</div>
+      <div class="ph-dsc">Status do DPO registrado na ANPD, programa de governança em privacidade, treinamentos, auditorias e certificações.</div>
+      <div class="ph-acts">
+        <button class="btn bs" style="background:rgba(234,88,12,.18);color:var(--conf-b);border-color:rgba(234,88,12,.28)">📋 Status DPO</button>
+        <button class="btn bg bs" onclick="openModal('incidente')">🚨 Notificar Incidente</button>
+      </div>
+    </div>
+    <div class="g2" style="margin-bottom:1.4rem">
+      <div class="card"><div class="ct">Status do DPO</div>
+        <div style="display:flex;align-items:center;gap:1rem;padding:.85rem;background:var(--s3);border-radius:8px;border:1px solid var(--bd);margin-bottom:.9rem">
+          <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--conf),var(--tit));display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0">⚖️</div>
+          <div><div style="font-size:.83rem;font-weight:700;color:#fff">4 Pilares LGPD</div><div style="font-size:.68rem;color:var(--tx3);margin-top:.1rem">DPO as a Service · CNPJ 58.551.044/0001-90</div><div style="display:flex;gap:.35rem;margin-top:.4rem"><span class="tag t-ok">Registrado ANPD</span><span class="tag t-w">Procuração pendente</span></div></div>
+        </div>
+        <div class="sla-g">
+          <div class="sla-i"><span class="sla-l">Registro ANPD</span><div class="sla-b"><div class="sla-f" style="width:100%;background:var(--ok)"></div></div><span class="sla-v" style="color:var(--ok)">✓</span></div>
+          <div class="sla-i"><span class="sla-l">Procuração assinada</span><div class="sla-b"><div class="sla-f" style="width:0%;background:var(--warn)"></div></div><span class="sla-v" style="color:var(--warn)">0%</span></div>
+          <div class="sla-i"><span class="sla-l">Canal titulares ativo</span><div class="sla-b"><div class="sla-f" style="width:100%;background:var(--ok)"></div></div><span class="sla-v" style="color:var(--ok)">✓</span></div>
+          <div class="sla-i"><span class="sla-l">Treinamentos</span><div class="sla-b"><div class="sla-f" style="width:50%;background:var(--conf)"></div></div><span class="sla-v">1/2</span></div>
+        </div>
+        <button class="btn bs" style="margin-top:.85rem;width:100%;justify-content:center;background:rgba(239,68,68,.1);color:#fca5a5;border-color:rgba(239,68,68,.25)" onclick="nav('procuracao')">⚠ Enviar Procuração</button>
+      </div>
+      <div class="card"><div class="ct">Maturidade — 4 Pilares</div>
+        <div style="display:flex;justify-content:space-around;padding:.5rem 0">
+          <div style="text-align:center"><svg class="pr" width="72" height="72" viewBox="0 0 72 72"><circle class="bg" cx="36" cy="36" r="29" stroke="rgba(255,255,255,.05)"/><circle class="fill" cx="36" cy="36" r="29" stroke="var(--lei)" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="161 182" style="transform:rotate(-90deg);transform-origin:center;fill:none"/></svg><div style="font-family:var(--ff-m);font-size:.8rem;color:var(--lei-b);font-weight:600;margin-top:.2rem">88%</div><div style="font-size:.6rem;color:var(--tx3)">Lei</div></div>
+          <div style="text-align:center"><svg class="pr" width="72" height="72" viewBox="0 0 72 72"><circle class="bg" cx="36" cy="36" r="29" stroke="rgba(255,255,255,.05)"/><circle class="fill" cx="36" cy="36" r="29" stroke="var(--reg)" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="106 182" style="transform:rotate(-90deg);transform-origin:center;fill:none"/></svg><div style="font-family:var(--ff-m);font-size:.8rem;color:var(--reg-b);font-weight:600;margin-top:.2rem">58%</div><div style="font-size:.6rem;color:var(--tx3)">Regras</div></div>
+          <div style="text-align:center"><svg class="pr" width="72" height="72" viewBox="0 0 72 72"><circle class="bg" cx="36" cy="36" r="29" stroke="rgba(255,255,255,.05)"/><circle class="fill" cx="36" cy="36" r="29" stroke="var(--conf)" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="131 182" style="transform:rotate(-90deg);transform-origin:center;fill:none"/></svg><div style="font-family:var(--ff-m);font-size:.8rem;color:var(--conf-b);font-weight:600;margin-top:.2rem">72%</div><div style="font-size:.6rem;color:var(--tx3)">Conf.</div></div>
+          <div style="text-align:center"><svg class="pr" width="72" height="72" viewBox="0 0 72 72"><circle class="bg" cx="36" cy="36" r="29" stroke="rgba(255,255,255,.05)"/><circle class="fill" cx="36" cy="36" r="29" stroke="var(--tit)" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="76 182" style="transform:rotate(-90deg);transform-origin:center;fill:none"/></svg><div style="font-family:var(--ff-m);font-size:.8rem;color:var(--tit-b);font-weight:600;margin-top:.2rem">42%</div><div style="font-size:.6rem;color:var(--tx3)">Titular</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       PAGE: PILAR 4 — TITULAR
+  ══════════════════════════════════════════ -->
+
+  <div class="pg" id="pg-titular">
+    <div class="pilar-hdr ph-tit">
+      <div class="ph-tag" style="color:var(--tit-b)">Pilar 4 — Direitos</div>
+      <div class="ph-ttl">👤 TITULAR — Requisições e Transparência</div>
+      <div class="ph-dsc">Gestão de requisições, atendimento aos 8 direitos do Art. 18 LGPD e portal de privacidade público.</div>
+      <div class="ph-acts">
+        <button class="btn bs" style="background:rgba(124,58,237,.18);color:var(--tit-b);border-color:rgba(124,58,237,.28)" onclick="openModal('nova-req')">+ Nova Requisição</button>
+        <button class="btn bg bs">🔗 Portal Público</button>
+      </div>
+    </div>
+    <div class="alert a-e"><span class="a-ic">🚨</span><strong>2 requisições com prazo vencido.</strong> Risco de reclamação à ANPD. Responda imediatamente.</div>
+    <div class="g2">
+      <div class="card"><div class="ct">Requisições Abertas <span>2 urgentes</span></div>
+        <div class="ri" onclick="openModal('req-det')"><div class="ri-ic">👤</div><div class="ri-info"><div class="ri-n">Maria Silva · Protocolo #002</div><div class="ri-t">Tipo: Acesso a dados · Rec. 03/02/2026</div></div><div style="text-align:right"><span class="tag t-e">Vencida</span><div style="font-family:var(--ff-m);font-size:.64rem;color:var(--err);margin-top:.25rem">03/03/2026</div></div></div>
+        <div class="ri" onclick="openModal('req-det')"><div class="ri-ic">👤</div><div class="ri-info"><div class="ri-n">João Souza · Protocolo #003</div><div class="ri-t">Tipo: Exclusão de dados · Rec. 28/01/2026</div></div><div style="text-align:right"><span class="tag t-e">Vencida</span><div style="font-family:var(--ff-m);font-size:.64rem;color:var(--err);margin-top:.25rem">28/02/2026</div></div></div>
+        <div style="margin-top:.9rem;padding-top:.75rem;border-top:1px solid var(--bd)"><div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-bottom:.5rem">Histórico</div>
+          <div class="ri" style="opacity:.55"><div class="ri-ic" style="background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.2)">✅</div><div class="ri-info"><div class="ri-n">Ana Paula · #001 · Correção</div><div class="ri-t">Respondida em 12 dias</div></div><span class="tag t-ok">Concluída</span></div>
+        </div>
+      </div>
+      <div class="card"><div class="ct">Art. 18 LGPD — 8 Direitos</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
+          <div style="padding:.55rem;background:var(--s3);border-radius:7px;border:1px solid var(--bd);text-align:center"><div style="font-size:1rem;margin-bottom:.2rem">🔍</div><div style="font-size:.7rem;font-weight:600;color:#fff">Acesso</div><div style="font-family:var(--ff-m);font-size:.62rem;color:var(--ok)">Atendido</div></div>
+          <div style="padding:.55rem;background:var(--s3);border-radius:7px;border:1px solid var(--bd);text-align:center"><div style="font-size:1rem;margin-bottom:.2rem">✏️</div><div style="font-size:.7rem;font-weight:600;color:#fff">Correção</div><div style="font-family:var(--ff-m);font-size:.62rem;color:var(--ok)">Atendido</div></div>
+          <div style="padding:.55rem;background:var(--s3);border-radius:7px;border:1px solid var(--bd);text-align:center"><div style="font-size:1rem;margin-bottom:.2rem">🗑️</div><div style="font-size:.7rem;font-weight:600;color:#fff">Exclusão</div><div style="font-family:var(--ff-m);font-size:.62rem;color:var(--warn)">Pendente</div></div>
+          <div style="padding:.55rem;background:var(--s3);border-radius:7px;border:1px solid var(--bd);text-align:center"><div style="font-size:1rem;margin-bottom:.2rem">📦</div><div style="font-size:.7rem;font-weight:600;color:#fff">Portabilidade</div><div style="font-family:var(--ff-m);font-size:.62rem;color:var(--tx3)">Configurar</div></div>
+          <div style="padding:.55rem;background:var(--s3);border-radius:7px;border:1px solid var(--bd);text-align:center"><div style="font-size:1rem;margin-bottom:.2rem">🔓</div><div style="font-size:.7rem;font-weight:600;color:#fff">Anonimização</div><div style="font-family:var(--ff-m);font-size:.62rem;color:var(--tx3)">Configurar</div></div>
+          <div style="padding:.55rem;background:var(--s3);border-radius:7px;border:1px solid var(--bd);text-align:center"><div style="font-size:1rem;margin-bottom:.2rem">🚫</div><div style="font-size:.7rem;font-weight:600;color:#fff">Revogação</div><div style="font-family:var(--ff-m);font-size:.62rem;color:var(--ok)">Atendido</div></div>
+          <div style="padding:.55rem;background:var(--s3);border-radius:7px;border:1px solid var(--bd);text-align:center"><div style="font-size:1rem;margin-bottom:.2rem">ℹ️</div><div style="font-size:.7rem;font-weight:600;color:#fff">Informação</div><div style="font-family:var(--ff-m);font-size:.62rem;color:var(--ok)">Atendido</div></div>
+          <div style="padding:.55rem;background:var(--s3);border-radius:7px;border:1px solid var(--bd);text-align:center"><div style="font-size:1rem;margin-bottom:.2rem">⚖️</div><div style="font-size:.7rem;font-weight:600;color:#fff">Negativa</div><div style="font-family:var(--ff-m);font-size:.62rem;color:var(--tx3)">Configurar</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGES: DOCS, TREINO, CHAMADOS, CONTRATO, PROCURAÇÃO — simplificados -->
+
+  <div class="pg" id="pg-docs">
+    <div class="ph"><div><h1>Documentos</h1><p>Repositório central dos 4 pilares</p></div><div class="ph-a"><button class="btn bp bs" onclick="openModal('novo-doc')">+ Solicitar</button></div></div>
+    <div class="card"><div class="ct">Documentos por Pilar</div>
+      <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);padding:.3rem 0;border-bottom:1px solid var(--bd);margin-bottom:.4rem">🏛️ PILAR 1 — LEI</div>
+      <div class="dr"><div class="di di-lei">📄</div><div style="flex:1"><div class="dn">Análise de Aplicabilidade LGPD</div><div class="dm">v1.0 · 15/02/2026 · 24 pgs</div></div><span class="tag t-ok">Entregue</span><button class="btn bg bs">📥</button></div>
+      <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);padding:.3rem 0;border-bottom:1px solid var(--bd);margin:.65rem 0 .4rem">📋 PILAR 2 — REGRAS</div>
+      <div class="dr"><div class="di di-reg">📄</div><div style="flex:1"><div class="dn">Política de Privacidade</div><div class="dm">v1.2 · 01/03/2026 · Publicada</div></div><span class="tag t-ok">Publicado</span><button class="btn bg bs">📥</button></div>
+      <div class="dr"><div class="di di-reg">📊</div><div style="flex:1"><div class="dn">RIPD — Relatório de Impacto</div><div class="dm">v1.0 · 20/02/2026</div></div><span class="tag t-ok">Aprovado</span><button class="btn bg bs">📥</button></div>
+      <div class="dr"><div class="di di-reg">📑</div><div style="flex:1"><div class="dn">ROPA — Registro de Operações</div><div class="dm">v0.4 · Em elaboração</div></div><span class="tag t-w">Em elaboração</span><button class="btn bg bs" disabled>📥</button></div>
+      <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);padding:.3rem 0;border-bottom:1px solid var(--bd);margin:.65rem 0 .4rem">✅ PILAR 3 — CONFORMIDADE</div>
+      <div class="dr"><div class="di di-conf">🔍</div><div style="flex:1"><div class="dn">Relatório GAP Analysis</div><div class="dm">v1.0 · 10/02/2026 · 38 pgs</div></div><span class="tag t-ok">Entregue</span><button class="btn bg bs">📥</button></div>
+      <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);padding:.3rem 0;border-bottom:1px solid var(--bd);margin:.65rem 0 .4rem">👤 PILAR 4 — TITULAR</div>
+      <div class="dr"><div class="di di-tit">📬</div><div style="flex:1"><div class="dn">Procedimento de Atendimento</div><div class="dm">v1.0 · 25/02/2026</div></div><span class="tag t-ok">Entregue</span><button class="btn bg bs">📥</button></div>
+    </div>
+  </div>
+
+  <div class="pg" id="pg-treino">
+    <div class="ph"><div><h1>Treinamentos</h1><p>Capacitação nos 4 pilares · 1 de 2 concluídos</p></div></div>
+    <div class="g4">
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;transition:transform .18s" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''"><div style="height:80px;display:flex;align-items:center;justify-content:center;font-size:2rem;background:linear-gradient(135deg,rgba(29,78,216,.2),rgba(29,78,216,.06));position:relative"><span>🏛️</span><span style="position:absolute;top:.4rem;right:.4rem;font-size:.58rem;font-weight:700;padding:.12rem .4rem;border-radius:100px;background:rgba(16,185,129,.25);color:#6ee7b7">✓ Concluído</span></div><div style="padding:.8rem"><div style="font-size:.8rem;font-weight:700;color:#fff;margin-bottom:.2rem">LGPD Essencial</div><div style="font-size:.67rem;color:var(--tx3)">⏱ 2h · 28/02/2026</div><div class="pb" style="margin-top:.5rem"><div class="pbf" style="width:100%;background:var(--ok)"></div></div><div style="font-size:.63rem;color:var(--ok);margin-top:.2rem">3 colaboradores certificados</div></div></div>
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;transition:transform .18s" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''"><div style="height:80px;display:flex;align-items:center;justify-content:center;font-size:2rem;background:linear-gradient(135deg,rgba(5,150,105,.2),rgba(5,150,105,.06));position:relative"><span>📋</span><span style="position:absolute;top:.4rem;right:.4rem;font-size:.58rem;font-weight:700;padding:.12rem .4rem;border-radius:100px;background:rgba(245,158,11,.2);color:#fcd34d">Pendente</span></div><div style="padding:.8rem"><div style="font-size:.8rem;font-weight:700;color:#fff;margin-bottom:.2rem">Governança de Dados</div><div style="font-size:.67rem;color:var(--tx3)">⏱ 2h · Abr/2026</div><div class="pb" style="margin-top:.5rem"><div class="pbf" style="width:0%"></div></div><div style="font-size:.63rem;color:var(--tx3);margin-top:.2rem">Não iniciado</div></div></div>
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;transition:transform .18s" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''"><div style="height:80px;display:flex;align-items:center;justify-content:center;font-size:2rem;background:linear-gradient(135deg,rgba(234,88,12,.2),rgba(234,88,12,.06));position:relative"><span>✅</span><span style="position:absolute;top:.4rem;right:.4rem;font-size:.58rem;font-weight:700;padding:.12rem .4rem;border-radius:100px;background:rgba(245,158,11,.2);color:#fcd34d">Pendente</span></div><div style="padding:.8rem"><div style="font-size:.8rem;font-weight:700;color:#fff;margin-bottom:.2rem">Segurança da Informação</div><div style="font-size:.67rem;color:var(--tx3)">⏱ 1.5h · Mai/2026</div><div class="pb" style="margin-top:.5rem"><div class="pbf" style="width:0%"></div></div><div style="font-size:.63rem;color:var(--tx3);margin-top:.2rem">Não iniciado</div></div></div>
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;transition:transform .18s" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''"><div style="height:80px;display:flex;align-items:center;justify-content:center;font-size:2rem;background:linear-gradient(135deg,rgba(124,58,237,.2),rgba(124,58,237,.06));position:relative"><span>👤</span><span style="position:absolute;top:.4rem;right:.4rem;font-size:.58rem;font-weight:700;padding:.12rem .4rem;border-radius:100px;background:rgba(245,158,11,.2);color:#fcd34d">Pendente</span></div><div style="padding:.8rem"><div style="font-size:.8rem;font-weight:700;color:#fff;margin-bottom:.2rem">Atendimento a Titulares</div><div style="font-size:.67rem;color:var(--tx3)">⏱ 1h · Jun/2026</div><div class="pb" style="margin-top:.5rem"><div class="pbf" style="width:0%"></div></div><div style="font-size:.63rem;color:var(--tx3);margin-top:.2rem">Não iniciado</div></div></div>
+    </div>
+  </div>
+
+  <div class="pg" id="pg-chamados">
+    <div class="ph"><div><h1>Chamados</h1><p>SLA Essencial: e-mail em até 48h úteis</p></div><div class="ph-a"><button class="btn bp bs" onclick="openModal('novo-chamado')">+ Novo</button></div></div>
+    <div class="card"><div class="ct">Chamados Ativos</div><div class="tw"><table><thead><tr><th>#</th><th>Assunto</th><th>Pilar</th><th>Status</th><th>Abertura</th><th>SLA</th></tr></thead><tbody>
+      <tr><td class="td-m">#012</td><td class="td-n">Elaboração ROPA urgente</td><td><span class="tag t-reg">P2</span></td><td><span class="tag t-w">Em andamento</span></td><td class="td-m">04/03</td><td class="td-m" style="color:var(--warn)">6h restantes</td></tr>
+      <tr><td class="td-m">#011</td><td class="td-n">Dúvida contrato DPA</td><td><span class="tag t-reg">P2</span></td><td><span class="tag t-ok">Respondido</span></td><td class="td-m">02/03</td><td class="td-m" style="color:var(--ok)">✓</td></tr>
+    </tbody></table></div></div>
+  </div>
+
+  <div class="pg" id="pg-contrato">
+    <div class="ph"><div><h1>Contrato & Plano</h1><p>Plano Essencial Completo · 12 meses fidelidade</p></div><div class="ph-a"><button class="btn bg bs">📥 Contrato PDF</button></div></div>
+    <div class="g2">
+      <div class="card"><div class="ct">Plano Ativo</div>
+        <div style="background:var(--s3);border-radius:8px;border:1px solid var(--bd);padding:1rem;margin-bottom:.85rem"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem"><div style="font-family:var(--ff-d);font-size:1rem;font-weight:700;color:#fff">Essencial Completo</div><span class="tag t-ok">Ativo</span></div><div style="font-size:.77rem;color:var(--tx2);line-height:1.7">DPO + Compliance + Regulatório + Jurídico + Treinamentos + Certificação</div><div style="margin-top:.8rem;padding-top:.65rem;border-top:1px solid var(--bd);display:flex;align-items:baseline;gap:.35rem"><div style="font-family:var(--ff-d);font-size:1.4rem;font-weight:800;color:#fff">R$997</div><div style="font-size:.72rem;color:var(--tx3)">/mês · 12 meses</div></div></div>
+        <div class="sla-g"><div class="sla-i"><span class="sla-l">Início</span><div class="sla-b"><div class="sla-f" style="width:15%;background:var(--tit)"></div></div><span class="sla-v" style="font-size:.6rem">Fev/26</span></div><div class="sla-i"><span class="sla-l">Progresso fidelidade</span><div class="sla-b"><div class="sla-f" style="width:15%;background:var(--tit)"></div></div><span class="sla-v" style="font-size:.6rem">2/12</span></div></div>
+      </div>
+      <div class="card"><div class="ct">Pagamentos</div><div class="tw"><table><thead><tr><th>Mês</th><th>Valor</th><th>Status</th><th>NF</th></tr></thead><tbody>
+        <tr><td class="td-m">Mar/2026</td><td class="td-m">R$997</td><td><span class="tag t-w">Pendente</span></td><td>—</td></tr>
+        <tr><td class="td-m">Fev/2026</td><td class="td-m">R$997</td><td><span class="tag t-ok">Pago</span></td><td><button class="btn bg bs">📥</button></td></tr>
+      </tbody></table></div></div>
+    </div>
+  </div>
+
+  <div class="pg" id="pg-procuracao">
+    <div class="ph"><div><h1>Procuração DPO</h1><p>Outorga de poderes para a 4 Pilares LGPD representar sua empresa</p></div></div>
+    <div class="alert a-e"><span class="a-ic">🚨</span><strong>Procuração não recebida.</strong> Sem este documento não podemos representá-lo perante a ANPD. Prazo: 15 dias do início do contrato.</div>
+    <div class="g2">
+      <div class="card"><div class="ct">Instruções</div>
+        <div style="display:flex;flex-direction:column;gap:.65rem">
+          <div style="padding:.8rem;background:var(--s3);border-radius:8px;border:1px solid var(--bd)"><div style="font-size:.73rem;font-weight:700;color:#fff;margin-bottom:.3rem">Opção 1 — Procuração Pública</div><div style="font-size:.75rem;color:var(--tx2);line-height:1.6">Lavre em cartório. Recomendado para contratos Empresarial e Enterprise.</div></div>
+          <div style="padding:.8rem;background:var(--s3);border-radius:8px;border:1px solid var(--bd)"><div style="font-size:.73rem;font-weight:700;color:#fff;margin-bottom:.3rem">Opção 2 — Certificado Digital ICP-Brasil</div><div style="font-size:.75rem;color:var(--tx2);line-height:1.6">Assine via certificado ou e-Gov (gov.br). Mais rápido, válido para plano Essencial.</div></div>
+          <div style="padding:.8rem;background:rgba(124,58,237,.08);border-radius:8px;border:1px solid rgba(124,58,237,.22)"><div style="font-size:.73rem;font-weight:700;color:var(--tit-b);margin-bottom:.3rem">📤 Enviar para:</div><div style="font-family:var(--ff-m);font-size:.8rem;color:var(--tit-b);background:rgba(124,58,237,.1);padding:.4rem .7rem;border-radius:6px">docs@sajodiagnos.club</div><div style="font-size:.68rem;color:var(--tx3);margin-top:.35rem">Formatos: PDF, JPG, PNG · Máx 10MB</div></div>
+        </div>
+        <div style="display:flex;gap:.5rem;margin-top:1rem"><button class="btn bs" style="flex:1;justify-content:center;background:rgba(124,58,237,.15);color:var(--tit-b);border-color:rgba(124,58,237,.3)">📥 Baixar Minuta</button><a href="https://wa.me/5563984381782" target="_blank" class="btn bg bs" style="flex:1;justify-content:center">💬 WhatsApp</a></div>
+      </div>
+      <div class="card"><div class="ct">Poderes Outorgados</div>
+        <div style="display:flex;flex-direction:column;gap:.35rem">
+          <div style="font-size:.76rem;color:var(--tx2);padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.03);display:flex;gap:.5rem"><span style="color:var(--tit-b);flex-shrink:0">a)</span>Representar perante a ANPD</div>
+          <div style="font-size:.76rem;color:var(--tx2);padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.03);display:flex;gap:.5rem"><span style="color:var(--tit-b);flex-shrink:0">b)</span>Atender requisições de titulares</div>
+          <div style="font-size:.76rem;color:var(--tx2);padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.03);display:flex;gap:.5rem"><span style="color:var(--tit-b);flex-shrink:0">c)</span>Receber comunicações da ANPD</div>
+          <div style="font-size:.76rem;color:var(--tx2);padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.03);display:flex;gap:.5rem"><span style="color:var(--tit-b);flex-shrink:0">d)</span>Prestar esclarecimentos a órgãos regulatórios</div>
+          <div style="font-size:.76rem;color:var(--tx2);padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.03);display:flex;gap:.5rem"><span style="color:var(--tit-b);flex-shrink:0">e)</span>Adotar providências determinadas pela ANPD</div>
+          <div style="font-size:.76rem;color:var(--tx2);padding:.35rem 0;display:flex;gap:.5rem"><span style="color:var(--tit-b);flex-shrink:0">f)</span>Orientar colaboradores sobre boas práticas</div>
+        </div>
+        <div style="margin-top:.85rem;padding:.7rem;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.18);border-radius:7px;font-size:.7rem;color:#fcd34d;line-height:1.55">⚠️ A ausência de procuração válida impede o início formal dos serviços, sem prejuízo da cobrança (Cláusula 8.4 do Contrato).</div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ══════════════════════ MODALS ══════════════════════ -->
+
+<div class="mo" id="modal-incidente"><div class="md"><div class="mh"><h3>🚨 Notificar Incidente</h3><button class="mc-btn" onclick="closeModal('incidente')">✕</button></div><div class="mb"><div class="alert a-e" style="margin-bottom:1rem"><span>⚠️</span>LGPD exige notificação à ANPD em até 2 dias úteis para incidentes graves.</div><div class="ff"><label class="fl">Tipo *</label><select class="fs"><option>Vazamento de dados</option><option>Acesso não autorizado</option><option>Ransomware/Malware</option><option>Perda de dispositivo</option><option>Compartilhamento indevido</option></select></div><div class="ff"><label class="fl">Data da descoberta *</label><input type="datetime-local" class="fi"></div><div class="ff"><label class="fl">Descrição *</label><textarea class="fta" placeholder="O que ocorreu, quais dados, quantos titulares..."></textarea></div><div class="f-row"><button class="btn bg bs" onclick="closeModal('incidente')">Cancelar</button><button class="btn bs" style="background:rgba(239,68,68,.15);color:#fca5a5;border-color:rgba(239,68,68,.3)">🚨 Notificar DPO</button></div></div></div></div>
+
+<div class="mo" id="modal-novo-chamado"><div class="md"><div class="mh"><h3>💬 Abrir Chamado</h3><button class="mc-btn" onclick="closeModal('novo-chamado')">✕</button></div><div class="mb"><div class="ff"><label class="fl">Pilar *</label><select class="fs"><option>Pilar 1 — Lei</option><option>Pilar 2 — Regras</option><option>Pilar 3 — Conformidade</option><option>Pilar 4 — Titular</option><option>Contrato/Financeiro</option></select></div><div class="ff"><label class="fl">Assunto *</label><input class="fi" type="text" placeholder="Resumo do problema..."></div><div class="ff"><label class="fl">Descrição *</label><textarea class="fta" placeholder="Detalhes..."></textarea></div><div class="f-row"><button class="btn bg bs" onclick="closeModal('novo-chamado')">Cancelar</button><button class="btn bp bs">Enviar</button></div></div></div></div>
+
+<div class="mo" id="modal-req-det"><div class="md"><div class="mh"><h3>👤 Req. #002 — Maria Silva</h3><button class="mc-btn" onclick="closeModal('req-det')">✕</button></div><div class="mb"><div style="display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-bottom:1rem;font-size:.77rem"><div><div style="color:var(--tx3);font-size:.63rem;margin-bottom:.18rem">TIPO</div><div>Acesso (Art. 18, I)</div></div><div><div style="color:var(--tx3);font-size:.63rem;margin-bottom:.18rem">PROTOCOLO</div><div style="font-family:var(--ff-m)">#002</div></div><div><div style="color:var(--tx3);font-size:.63rem;margin-bottom:.18rem">RECEBIDA</div><div>03/02/2026</div></div><div><div style="color:var(--tx3);font-size:.63rem;margin-bottom:.18rem">PRAZO</div><div style="color:var(--err)">Vencida — 03/03</div></div></div><div class="alert a-e" style="margin-bottom:1rem"><span>⚠️</span>Prazo vencido. Responda imediatamente.</div><div class="ff"><label class="fl">Resposta ao Titular *</label><textarea class="fta" placeholder="Prezada Maria Silva, Em atendimento à sua solicitação..."></textarea></div><div class="ff"><label class="fl">Status</label><select class="fs"><option>Em análise</option><option>Preparando resposta</option><option>Respondida</option><option>Indeferida</option></select></div><div class="f-row"><button class="btn bg bs" onclick="closeModal('req-det')">Fechar</button><button class="btn bs" style="background:rgba(124,58,237,.18);color:var(--tit-b);border-color:rgba(124,58,237,.3)">Enviar Resposta</button></div></div></div></div>
+
+<div class="mo" id="modal-novo-doc"><div class="md"><div class="mh"><h3>📄 Solicitar Documento</h3><button class="mc-btn" onclick="closeModal('novo-doc')">✕</button></div><div class="mb"><div class="ff"><label class="fl">Documento *</label><select class="fs"><option>ROPA — Registro de Operações</option><option>LIA — Avaliação Legítimo Interesse</option><option>Contrato DPA</option><option>NDA</option><option>POP Segurança</option><option>Outro</option></select></div><div class="ff"><label class="fl">Urgência</label><select class="fs"><option>Normal</option><option>Urgente — 5 dias úteis</option></select></div><div class="ff"><label class="fl">Observações</label><textarea class="fta" placeholder="Contexto para a elaboração..."></textarea></div><div class="f-row"><button class="btn bg bs" onclick="closeModal('novo-doc')">Cancelar</button><button class="btn bs" style="background:rgba(5,150,105,.15);color:var(--reg-b);border-color:rgba(5,150,105,.28)">Solicitar</button></div></div></div></div>
+
+<div class="mo" id="modal-nova-req"><div class="md"><div class="mh"><h3>👤 Nova Requisição Manual</h3><button class="mc-btn" onclick="closeModal('nova-req')">✕</button></div><div class="mb"><div class="ff"><label class="fl">Nome do Titular *</label><input class="fi" type="text" placeholder="Nome completo..."></div><div class="ff"><label class="fl">Tipo de Direito *</label><select class="fs"><option>Acesso (Art. 18, I)</option><option>Correção (Art. 18, III)</option><option>Exclusão (Art. 18, VI)</option><option>Portabilidade (Art. 18, V)</option><option>Revogação de consentimento</option></select></div><div class="ff"><label class="fl">Descrição</label><textarea class="fta" placeholder="Detalhes da requisição..."></textarea></div><div class="f-row"><button class="btn bg bs" onclick="closeModal('nova-req')">Cancelar</button><button class="btn bs" style="background:rgba(124,58,237,.15);color:var(--tit-b);border-color:rgba(124,58,237,.28)">Registrar</button></div></div></div></div>
+
+<div class="mo" id="modal-relatorio"><div class="md"><div class="mh"><h3>📊 Gerar Relatório</h3><button class="mc-btn" onclick="closeModal('relatorio')">✕</button></div><div class="mb"><div class="ff"><label class="fl">Tipo</label><select class="fs"><option>Relatório Geral — 4 Pilares</option><option>Pilar 1 — Legislação</option><option>Pilar 2 — Documentação</option><option>Pilar 3 — Conformidade</option><option>Pilar 4 — Titular</option><option>Relatório Executivo (1 página)</option></select></div><div class="ff"><label class="fl">Período</label><select class="fs"><option>Mês atual (Mar/2026)</option><option>Últimos 3 meses</option><option>Desde o início</option></select></div><div class="ff"><label class="fl">Formato</label><select class="fs"><option>PDF</option><option>DOCX</option></select></div><div class="f-row"><button class="btn bg bs" onclick="closeModal('relatorio')">Cancelar</button><button class="btn bp bs">📊 Gerar</button></div></div></div></div>
+
+<script>
+/* ═══ NAV ═══ */
+const BC={overview:'Visão Geral',arq:'Arquitetura Modular',lei:'Pilar 1 — Lei',regras:'Pilar 2 — Regras',conformidade:'Pilar 3 — Conformidade',titular:'Pilar 4 — Titular',docs:'Documentos',treino:'Treinamentos',chamados:'Chamados',contrato:'Contrato & Plano',procuracao:'Procuração DPO'};
+
+function nav(p,btn){
+  document.querySelectorAll('.pg').forEach(x=>x.classList.remove('on'));
+  const pg=document.getElementById('pg-'+p);
+  if(pg)pg.classList.add('on');
+  document.querySelectorAll('.sb-a').forEach(b=>b.classList.remove('on'));
+  if(btn)btn.classList.add('on');
+  else document.querySelectorAll('.sb-a').forEach(b=>{if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes(`'${p}'`))b.classList.add('on')});
+  document.getElementById('bc').textContent=BC[p]||p;
+  window.scrollTo(0,0);
+}
+
+/* ═══ MODULE TABLE ═══ */
+function switchMT(p){
+  document.querySelectorAll('.mt-h-cell').forEach(c=>c.classList.remove('on'));
+  document.querySelectorAll('.mt-panel').forEach(x=>x.classList.remove('on'));
+  document.getElementById('mt-tab-'+p).classList.add('on');
+  document.getElementById('mt-'+p).classList.add('on');
+}
+
+/* ═══ MODALS ═══ */
+function openModal(id){const m=document.getElementById('modal-'+id);if(m)m.classList.add('open')}
+function closeModal(id){const m=document.getElementById('modal-'+id);if(m)m.classList.remove('open')}
+document.querySelectorAll('.mo').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open')}));
+
+/* ═══ LEI ACCORDION ═══ */
+// handled inline
+
+/* ═══ CHECKLIST ═══ */
+document.querySelectorAll('.cl-i:not(.ck)').forEach(i=>{
+  i.addEventListener('click',()=>{
+    i.classList.toggle('ck-temp');
+    const c=i.querySelector('.cl-c');
+    if(i.classList.contains('ck-temp')){c.style.background='var(--ok)';c.style.borderColor='var(--ok)';c.style.color='#fff';c.textContent='✓'}
+    else{c.style.background='';c.style.borderColor='';c.style.color='';c.textContent=''}
+  });
+});
+</script>
+
+</body>
+</html>
