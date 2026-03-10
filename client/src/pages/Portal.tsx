@@ -87,7 +87,7 @@ export default function Portal() {
 
   const planoAtual = { 
     nome: subscription?.planName || "Nenhum plano ativo", 
-    preco: subscription?.priceMonthly ? `R$ ${(subscription.priceMonthly / 100).toFixed(2).replace('.', ',')}/mês` : "-", 
+    preco: subscription?.priceMonthly ? `R$ ${(Number(subscription.priceMonthly) / 100).toFixed(2).replace('.', ',')}/mês` : "-", 
     vencimento: "-", 
     status: subscription?.status || "Inativo" 
   };

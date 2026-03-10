@@ -33,14 +33,14 @@ export default function AdminClientes() {
     plano: sub.planName || "Básico",
     planoColor: sub.planName === "Essencial" ? "#059669" : (sub.planName === "Profissional" ? "#EA580C" : (sub.planName === "Empresarial" ? "#7C3AED" : "#1D4ED8")),
     segment: "N/A",
-    status: sub.status === "ativa" ? "Monitoramento" : "Diagnóstico",
-    statusColor: sub.status === "ativa" ? "#059669" : "#1D4ED8",
-    progress: sub.status === "ativa" ? 100 : 20,
+    status: sub.status === "active" ? "Monitoramento" : "Diagnóstico",
+    statusColor: sub.status === "active" ? "#059669" : "#1D4ED8",
+    progress: sub.status === "active" ? 100 : 20,
     responsavel: "N/A",
     email: "N/A",
     telefone: "N/A",
     since: sub.startDate ? new Date(sub.startDate).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }) : "N/A",
-    score: sub.status === "ativa" ? 100 : 20,
+    score: sub.status === "active" ? 100 : 20,
   }));
 
   const [selectedClient, setSelectedClient] = useState<typeof clientes[0] | null>(null);

@@ -123,8 +123,8 @@ export const appRouter = router({
 
         if(!user) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Could not create user" });
 
-        const [existing] = await db.select().from(subscriptions).where(eq(subscriptions.userId, user.id));
-        if (!existing) {
+        const existing = await db.select().from(subscriptions).where(eq(subscriptions.userId, user.id)).limit(1);
+        if (!existing.length) {
           await db.insert(subscriptions).values({
             userId: user.id,
             planId: input.planId,
@@ -134,11 +134,11 @@ export const appRouter = router({
             cnpj: input.cnpj,
             mercadoPagoId: input.paymentId,
             startDate: new Date(),
-            status: "pending"
+            paymentStatus: "pending"
           });
         } else if (input.paymentId) {
           await db.update(subscriptions)
-            .set({ mercadoPagoId: input.paymentId, status: "pending" })
+            .set({ mercadoPagoId: input.paymentId, paymentStatus: "pending" })
             .where(eq(subscriptions.userId, user.id));
         }
         

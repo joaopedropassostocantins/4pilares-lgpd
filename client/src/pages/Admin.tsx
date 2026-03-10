@@ -53,7 +53,7 @@ export default function Admin() {
 
   let mrr = 0;
   const recentClients = subscriptions.slice(-5).map((sub) => {
-    const isPago = sub.status === "ativa";
+    const isPago = sub.status === "active";
     const valor = Number(sub.priceMonthly) || 0;
     if (isPago) mrr += valor;
 
@@ -69,14 +69,14 @@ export default function Admin() {
   });
 
   subscriptions.forEach(sub => {
-    const isPago = sub.status === "ativa";
+    const isPago = sub.status === "active";
     if (isPago && !recentClients.some(rc => rc.name === (sub.razaoSocial || `Cliente #${sub.id}`))) {
        mrr += Number(sub.priceMonthly) || 0;
     }
   });
 
   const statsCards = [
-    { label: "Clientes ativos", value: subscriptions.filter(s => s.status === 'ativa').length.toString(), change: "Atualizado", trend: "up", icon: Users, color: "#1D4ED8", bg: "#EFF6FF" },
+    { label: "Clientes ativos", value: subscriptions.filter(s => s.status === 'active').length.toString(), change: "Atualizado", trend: "up", icon: Users, color: "#1D4ED8", bg: "#EFF6FF" },
     { label: "MRR", value: `R$ ${(mrr/1000).toFixed(1)}k`, change: "Atualizado", trend: "up", icon: DollarSign, color: "#059669", bg: "#ECFDF5" },
     { label: "Chamados abertos", value: "0", change: "0 urgentes", trend: "neutral", icon: MessageSquare, color: "#EA580C", bg: "#FFF7ED" },
     { label: "Docs emitidos", value: "0", change: "0 este mês", trend: "neutral", icon: FolderOpen, color: "#7C3AED", bg: "#F5F3FF" },
@@ -92,8 +92,8 @@ export default function Admin() {
     plano: sub.planName || "Básico",
     valor: `R$ ${Number(sub.priceMonthly) || 0}`,
     venc: sub.startDate ? new Date(new Date(sub.startDate).getTime() + 30*24*60*60*1000).toLocaleDateString('pt-BR') : "N/A",
-    status: sub.status === "ativa" ? "Vigente" : "A vencer",
-    cor: sub.status === "ativa" ? "#059669" : "#EA580C"
+    status: sub.status === "active" ? "Vigente" : "A vencer",
+    cor: sub.status === "active" ? "#059669" : "#EA580C"
   }));
 
   const handleNav = (item: typeof navItems[0]) => {

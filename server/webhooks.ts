@@ -34,10 +34,10 @@ export async function processarWebhookMercadoPago(body: any) {
       await db
         .update(subscriptions)
         .set({
-          status: "ativa",
-          mercadoPagoPaymentId: paymentId,
+          paymentStatus: "approved",
+          mercadoPagoId: paymentId,
         })
-        .where(eq(subscriptions.mercadoPagoPaymentId, paymentId));
+        .where(eq(subscriptions.mercadoPagoId, paymentId));
         
       console.log(`✅ Assinatura (Pagamento ${paymentId}) atualizada para ativa`);
     }

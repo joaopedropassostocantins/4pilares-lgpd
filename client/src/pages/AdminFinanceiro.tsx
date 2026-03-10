@@ -27,11 +27,11 @@ export default function AdminFinanceiro() {
   const planCount: Record<string, number> = {};
 
   const assinaturas = subscriptions.map((sub) => {
-    const isPago = sub.status === "ativa";
+    const isPago = sub.status === "active";
     const valor = Number(sub.priceMonthly) || 0;
     
     if (isPago) mrr += valor;
-    if (sub.status === "expirada") inadimplencia += valor;
+    if (sub.status === "expired") inadimplencia += valor;
 
     const planName = sub.planName || "Básico";
     planCount[planName] = (planCount[planName] || 0) + 1;
@@ -40,10 +40,10 @@ export default function AdminFinanceiro() {
       empresa: sub.razaoSocial || `Cliente #${sub.id}`,
       plano: planName,
       valor: valor,
-      status: isPago ? "Pago" : (sub.status === "pending" ? "Pendente" : "Inadimplente"),
+      status: isPago ? "Pago" : (sub.paymentStatus === "pending" ? "Pendente" : "Inadimplente"),
       vencimento: sub.startDate ? new Date(new Date(sub.startDate).getTime() + 30*24*60*60*1000).toLocaleDateString('pt-BR') : "N/A",
       metodo: "Checkout",
-      statusColor: isPago ? "#059669" : (sub.status === "pending" ? "#EA580C" : "#DC2626"),
+      statusColor: isPago ? "#059669" : (sub.paymentStatus === "pending" ? "#EA580C" : "#DC2626"),
     };
   });
 
