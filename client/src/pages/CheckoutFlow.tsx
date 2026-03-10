@@ -358,7 +358,6 @@ export default function CheckoutFlow() {
                   cpf: form.cpf,
                   planId: planoSelecionado.id,
                   planName: planoSelecionado.nome,
-                  priceMonthly: preco.valor || 0,
                   token: formData.token,
                 });
 

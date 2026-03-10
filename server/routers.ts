@@ -1,3 +1,4 @@
+import axios from "axios";
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
@@ -103,7 +104,6 @@ export const appRouter = router({
         cpf: z.string(),
         planId: z.string(),
         planName: z.string(),
-        priceMonthly: z.number(),
         token: z.string(),
       }))
       .mutation(async ({ input, ctx }) => {
@@ -235,11 +235,12 @@ export const appRouter = router({
         let user = await getUserByEmail(input.email);
         if (!user) {
           const openId = `local_${Date.now()}`;
+          const randomPassword = Math.random().toString(36).slice(-12);
           await upsertUser({
             openId,
             email: input.email,
             name: input.razaoSocial,
-            password: "123",
+            password: randomPassword,
             loginMethod: "local"
           });
           user = await getUserByEmail(input.email);

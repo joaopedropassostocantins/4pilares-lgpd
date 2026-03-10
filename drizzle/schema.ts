@@ -144,3 +144,37 @@ export const documents = mysqlTable("documents", {
 
 export type Document = typeof documents.$inferSelect;
 export type InsertDocument = typeof documents.$inferInsert;
+
+/**
+ * Tabela de Eventos de Webhook
+ * Armazena IDs de webhooks já processados para evitar duplicação
+ */
+export const webhookEvents = mysqlTable("webhook_events", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Identificação do evento
+  requestId: varchar("request_id", { length: 255 }).notNull().unique(),
+  paymentId: varchar("payment_id", { length: 255 }).notNull(),
+  
+  // Tipo de evento
+  eventType: varchar("event_type", { length: 50 }).notNull(), // "payment.created", "payment.updated", etc
+  
+  // Status
+  status: mysqlEnum("status", ["pending", "processed", "failed"]).default("pending"),
+  
+  // Dados do evento
+  eventData: json("event_data"),
+  
+  // Resultado do processamento
+  result: text("result"),
+  error: text("error"),
+  
+  // Timestamps
+  receivedAt: timestamp("received_at").defaultNow().notNull(),
+  processedAt: timestamp("processed_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type WebhookEvent = typeof webhookEvents.$inferSelect;
+export type InsertWebhookEvent = typeof webhookEvents.$inferInsert;
