@@ -28,6 +28,11 @@ import PilarTitular from "./pages/PilarTitular";
 // Painéis
 import Admin from "./pages/Admin";
 import Dashboard from "./pages/Dashboard";
+import Portal from "./pages/Portal";
+import Login from "./pages/Login";
+import AdminClientes from "./pages/AdminClientes";
+import AdminFinanceiro from "./pages/AdminFinanceiro";
+import AdminIncidentes from "./pages/AdminIncidentes";
 import Checkout from "./pages/Checkout";
 import CheckoutFlow from "./pages/CheckoutFlow";
 import CheckoutSuccess from "./pages/CheckoutSuccess";
@@ -58,6 +63,11 @@ function Router() {
 
       {/* Painéis */}
       <Route path="/admin" component={Admin} />
+      <Route path="/admin/clientes" component={AdminClientes} />
+      <Route path="/admin/financeiro" component={AdminFinanceiro} />
+      <Route path="/admin/incidentes" component={AdminIncidentes} />
+      <Route path="/portal" component={Portal} />
+      <Route path="/login" component={Login} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/checkout" component={CheckoutFlow} />
       <Route path="/checkout-success" component={CheckoutSuccess} />
