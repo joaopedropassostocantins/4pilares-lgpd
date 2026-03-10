@@ -61,7 +61,7 @@ export default function CheckoutFlow() {
   const brickRef = useRef<any>(null);
   const sdkLoadedRef = useRef(false);
 
-  const { maskCNPJ, maskCPF, maskCEP, maskTelefone, unmask, validarCNPJ, validarCPF } = useMasks();
+  const { maskCNPJ, maskCPF, maskCEP, maskTelefone, unmask, validarCNPJ, validarCPF, validarEmail } = useMasks();
 
   const [form, setForm] = useState<FormData>({
     razaoSocial: "",
@@ -137,8 +137,9 @@ export default function CheckoutFlow() {
         toast.error("CPF inválido");
         return false;
       }
-      if (!form.email || !form.email.includes("@")) {
-        toast.error("E-mail válido é obrigatório");
+      if (!form.email || !validarEmail(form.email)) {
+        toast.error("E-mail inválido. Verifique o formato (exemplo: usuario@dominio.com.br)");
+        console.warn("⚠️ E-mail inválido na etapa empresa:", form.email);
         return false;
       }
     }
@@ -300,11 +301,20 @@ export default function CheckoutFlow() {
 
       console.log("🎯 Criando Payment Brick...");
       const bricksBuilder = mp.bricks();
+      
+      // Validar e-mail antes de passar ao Payment Brick
+      if (!form.email || !validarEmail(form.email)) {
+        console.error("❌ E-mail inválido para Payment Brick:", form.email);
+        setBrickError("E-mail inválido. Verifique e volte à etapa anterior.");
+        toast.error("E-mail inválido. Por favor, corrija na etapa anterior.");
+        return;
+      }
+      
       brickRef.current = await bricksBuilder.create("payment", "paymentBrick_container", {
         initialization: {
           amount: amount,
           payer: {
-            email: form.email || undefined,
+            email: form.email,
           },
         },
         customization: {

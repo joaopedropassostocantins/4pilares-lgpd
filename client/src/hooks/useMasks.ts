@@ -99,6 +99,15 @@ export function useMasks() {
     return true;
   };
 
+  const validarEmail = (email: string): boolean => {
+    // Regex RFC 5321 com TLD mínimo de 2 caracteres
+    // Formato: local-part@domain.tld
+    // TLD deve ter pelo menos 2 caracteres (ex: .com, .br, .edu.br)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+    // Verificar formato e comprimento máximo (RFC 5321)
+    return emailRegex.test(email) && email.length <= 254;
+  };
+
   return {
     maskCNPJ,
     maskCPF,
@@ -107,6 +116,7 @@ export function useMasks() {
     unmask,
     validarCNPJ,
     validarCPF,
+    validarEmail,
   };
 }
 
