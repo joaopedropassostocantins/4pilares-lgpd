@@ -10,6 +10,7 @@ import { sdk } from "./_core/sdk";
 import { TRPCError } from "@trpc/server";
 import { protectedProcedure } from "./_core/trpc";
 import { processarWebhookMercadoPago } from "./webhooks";
+import { createMercadoPagoPreference, processPayment, getPaymentStatus } from "./payment";
 
 export const appRouter = router({
   system: systemRouter,
@@ -165,12 +166,40 @@ export const appRouter = router({
       })
   }),
 
+  payments: router({
+    createPreference: publicProcedure
+      .input(z.object({
+        planId: z.string(),
+        planName: z.string(),
+        priceMonthly: z.number(),
+        razaoSocial: z.string(),
+        cnpj: z.string(),
+        email: z.string().email(),
+        userId: z.number(),
+      }))
+      .mutation(async ({ input }) => {
+        return await createMercadoPagoPreference(input);
+      }),
+
+    getStatus: publicProcedure
+      .input(z.object({ paymentId: z.string() }))
+      .query(async ({ input }) => {
+        return await getPaymentStatus(input.paymentId);
+      }),
+
+    processPayment: publicProcedure
+      .input(z.object({ paymentId: z.string() }))
+      .mutation(async ({ input }) => {
+        return await processPayment(input.paymentId);
+      }),
+  }),
+
   webhooks: router({
     mercadoPago: publicProcedure
       .input(z.object({
         type: z.string(),
         data: z.object({
-          id: z.number().optional(),
+          id: z.number(),
         }).optional(),
       }))
       .mutation(async ({ input }) => {
