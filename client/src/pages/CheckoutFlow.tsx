@@ -284,8 +284,8 @@ export default function CheckoutFlow() {
         locale: "pt-BR",
       });
 
-      const amount = Math.max((preco.valor || 0) * 100, 100); // Mínimo 1 real
-      console.log("💰 Valor do pagamento:", amount, "centavos (R$", (amount / 100).toFixed(2), ")");
+      const amount = Math.max((preco.valor || 0) / 100, 1); // Converter centavos para reais
+      console.log("💰 Valor do pagamento: R$", amount.toFixed(2), "(", (amount * 100).toFixed(0), "centavos)");
 
       // Verificar se container existe
       const container = document.getElementById("paymentBrick_container");
@@ -296,7 +296,8 @@ export default function CheckoutFlow() {
       }
 
       console.log("🎯 Criando Payment Brick...");
-      brickRef.current = mp.bricks().create("payment", {
+      const bricksBuilder = mp.bricks();
+      brickRef.current = await bricksBuilder.create("payment", "paymentBrick_container", {
         initialization: {
           amount: amount,
           payer: {
@@ -344,13 +345,6 @@ export default function CheckoutFlow() {
           },
         },
       });
-
-      console.log("✅ Payment Brick criado, montando no container...");
-      await brickRef.current = await brickBuilder.create(
-  "payment",
-  "paymentBrick_container",
-  settings
-);
       console.log("✅ Payment Brick montado com sucesso");
     } catch (error) {
       console.error("❌ Erro ao inicializar Payment Brick:", error);
@@ -461,6 +455,7 @@ export default function CheckoutFlow() {
                             <input
                               type="text"
                               name="cnpj"
+                              inputMode="numeric"
                               value={form.cnpj}
                               onChange={handleInputChange}
                               className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
@@ -473,6 +468,7 @@ export default function CheckoutFlow() {
                               <input
                                 type="text"
                                 name="cep"
+                                inputMode="numeric"
                                 value={form.cep}
                                 onChange={handleInputChange}
                                 className="flex-1 px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
@@ -506,6 +502,7 @@ export default function CheckoutFlow() {
                             <input
                               type="text"
                               name="numero"
+                              inputMode="numeric"
                               value={form.numero}
                               onChange={handleInputChange}
                               className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
@@ -568,6 +565,7 @@ export default function CheckoutFlow() {
                             <input
                               type="text"
                               name="cpf"
+                              inputMode="numeric"
                               value={form.cpf}
                               onChange={handleInputChange}
                               className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
@@ -593,6 +591,7 @@ export default function CheckoutFlow() {
                             <input
                               type="tel"
                               name="telefone"
+                              inputMode="tel"
                               value={form.telefone}
                               onChange={handleInputChange}
                               className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
