@@ -41,6 +41,12 @@ export function useMasks() {
   const validarCNPJ = (cnpj: string): boolean => {
     const numbers = unmask(cnpj);
     if (numbers.length !== 14) return false;
+    
+    // Rejeitar CNPJs com todos os dígitos iguais
+    if (/^(\d)\1{13}$/.test(numbers)) return false;
+    
+    // Rejeitar CNPJ 00.000.000/0001-91 (inválido)
+    if (numbers === '00000000000191') return false;
 
     let size = numbers.length - 2;
     let numbers1 = numbers.substring(0, size);
@@ -69,12 +75,15 @@ export function useMasks() {
     result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
     if (result !== parseInt(digits.charAt(1), 10)) return false;
 
-    return true;
+    return true; // CNPJ válido
   };
 
   const validarCPF = (cpf: string): boolean => {
     const numbers = unmask(cpf);
     if (numbers.length !== 11) return false;
+    
+    // Rejeitar CPFs com todos os dígitos iguais (111.111.111-11, 000.000.000-00, etc)
+    if (/^(\d)\1{10}$/.test(numbers)) return false;
 
     let sum = 0;
     let remainder;

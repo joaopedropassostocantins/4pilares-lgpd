@@ -195,60 +195,62 @@ export default function CheckoutFlow() {
       return;
     }
 
-    // Aguardar container estar disponível
-    const checkContainer = setInterval(() => {
-      const container = document.getElementById("paymentBrick_container");
+    // Aguardar animação terminar (300ms) e container estar disponível
+    const timer = setTimeout(() => {
+      const checkContainer = setInterval(() => {
+        const container = document.getElementById("paymentBrick_container");
       if (!container) {
         console.log("⏳ Aguardando container...");
         return;
       }
-      clearInterval(checkContainer);
+        clearInterval(checkContainer);
 
-      // Se SDK já foi carregado, inicializar brick
-      if (sdkLoadedRef.current && (window as any).MercadoPago) {
-        console.log("SDK já carregado, inicializando brick");
-        inicializarPaymentBrick();
-        return;
-      }
+        // Se SDK já foi carregado, inicializar brick
+        if (sdkLoadedRef.current && (window as any).MercadoPago) {
+          console.log("SDK já carregado, inicializando brick");
+          inicializarPaymentBrick();
+          return;
+        }
 
-      // Verificar se script já existe
-      const scriptExistente = document.querySelector('script[src="https://sdk.mercadopago.com/js/v2"]');
-      if (scriptExistente) {
-        console.log("Script já existe no DOM");
-        // Aguardar SDK estar disponível
-        const checkInterval = setInterval(() => {
-          if ((window as any).MercadoPago) {
-            clearInterval(checkInterval);
-            sdkLoadedRef.current = true;
-            inicializarPaymentBrick();
-          }
-        }, 100);
-        setTimeout(() => clearInterval(checkInterval), 5000);
-        return;
-      }
+        // Verificar se script já existe
+        const scriptExistente = document.querySelector('script[src="https://sdk.mercadopago.com/js/v2"]');
+        if (scriptExistente) {
+          console.log("Script já existe no DOM");
+          // Aguardar SDK estar disponível
+          const checkInterval = setInterval(() => {
+            if ((window as any).MercadoPago) {
+              clearInterval(checkInterval);
+              sdkLoadedRef.current = true;
+              inicializarPaymentBrick();
+            }
+          }, 100);
+          setTimeout(() => clearInterval(checkInterval), 5000);
+          return;
+        }
 
-      // Carregar script do Mercado Pago
-      console.log("Carregando SDK Mercado Pago...");
-      const script = document.createElement("script");
-      script.src = "https://sdk.mercadopago.com/js/v2";
-      script.async = true;
-      script.onload = () => {
-        console.log("✅ SDK Mercado Pago carregado com sucesso");
-        sdkLoadedRef.current = true;
-        inicializarPaymentBrick();
-      };
-      script.onerror = () => {
-        console.error("❌ Erro ao carregar SDK Mercado Pago");
-        setBrickError("Erro ao carregar sistema de pagamento");
-        toast.error("Erro ao carregar sistema de pagamento");
-      };
-      document.head.appendChild(script);
-    }, 100);
+        // Carregar script do Mercado Pago
+        console.log("Carregando SDK Mercado Pago...");
+        const script = document.createElement("script");
+        script.src = "https://sdk.mercadopago.com/js/v2";
+        script.async = true;
+        script.onload = () => {
+          console.log("✅ SDK Mercado Pago carregado com sucesso");
+          sdkLoadedRef.current = true;
+          inicializarPaymentBrick();
+        };
+        script.onerror = () => {
+          console.error("❌ Erro ao carregar SDK Mercado Pago");
+          setBrickError("Erro ao carregar sistema de pagamento");
+          toast.error("Erro ao carregar sistema de pagamento");
+        };
+        document.head.appendChild(script);
+      }, 100);
+    }, 300); // Aguardar animação terminar
 
     return () => {
-      clearInterval(checkContainer);
+      clearTimeout(timer);
     };
-  }, [etapaAtual]);
+  }, [etapaAtual, validarEmail, preco, form.email, planoSelecionado]);
 
   const inicializarPaymentBrick = async () => {
     try {
@@ -288,7 +290,9 @@ export default function CheckoutFlow() {
         locale: "pt-BR",
       });
 
-      const amount = Math.max((preco.valor || 0) / 100, 1); // Converter centavos para reais
+      // Garantir que preco.valor é um número válido
+      const precoValor = typeof preco.valor === 'number' ? preco.valor : 0;
+      const amount = Math.max(precoValor / 100, 1); // Converter centavos para reais
       console.log("💰 Valor do pagamento: R$", amount.toFixed(2), "(", (amount * 100).toFixed(0), "centavos)");
 
       // Verificar se container existe
@@ -309,6 +313,9 @@ export default function CheckoutFlow() {
         toast.error("E-mail inválido. Por favor, corrija na etapa anterior.");
         return;
       }
+      
+      // Garantir que o container está pronto
+      await new Promise(resolve => setTimeout(resolve, 100));
       
       brickRef.current = await bricksBuilder.create("payment", "paymentBrick_container", {
         initialization: {

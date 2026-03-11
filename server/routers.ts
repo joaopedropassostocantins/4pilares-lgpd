@@ -1,4 +1,3 @@
-import axios from "axios";
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
@@ -12,6 +11,8 @@ import { TRPCError } from "@trpc/server";
 import { protectedProcedure } from "./_core/trpc";
 import { processarWebhookMercadoPago } from "./webhooks";
 import { createMercadoPagoPreference, processPayment, getPaymentStatus } from "./payment";
+import { ENV } from "./_core/env";
+import axios from "axios";
 
 export const appRouter = router({
   system: systemRouter,
@@ -186,14 +187,14 @@ export const appRouter = router({
               mercadoPagoId: paymentId.toString(),
               startDate: new Date(),
               paymentStatus: paymentStatus,
-              status: paymentStatus === "approved" ? "active" : "pending"
+              status: paymentStatus === "approved" ? "active" : "suspended"
             });
           } else {
             await db.update(subscriptions)
               .set({
                 mercadoPagoId: paymentId.toString(),
                 paymentStatus: paymentStatus,
-                status: paymentStatus === "approved" ? "active" : "pending"
+                status: paymentStatus === "approved" ? "active" : "suspended"
               })
               .where(eq(subscriptions.userId, user.id));
           }
