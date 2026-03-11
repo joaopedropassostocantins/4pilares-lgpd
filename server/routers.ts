@@ -115,18 +115,19 @@ export const appRouter = router({
             throw new TRPCError({ code: "BAD_REQUEST", message: "Plano inválido" });
           }
 
-          // Usar preco correto do servidor
+          // Usar preco correto do servidor (em centavos)
           const precoCentavos = plano.precoPromocional || plano.precoNormal;
           const precoReais = precoCentavos / 100;
 
-          console.log(`💳 Processando pagamento real: ${input.email} - Plano ${input.planId} - R$ ${precoReais}`);
+          console.log(`💳 Processando pagamento real: ${input.email} - Plano ${input.planId} - R$ ${precoReais} (${precoCentavos} centavos)`);
 
           // Criar pagamento real no Mercado Pago usando token
+          // IMPORTANTE: amount deve estar em CENTAVOS, não em reais
           const mpResponse = await axios.post(
             "https://api.mercadopago.com/v1/payments",
             {
               token: input.token,
-              amount: precoReais,
+              amount: precoCentavos,
               currency_id: "BRL",
               description: `Plano ${input.planName} - 4 Pilares LGPD`,
               payer: {
@@ -144,8 +145,9 @@ export const appRouter = router({
 
           const paymentId = mpResponse.data.id;
           const paymentStatus = mpResponse.data.status;
+          const paymentAmount = mpResponse.data.transaction_amount;
 
-          console.log(`✅ Pagamento criado no Mercado Pago: ${paymentId} - Status: ${paymentStatus}`);
+          console.log(`✅ Pagamento criado no Mercado Pago: ${paymentId} - Status: ${paymentStatus} - Valor: R$ ${paymentAmount / 100}`);
 
           // Criar ou atualizar usuario
           let user = await getUserByEmail(input.email);
