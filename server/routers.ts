@@ -294,6 +294,33 @@ export const appRouter = router({
         const db = await getDb();
         if (!db) return [];
         return await db.select().from(subscriptions);
+      }),
+
+    getMySubscription: protectedProcedure
+      .query(async ({ ctx }) => {
+        const db = await getDb();
+        if (!db) return null;
+        const result = await db.select().from(subscriptions).where(eq(subscriptions.userId, ctx.user!.id)).limit(1);
+        if (!result.length) return null;
+        return result[0];
+      }),
+
+    cancelSubscription: protectedProcedure
+      .input(z.object({ reason: z.string().optional() }))
+      .mutation(async ({ ctx, input }) => {
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "DB Error" });
+        
+        const result = await db.select().from(subscriptions).where(eq(subscriptions.userId, ctx.user!.id)).limit(1);
+        if (!result.length) throw new TRPCError({ code: "NOT_FOUND", message: "Assinatura nao encontrada" });
+        
+        await db.update(subscriptions)
+          .set({ status: "cancelled", endDate: new Date() })
+          .where(eq(subscriptions.userId, ctx.user!.id));
+        
+        console.log(`Assinatura cancelada: ${ctx.user!.id} - Motivo: ${input.reason || "Nao informado"}`);
+        
+        return { success: true, message: "Assinatura cancelada com sucesso" };
       })
   }),
 

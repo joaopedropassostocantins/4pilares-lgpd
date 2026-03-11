@@ -38,6 +38,7 @@ import AdminIncidentes from "./pages/AdminIncidentes";
 import Checkout from "./pages/Checkout";
 import CheckoutFlow from "./pages/CheckoutFlow";
 import CheckoutSuccess from "./pages/CheckoutSuccess";
+import SubscriptionDashboard from "./pages/SubscriptionDashboard";
 
 // Preços
 import Preco from "./pages/Preco";
@@ -88,6 +89,7 @@ function Router() {
       <Route path="/dashboard" component={() => <ProtectedRoute component={Dashboard} />} />
       <Route path="/checkout" component={CheckoutFlow} />
       <Route path="/checkout-success" component={CheckoutSuccess} />
+      <Route path="/subscription" component={() => <ProtectedRoute component={SubscriptionDashboard} />} />
       <Route path="/preco" component={Preco} />
       <Route path="/precos" component={Preco} />
       <Route path="/degustacao" component={Degustacao} />
