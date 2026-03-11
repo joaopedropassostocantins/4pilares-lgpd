@@ -123,22 +123,26 @@ export const appRouter = router({
 
           // Criar pagamento real no Mercado Pago usando token
           // IMPORTANTE: amount deve estar em CENTAVOS, não em reais
+          // Gerar ID unico para idempotencia
+          const idempotencyKey = `${input.cnpj}-${input.planId}-${Date.now()}`;
+
           const mpResponse = await axios.post(
             "https://api.mercadopago.com/v1/payments",
             {
               token: input.token,
-              amount: precoCentavos,
-              currency_id: "BRL",
+              transaction_amount: precoReais,
+              installments: 1,
               description: `Plano ${input.planName} - 4 Pilares LGPD`,
               payer: {
                 email: input.email,
               },
-              external_reference: `${input.cnpj}-${input.planId}-${Date.now()}`,
+              external_reference: idempotencyKey,
             },
             {
               headers: {
                 Authorization: `Bearer ${ENV.mercadoPagoAccessToken}`,
                 "Content-Type": "application/json",
+                "X-Idempotency-Key": idempotencyKey,
               },
             }
           );
