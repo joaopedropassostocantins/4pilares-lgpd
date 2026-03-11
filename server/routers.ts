@@ -137,10 +137,7 @@ export const appRouter = router({
         cpf: z.string(),
         planId: z.string(),
         planName: z.string(),
-        token: z.string().optional(),
-        paymentMethodId: z.string().optional(),
-        paymentTypeId: z.string().optional(),
-        transactionDetails: z.any().optional(),
+        token: z.string(),
       }))
       .mutation(async ({ input, ctx }) => {
         try {
@@ -162,25 +159,18 @@ export const appRouter = router({
           // Gerar ID unico para idempotencia
           const idempotencyKey = `${input.cnpj}-${input.planId}-${Date.now()}`;
 
-          const paymentPayload: any = {
-            transaction_amount: precoReais,
-            description: `Plano ${input.planName} - 4 Pilares LGPD`,
-            payer: { email: input.email },
-            external_reference: idempotencyKey,
-          };
-
-          if (input.token) {
-            paymentPayload.token = input.token;
-            paymentPayload.installments = 1;
-          } else if (input.paymentMethodId) {
-            paymentPayload.payment_method_id = input.paymentMethodId;
-          } else if (input.transactionDetails) {
-            Object.assign(paymentPayload, input.transactionDetails);
-          }
-
           const mpResponse = await axios.post(
             "https://api.mercadopago.com/v1/payments",
-            paymentPayload,
+            {
+              token: input.token,
+              transaction_amount: precoReais,
+              installments: 1,
+              description: `Plano ${input.planName} - 4 Pilares LGPD`,
+              payer: {
+                email: input.email,
+              },
+              external_reference: idempotencyKey,
+            },
             {
               headers: {
                 Authorization: `Bearer ${ENV.mercadoPagoAccessToken}`,
