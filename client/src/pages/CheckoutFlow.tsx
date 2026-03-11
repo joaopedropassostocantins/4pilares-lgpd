@@ -256,7 +256,18 @@ export default function CheckoutFlow() {
     try {
       console.log("🔧 Iniciando Payment Brick...");
 
-      const publicKey = import.meta.env.VITE_MERCADO_PAGO_PUBLIC_KEY;
+      let publicKey: string | undefined;
+      try {
+        const response = await fetch('/api/trpc/payments.getPublicKey?input={}', {
+          credentials: 'include',
+        });
+        const data = await response.json();
+        publicKey = data.result?.data?.publicKey;
+      } catch (err) {
+        console.warn("⚠️ Erro ao buscar chave pública via tRPC, tentando import.meta.env", err);
+        publicKey = import.meta.env.VITE_MERCADO_PAGO_PUBLIC_KEY;
+      }
+
       console.log("📌 Chave pública:", publicKey ? "✅ Configurada" : "❌ Não configurada");
 
       if (!publicKey) {

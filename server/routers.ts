@@ -16,6 +16,38 @@ import axios from "axios";
 
 export const appRouter = router({
   system: systemRouter,
+  payments: router({
+    getPublicKey: publicProcedure.query(() => {
+      const publicKey = ENV.mercadoPagoPublicKey;
+      if (!publicKey) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Chave pública do Mercado Pago não configurada" });
+      }
+      return { publicKey };
+    }),
+    createPreference: publicProcedure
+      .input(z.object({
+        planId: z.string(),
+        planName: z.string(),
+        priceMonthly: z.number(),
+        razaoSocial: z.string(),
+        cnpj: z.string(),
+        email: z.string().email(),
+        userId: z.number(),
+      }))
+      .mutation(async ({ input }) => {
+        return await createMercadoPagoPreference(input);
+      }),
+    getStatus: publicProcedure
+      .input(z.object({ paymentId: z.string() }))
+      .query(async ({ input }) => {
+        return await getPaymentStatus(input.paymentId);
+      }),
+    getPaymentStatus: publicProcedure
+      .input(z.object({ paymentId: z.string() }))
+      .query(async ({ input }) => {
+        return await getPaymentStatus(input.paymentId);
+      }),
+  }),
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     login: publicProcedure
@@ -120,10 +152,10 @@ export const appRouter = router({
           const precoCentavos = plano.precoPromocional || plano.precoNormal;
           const precoReais = precoCentavos / 100;
 
-          console.log(`💳 Processando pagamento real: ${input.email} - Plano ${input.planId} - R$ ${precoReais} (${precoCentavos} centavos)`);
+          console.log(`💳 Processando pagamento real: ${input.email} - Plano ${input.planId} - R$ ${precoReais}`);
 
           // Criar pagamento real no Mercado Pago usando token
-          // IMPORTANTE: amount deve estar em CENTAVOS, não em reais
+          // IMPORTANTE: transaction_amount deve estar em REAIS, não em centavos
           // Gerar ID unico para idempotencia
           const idempotencyKey = `${input.cnpj}-${input.planId}-${Date.now()}`;
 
@@ -131,7 +163,7 @@ export const appRouter = router({
             "https://api.mercadopago.com/v1/payments",
             {
               token: input.token,
-              transaction_amount: precoCentavos,
+              transaction_amount: precoReais,
               installments: 1,
               description: `Plano ${input.planName} - 4 Pilares LGPD`,
               payer: {
@@ -391,34 +423,6 @@ export const appRouter = router({
         
         return { success: true, message: "Plano atualizado com sucesso", creditAmount: input.creditAmount };
       })
-  }),
-
-  payments: router({
-    createPreference: publicProcedure
-      .input(z.object({
-        planId: z.string(),
-        planName: z.string(),
-        priceMonthly: z.number(),
-        razaoSocial: z.string(),
-        cnpj: z.string(),
-        email: z.string().email(),
-        userId: z.number(),
-      }))
-      .mutation(async ({ input }) => {
-        return await createMercadoPagoPreference(input);
-      }),
-
-    getStatus: publicProcedure
-      .input(z.object({ paymentId: z.string() }))
-      .query(async ({ input }) => {
-        return await getPaymentStatus(input.paymentId);
-      }),
-
-    getPaymentStatus: publicProcedure
-      .input(z.object({ paymentId: z.string() }))
-      .query(async ({ input }) => {
-        return await getPaymentStatus(input.paymentId);
-      }),
   }),
 
   webhooks: router({
