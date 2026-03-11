@@ -361,11 +361,18 @@ export default function CheckoutFlow() {
 
             const tentarProcessarPagamento = async () => {
               try {
-                if (!formData.token) {
-                  toast.error("Erro: Token de pagamento não gerado. Recarregue a página.");
+                // Validar que temos dados de pagamento (token para cartão, payment_method_id para Pix/Boleto)
+                const temToken = !!formData.token;
+                const temMetodoPagamento = !!formData.payment_method_id;
+                
+                if (!temToken && !temMetodoPagamento) {
+                  console.error("❌ Dados de pagamento incompletos:", formData);
+                  toast.error("Erro: Dados de pagamento não gerados. Recarregue a página.");
                   setLoading(false);
                   return;
                 }
+                
+                console.log(`✅ Dados de pagamento válidos - Token: ${temToken ? 'Sim' : 'Não'}, Método: ${temMetodoPagamento ? 'Sim' : 'Não'}`);
 
                 console.log(`💳 Tentativa ${retries + 1}/${maxRetries + 1}`);
 
@@ -376,7 +383,10 @@ export default function CheckoutFlow() {
                   cpf: form.cpf,
                   planId: planoSelecionado.id,
                   planName: planoSelecionado.nome,
-                  token: formData.token,
+                  token: formData.token || undefined,
+                  paymentMethodId: formData.payment_method_id || undefined,
+                  paymentTypeId: formData.payment_type_id || undefined,
+                  transactionDetails: formData.transaction_details || undefined,
                 });
 
                 if (response.status === "approved") {
