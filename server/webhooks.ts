@@ -1,5 +1,5 @@
 import { getDb } from "./db";
-import { subscriptions } from "../drizzle/schema";
+import { subscriptions, webhookEvents } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 import axios from "axios";
 import { ENV } from "./_core/env";
@@ -67,11 +67,12 @@ async function fetchPaymentDetails(paymentId: number) {
 }
 
 /**
- * Processar webhook do Mercado Pago com reconciliação
+ * Processar webhook do Mercado Pago com reconciliação e idempotência
  */
 export async function processarWebhookMercadoPago(input: {
   type: string;
   data?: { id: number };
+  requestId?: string;
 }) {
   try {
     console.log("📩 Webhook recebido:", input.type);
@@ -83,17 +84,47 @@ export async function processarWebhookMercadoPago(input: {
     }
 
     const paymentId = input.data.id;
-    console.log(`💳 Processando pagamento: ${paymentId}`);
-
-    // Buscar detalhes do pagamento
-    const payment = await fetchPaymentDetails(paymentId);
-    console.log(`📊 Status do pagamento: ${payment.status}`);
+    const requestId = input.requestId || `mp-${paymentId}-${Date.now()}`;
+    console.log(`💳 Processando pagamento: ${paymentId} (requestId: ${requestId})`);
 
     const db = await getDb();
     if (!db) {
       console.warn("⚠️ Banco de dados não disponível");
       return { success: false, message: "Banco de dados indisponível" };
     }
+
+    // IDEMPOTÊNCIA: Verificar se webhook já foi processado
+    const existingEvent = await db
+      .select()
+      .from(webhookEvents)
+      .where(eq(webhookEvents.requestId, requestId))
+      .limit(1);
+
+    if (existingEvent.length > 0) {
+      const event = existingEvent[0];
+      if (event.status === "processed") {
+        console.log(`⏭️ Webhook já processado (requestId: ${requestId})`);
+        return { success: true, message: "Webhook já processado", duplicate: true };
+      }
+    }
+
+    // Registrar evento como pendente
+    try {
+      await db.insert(webhookEvents).values({
+        requestId,
+        paymentId: paymentId.toString(),
+        eventType: "payment.notification",
+        status: "pending",
+      });
+    } catch (e) {
+      // Se falhar por unique constraint, é um webhook duplicado
+      console.log(`⏭️ Webhook duplicado detectado (requestId: ${requestId})`);
+      return { success: true, message: "Webhook duplicado", duplicate: true };
+    }
+
+    // Buscar detalhes do pagamento
+    const payment = await fetchPaymentDetails(paymentId);
+    console.log(`📊 Status do pagamento: ${payment.status}`);
 
     // Processar baseado no status
     switch (payment.status) {
@@ -145,12 +176,19 @@ export async function processarWebhookMercadoPago(input: {
         console.log(`⚠️ Status desconhecido: ${payment.status}`);
     }
 
+    // Marcar evento como processado
+    await db
+      .update(webhookEvents)
+      .set({ status: "processed" })
+      .where(eq(webhookEvents.requestId, requestId));
+
     console.log("✅ Webhook processado com sucesso");
     return {
       success: true,
       message: "Webhook processado com sucesso",
       paymentId,
       status: payment.status,
+      requestId,
     };
   } catch (error) {
     console.error("❌ Erro ao processar webhook:", error);

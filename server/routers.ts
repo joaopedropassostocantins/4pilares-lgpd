@@ -130,7 +130,7 @@ export const appRouter = router({
             "https://api.mercadopago.com/v1/payments",
             {
               token: input.token,
-              transaction_amount: precoReais,
+              transaction_amount: precoCentavos,
               installments: 1,
               description: `Plano ${input.planName} - 4 Pilares LGPD`,
               payer: {
@@ -317,10 +317,10 @@ export const appRouter = router({
         return await getPaymentStatus(input.paymentId);
       }),
 
-    processPayment: publicProcedure
+    getPaymentStatus: publicProcedure
       .input(z.object({ paymentId: z.string() }))
-      .mutation(async ({ input }) => {
-        return await processPayment(input.paymentId);
+      .query(async ({ input }) => {
+        return await getPaymentStatus(input.paymentId);
       }),
   }),
 

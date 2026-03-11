@@ -73,7 +73,10 @@ async function startServer() {
       }
       const { processarWebhookMercadoPago } = await import("../webhooks.js");
       console.log("📊 Dados do webhook:", data);
-      const result = await processarWebhookMercadoPago(data);
+      const result = await processarWebhookMercadoPago({
+        ...data,
+        requestId: xRequestId,
+      });
 
       res.status(200).json(result);
     } catch (error) {
