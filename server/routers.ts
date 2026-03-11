@@ -321,6 +321,75 @@ export const appRouter = router({
         console.log(`Assinatura cancelada: ${ctx.user!.id} - Motivo: ${input.reason || "Nao informado"}`);
         
         return { success: true, message: "Assinatura cancelada com sucesso" };
+      }),
+
+    getPaymentHistory: protectedProcedure
+      .query(async ({ ctx }) => {
+        const db = await getDb();
+        if (!db) return [];
+        
+        const result = await db.select().from(subscriptions).where(eq(subscriptions.userId, ctx.user!.id)).limit(1);
+        if (!result.length) return [];
+        
+        const subscription = result[0];
+        if (!subscription.mercadoPagoId) return [];
+        
+        try {
+          const response = await axios.get(
+            `https://api.mercadopago.com/v1/payments/search`,
+            {
+              params: {
+                external_reference: subscription.mercadoPagoId,
+                limit: 100,
+              },
+              headers: {
+                Authorization: `Bearer ${ENV.mercadoPagoAccessToken}`,
+              },
+            }
+          );
+          
+          return (response.data.results || []).map((payment: any) => ({
+            id: payment.id,
+            amount: payment.transaction_amount / 100,
+            status: payment.status,
+            date: new Date(payment.date_created),
+            paymentMethod: payment.payment_method_id,
+            description: payment.description,
+          }));
+        } catch (error) {
+          console.error("Erro ao buscar historico de pagamentos:", error);
+          return [];
+        }
+      }),
+
+    upgradePlan: protectedProcedure
+      .input(z.object({ newPlanId: z.string(), creditAmount: z.number() }))
+      .mutation(async ({ ctx, input }) => {
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "DB Error" });
+        
+        const { getPlanoById } = await import("@/const/pricing");
+        const newPlan = getPlanoById(input.newPlanId);
+        if (!newPlan) throw new TRPCError({ code: "BAD_REQUEST", message: "Plano invalido" });
+        
+        const result = await db.select().from(subscriptions).where(eq(subscriptions.userId, ctx.user!.id)).limit(1);
+        if (!result.length) throw new TRPCError({ code: "NOT_FOUND", message: "Assinatura nao encontrada" });
+        
+        const oldPlanId = result[0].planId;
+        const newPrice = newPlan.precoPromocional || newPlan.precoNormal;
+        
+        await db.update(subscriptions)
+          .set({
+            planId: input.newPlanId,
+            planName: newPlan.nome,
+            priceMonthly: (newPrice / 100).toString(),
+            updatedAt: new Date(),
+          })
+          .where(eq(subscriptions.userId, ctx.user!.id));
+        
+        console.log(`Plano atualizado: ${ctx.user!.id} - De ${oldPlanId} para ${input.newPlanId}`);
+        
+        return { success: true, message: "Plano atualizado com sucesso", creditAmount: input.creditAmount };
       })
   }),
 

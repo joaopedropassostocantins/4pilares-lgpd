@@ -6,7 +6,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { AlertCircle, CheckCircle2, Clock, CreditCard, Trash2, RefreshCw, LogOut } from "lucide-react";
+import { AlertCircle, CheckCircle2, Clock, CreditCard, Trash2, RefreshCw, LogOut, Download } from "lucide-react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -26,6 +26,10 @@ export default function SubscriptionDashboard() {
   const [canceling, setCanceling] = useState(false);
 
   const { data: subscription, isLoading, refetch } = trpc.subscriptions.getMySubscription.useQuery(undefined, {
+    enabled: !!user,
+  });
+
+  const { data: paymentHistory = [], isLoading: historyLoading } = trpc.subscriptions.getPaymentHistory.useQuery(undefined, {
     enabled: !!user,
   });
 
@@ -190,6 +194,72 @@ export default function SubscriptionDashboard() {
                   <p className="text-xs text-slate-500 mt-4">
                     Pagamentos processados via Mercado Pago com segurança SSL
                   </p>
+                </div>
+
+                {/* Histórico de Pagamentos */}
+                <div className="bg-white rounded-2xl border border-slate-200 p-8 mb-8">
+                  <h3 className="text-xl font-semibold text-slate-900 mb-6">Histórico de Pagamentos</h3>
+
+                  {historyLoading ? (
+                    <div className="text-center py-8">
+                      <RefreshCw className="w-6 h-6 text-slate-400 animate-spin mx-auto mb-2" />
+                      <p className="text-slate-500">Carregando histórico...</p>
+                    </div>
+                  ) : paymentHistory.length === 0 ? (
+                    <div className="text-center py-8">
+                      <CreditCard className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                      <p className="text-slate-500">Nenhum pagamento registrado</p>
+                    </div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-slate-200">
+                            <th className="text-left py-3 px-4 font-semibold text-slate-900">Data</th>
+                            <th className="text-left py-3 px-4 font-semibold text-slate-900">Valor</th>
+                            <th className="text-left py-3 px-4 font-semibold text-slate-900">Status</th>
+                            <th className="text-left py-3 px-4 font-semibold text-slate-900">Método</th>
+                            <th className="text-left py-3 px-4 font-semibold text-slate-900">Ação</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {paymentHistory.map((payment: any) => (
+                            <tr key={payment.id} className="border-b border-slate-100 hover:bg-slate-50">
+                              <td className="py-3 px-4 text-slate-900">
+                                {new Date(payment.date).toLocaleDateString("pt-BR")}
+                              </td>
+                              <td className="py-3 px-4 font-semibold text-slate-900">
+                                R$ {payment.amount.toFixed(2)}
+                              </td>
+                              <td className="py-3 px-4">
+                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                  payment.status === "approved" ? "bg-green-100 text-green-800" :
+                                  payment.status === "pending" ? "bg-amber-100 text-amber-800" :
+                                  "bg-red-100 text-red-800"
+                                }`}>
+                                  {payment.status === "approved" ? "✅ Aprovado" :
+                                   payment.status === "pending" ? "⏳ Pendente" :
+                                   "❌ Falhou"}
+                                </span>
+                              </td>
+                              <td className="py-3 px-4 text-slate-600">
+                                {payment.paymentMethod === "pix" ? "Pix" :
+                                 payment.paymentMethod === "credit_card" ? "Cartão Crédito" :
+                                 payment.paymentMethod === "debit_card" ? "Cartão Débito" :
+                                 "Outro"}
+                              </td>
+                              <td className="py-3 px-4">
+                                <button className="text-blue-600 hover:text-blue-700 font-medium text-xs flex items-center gap-1">
+                                  <Download className="w-3 h-3" />
+                                  Recibo
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
 
                 {/* Ações */}
