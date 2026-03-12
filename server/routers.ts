@@ -408,7 +408,8 @@ export const appRouter = router({
         if (!result.length) throw new TRPCError({ code: "NOT_FOUND", message: "Assinatura nao encontrada" });
         
         const oldPlanId = result[0].planId;
-        const newPrice = newPlan.precoPromocional || newPlan.precoNormal;
+        const newPrice = newPlan.precoPromocional ?? newPlan.precoNormal;
+        if (!newPrice) throw new TRPCError({ code: "BAD_REQUEST", message: "Plano nao tem preco" });
         
         await db.update(subscriptions)
           .set({

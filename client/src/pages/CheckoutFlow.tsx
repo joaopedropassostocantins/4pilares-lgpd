@@ -117,29 +117,19 @@ export default function CheckoutFlow() {
 
   const validarEtapa = (): boolean => {
     if (etapaAtual === "empresa") {
-      if (!form.razaoSocial) {
-        toast.error("Razão Social é obrigatória");
+      // Validação mínima apenas para campos críticos
+      if (!form.razaoSocial || !form.cnpj || !form.email) {
+        toast.error("Preencha os campos obrigatórios: Razão Social, CNPJ e E-mail");
         return false;
       }
+      
+      // Validar CNPJ e Email apenas
       if (!validarCNPJ(form.cnpj)) {
         toast.error("CNPJ inválido");
         return false;
       }
-      if (!form.endereco || !form.numero || !form.cidade || !form.estado) {
-        toast.error("Endereço completo é obrigatório");
-        return false;
-      }
-      if (!form.responsavel) {
-        toast.error("Nome do responsável é obrigatório");
-        return false;
-      }
-      if (!validarCPF(form.cpf)) {
-        toast.error("CPF inválido");
-        return false;
-      }
-      if (!form.email || !validarEmail(form.email)) {
-        toast.error("E-mail inválido. Verifique o formato (exemplo: usuario@dominio.com.br)");
-        console.warn("⚠️ E-mail inválido na etapa empresa:", form.email);
+      if (!validarEmail(form.email)) {
+        toast.error("E-mail inválido");
         return false;
       }
     }
@@ -155,7 +145,14 @@ export default function CheckoutFlow() {
   };
 
   const proximaEtapa = () => {
-    if (!validarEtapa()) return;
+    console.log('🔍 Tentando avançar de:', etapaAtual);
+    console.log('📋 Form atual:', form);
+    const validacao = validarEtapa();
+    console.log('✅ Validação passou:', validacao);
+    if (!validacao) {
+      console.log('❌ Validação falhou, não avançando');
+      return;
+    }
 
     const etapas: Etapa[] = ["plano", "empresa", "termos", "pagamento"];
     const indexAtual = etapas.indexOf(etapaAtual);
