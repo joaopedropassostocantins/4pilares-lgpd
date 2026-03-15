@@ -14,6 +14,31 @@ import { createMercadoPagoPreference, processPayment, getPaymentStatus } from ".
 import { ENV } from "./_core/env";
 import axios from "axios";
 
+/**
+ * Mapeia o status bruto da API do Mercado Pago para os valores válidos do enum payment_status.
+ * MP pode retornar: "approved", "pending", "in_process", "in_mediation", "rejected",
+ *                   "cancelled", "refunded", "charged_back", "authorized", "failed"
+ */
+function mapMPPaymentStatus(mpStatus: string): "pending" | "approved" | "failed" | "cancelled" {
+  switch (mpStatus) {
+    case "approved":
+    case "authorized":
+      return "approved";
+    case "pending":
+    case "in_process":
+    case "in_mediation":
+      return "pending";
+    case "cancelled":
+      return "cancelled";
+    case "rejected":
+    case "refunded":
+    case "charged_back":
+    case "failed":
+    default:
+      return "failed";
+  }
+}
+
 export const appRouter = router({
   system: systemRouter,
   payments: router({
@@ -230,6 +255,9 @@ export const appRouter = router({
           const db = await getDb();
           if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "DB Error" });
 
+          const mappedPaymentStatus = mapMPPaymentStatus(paymentStatus);
+          const mappedStatus = paymentStatus === "approved" ? "active" : "suspended";
+
           const existing = await db.select().from(subscriptions).where(eq(subscriptions.userId, user.id)).limit(1);
           if (!existing.length) {
             await db.insert(subscriptions).values({
@@ -241,15 +269,15 @@ export const appRouter = router({
               cnpj: input.cnpj,
               mercadoPagoId: paymentId.toString(),
               startDate: new Date(),
-              paymentStatus: paymentStatus,
-              status: paymentStatus === "approved" ? "active" : "suspended"
+              paymentStatus: mappedPaymentStatus,
+              status: mappedStatus,
             });
           } else {
             await db.update(subscriptions)
               .set({
                 mercadoPagoId: paymentId.toString(),
-                paymentStatus: paymentStatus,
-                status: paymentStatus === "approved" ? "active" : "suspended"
+                paymentStatus: mappedPaymentStatus,
+                status: mappedStatus,
               })
               .where(eq(subscriptions.userId, user.id));
           }
