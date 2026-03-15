@@ -321,7 +321,6 @@ export default function CheckoutFlow() {
       }
 
       console.log("🎯 Criando Payment Brick...");
-      const bricksBuilder = mp.bricks();
       
       // Validar e-mail antes de passar ao Payment Brick
       if (!form.email || !validarEmail(form.email)) {
@@ -333,6 +332,8 @@ export default function CheckoutFlow() {
       
       // Garantir que o container está pronto
       await new Promise(resolve => setTimeout(resolve, 100));
+      
+      const bricksBuilder = mp.bricks();
       
       brickRef.current = await bricksBuilder.create("payment", "paymentBrick_container", {
         initialization: {
@@ -432,7 +433,6 @@ export default function CheckoutFlow() {
       toast.error("Erro ao inicializar sistema de pagamento");
     }
   };
-
   return (
     <Layout>
       <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white py-12 px-4">
