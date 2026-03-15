@@ -34,7 +34,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build (GitHub Pages)
-        run: pnpm build
+        run: pnpm exec vite build
         env:
           GITHUB_PAGES: "true"
           VITE_ANALYTICS_ENDPOINT: ""
