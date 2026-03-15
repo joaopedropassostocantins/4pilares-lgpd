@@ -169,7 +169,7 @@ export async function createPaymentIntent(
       metadata: {
         country: countryCode,
         diagnosticId: diagnosticId,
-        product: 'SAJO Astrology Analysis',
+        product: '4 Pilares LGPD - Adequação LGPD',
       },
       ...(userEmail && { receipt_email: userEmail }),
     });

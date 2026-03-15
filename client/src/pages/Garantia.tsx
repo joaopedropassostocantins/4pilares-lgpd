@@ -25,7 +25,7 @@ export default function GarantiaPage() {
     },
     {
       question: "E se eu tiver dúvidas sobre a análise?",
-      answer: "Durante os 90 dias de acompanhamento, você tem acesso direto ao especialista Musok (무속) coreano via videochamada semanal. Todas as suas dúvidas serão respondidas.",
+      answer: "Durante o período de suporte, você tem acesso direto à nossa equipe especializada em LGPD via e-mail e WhatsApp. Todas as suas dúvidas serão respondidas.",
     },
     {
       question: "Posso compartilhar a análise com outras pessoas?",

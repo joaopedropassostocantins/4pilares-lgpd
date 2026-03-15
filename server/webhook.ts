@@ -130,47 +130,34 @@ export async function generateFullAnalysisOnPayment(diagnosticId: string): Promi
       throw new Error(`Diagnostic not found: ${diagnosticId}`);
     }
 
-    const pillarsData = diagnostic.pillarsData as any;
-    const name = diagnostic.consultantName || "Viajante";
+    const diagnosticData = diagnostic.pillarsData as any;
+    const name = diagnostic.consultantName || "Responsável";
 
-    const prompt = `Você é um especialista em SAJO (사주) coreano com profundo conhecimento de padrões de destino. Seu tom é assertivo, contundente e transformador — com afirmações concretas sobre presente e futuro. Fale em português brasileiro.
+    const prompt = `Você é um especialista em LGPD (Lei Geral de Proteção de Dados - Lei 13.709/2018) com amplo conhecimento em compliance, adequação e boas práticas de proteção de dados. Seu tom é claro, objetivo e orientado a soluções práticas. Fale em português brasileiro.
 
-Dados do consulente:
-- Nome: ${name}
-- Signo Animal: ${pillarsData.animalSign}
-- Pilar do Ano: ${pillarsData.yearPillar.stem.name} sobre ${pillarsData.yearPillar.branch.name}
-- Pilar do Mês: ${pillarsData.monthPillar.stem.name} sobre ${pillarsData.monthPillar.branch.name}
-- Pilar do Dia (essência): ${pillarsData.dayPillar.stem.name} sobre ${pillarsData.dayPillar.branch.name}
-- Pilar da Hora: ${pillarsData.hourPillar.stem.name} sobre ${pillarsData.hourPillar.branch.name}
-- Elemento dominante: ${pillarsData.dominantElement}
-- Equilíbrio dos elementos: ${JSON.stringify(pillarsData.elementBalance)}
-- Traços de personalidade: ${pillarsData.personalityTraits.join(", ")}
-- Pontos fortes: ${pillarsData.strengths.join(", ")}
-- Desafios: ${pillarsData.challenges.join(", ")}
-- Signos compatíveis: ${pillarsData.compatibleSigns.join(", ")}
-- Direções auspiciosas: ${pillarsData.luckyDirections.join(", ")}
-- Foco de saúde: ${pillarsData.healthFocus.join(", ")}
+Dados do diagnóstico:
+- Nome/Empresa: ${name}
+- Módulo contratado: ${diagnosticData.module || "Diagnóstico Geral"}
+- Informações adicionais: ${JSON.stringify(diagnosticData)}
 
-Escreva uma análise COMPLETA e PROFUNDA de 10-12 parágrafos com AFIRMAÇÕES CONCRETAS:
+Elabore um relatório de análise LGPD com 8-10 seções bem estruturadas:
 
-1. **Saudação Assertiva**: Saúde o consulente pelo nome e signo animal com uma afirmação contundente sobre sua essência.
-2. **Análise dos 4 Pilares**: Descreva cada pilar com significado profundo e afirmações sobre o que ESTÁ ACONTECENDO agora.
-3. **Essência do Ser**: Revele a essência do Pilar do Dia com clareza e contundência.
-4. **Missão de Vida**: Descreva a jornada e propósito de vida com afirmações concretas.
-5. **Saúde e Vitalidade**: Analise o equilíbrio dos 5 elementos com recomendações específicas.
-6. **Finanças e Abundância**: Previsões CONCRETAS sobre ciclos financeiros e oportunidades.
-7. **Relacionamentos e Amor**: Análise de compatibilidade com afirmações sobre dinâmicas relacionais.
-8. **Guia Prático**: Ofereça sabedoria ancestral e práticas concretas para harmonização.
-9. **Ciclos Temporais**: Descreva ciclos de 10 anos (Grandes Ciclos) e transformações iminentes.
-10. **Encerramento Empoderador**: Termine com afirmações de força e empoderamento.
+1. **Resumo Executivo**: Visão geral do diagnóstico e principais pontos de atenção.
+2. **Bases Legais Aplicáveis**: Identifique quais bases legais do Art. 7º são mais relevantes para o contexto.
+3. **Obrigações do Controlador**: Liste as obrigações principais aplicáveis ao caso.
+4. **Gaps Identificados**: Aponte os principais pontos de não conformidade ou riscos.
+5. **Plano de Adequação Prioritário**: 3-5 ações imediatas recomendadas com ordem de prioridade.
+6. **Documentação Necessária**: Liste os documentos e políticas que precisam ser criados ou revisados.
+7. **Direitos dos Titulares**: Como estruturar o canal de atendimento para o contexto específico.
+8. **Próximos Passos**: Roadmap claro com ações de curto, médio e longo prazo.
 
-Use linguagem ASSERTIVA, CONTUNDENTE, com afirmações sobre PRESENTE e FUTURO. Evite especulação. Seja direto e transformador.`;
+Use linguagem CLARA e ACESSÍVEL, com orientações PRÁTICAS e ACIONÁVEIS. Cite artigos da LGPD quando relevante.`;
 
     const response = await invokeLLM({
       messages: [
         {
           role: "system",
-          content: "Você é um especialista em SAJO com conhecimento profundo. Fale com assertividade, contundência e certeza. Português brasileiro.",
+          content: "Você é um especialista em LGPD e compliance de proteção de dados. Forneça análises claras, práticas e juridicamente embasadas. Português brasileiro.",
         },
         {
           role: "user",
