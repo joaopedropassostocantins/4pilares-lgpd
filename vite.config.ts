@@ -152,8 +152,12 @@ function vitePluginManusDebugCollector(): Plugin {
 
 const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector()];
 
+// Base path: "/" em dev/produção normal, "/4pilares-lgpd/" no GitHub Pages
+const base = process.env.GITHUB_PAGES === "true" ? "/4pilares-lgpd/" : "/";
+
 export default defineConfig({
   plugins,
+  base,
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),
