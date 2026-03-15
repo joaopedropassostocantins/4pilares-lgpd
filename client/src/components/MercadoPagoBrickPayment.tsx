@@ -160,7 +160,7 @@ export default function MercadoPagoBrickPayment({
             customization: {
               paymentMethods: {
                 creditCard: "all",
-                debitCard: "all",
+                debitCard: "none",
                 ticket: "none",
                 bankTransfer: "none",
               },
@@ -181,11 +181,20 @@ export default function MercadoPagoBrickPayment({
                 console.log("[MP] brick:onSubmit", {
                   hasToken: Boolean(formData?.token),
                   hasPaymentMethodId: Boolean(formData?.payment_method_id),
+                  paymentMethodId: formData?.payment_method_id,
                   hasInstallments: Boolean(formData?.installments),
                   hasPayer: Boolean(formData?.payer),
-                  payerEmail: formData?.payer?.email,
-                  payerDocType: formData?.payer?.identification?.type,
                 });
+
+                // CAMADA 2: Validar método de pagamento (segurança extra)
+                const method = String(formData?.payment_method_id || "").toLowerCase();
+                if (["pix", "bolbradesco", "ticket", "bank_transfer"].includes(method)) {
+                  const errorMsg = "No momento, este checkout aceita apenas pagamento por cartão.";
+                  console.error("[MP] brick:onSubmit:unsupported_method", { method });
+                  toast.error(errorMsg);
+                  onPaymentError?.(errorMsg);
+                  throw new Error(errorMsg);
+                }
 
                 // Proteção contra duplo submit
                 if (isSubmitting) {
@@ -193,7 +202,7 @@ export default function MercadoPagoBrickPayment({
                   return;
                 }
 
-                // Validação de token
+                // CAMADA 3: Validação de token
                 if (!formData?.token) {
                   const errorMsg = "Token de pagamento não gerado pelo Mercado Pago.";
                   console.error("[MP] brick:onSubmit:no_token", formData);
