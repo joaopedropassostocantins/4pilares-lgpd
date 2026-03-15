@@ -68,7 +68,7 @@ export default function ModuleCard({ module }: ModuleCardProps) {
               className="btn-module-checkout block text-center w-full text-sm py-2.5"
               style={{ background: accentColor }}
             >
-              🔓 Módulo + 90 dias com especialista Musok (무속) coreano — R$ 299
+              🔓 Contratar este módulo
             </span>
           </Link>
         )}
@@ -77,9 +77,9 @@ export default function ModuleCard({ module }: ModuleCardProps) {
       {/* Descrição de benefícios */}
       {paymentSlug && (
         <p className="text-xs text-muted-foreground text-center mt-2 leading-relaxed">
-          Inclui análise completa + 1 videochamada/semana por 90 dias
+          Inclui material completo + suporte especializado
           <br />
-          <span style={{ color: "#C9A84C" }}>✓ Garantia total de devolução</span>
+          <span style={{ color: "#1D4ED8" }}>✓ Garantia total de devolução em 30 dias</span>
         </p>
       )}
     </div>

@@ -7,7 +7,7 @@ const BANNER_TTL_DAYS = 7;
 // Altere o número abaixo para o WhatsApp real (ou defina como "" para ocultar o botão)
 const WHATSAPP_NUMBER = "5563984381782"; // (63) 98438-1782
 const WHATSAPP_MSG = encodeURIComponent(
-    "Olá! Vi o banner sobre os módulos de análise SAJO e quero saber mais sobre o acompanhamento virtual de 90 dias."
+    "Olá! Vi o banner sobre os módulos de adequação LGPD e quero saber mais."
 );
 const WHATSAPP_URL = WHATSAPP_NUMBER
     ? `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MSG}`
@@ -92,10 +92,10 @@ export default function TopPromoBanner() {
                             <span style={{ fontSize: "1.4rem", flexShrink: 0, filter: "sepia(1) saturate(3) hue-rotate(5deg)" }}>🔓</span>
                             <div>
                                 <p style={{ margin: 0, fontWeight: 700, fontSize: "0.85rem", color: "#f5d97a", lineHeight: 1.3 }}>
-                                    Módulos liberados + acompanhamento virtual por 90 dias
+                                    Adequação LGPD completa para sua empresa
                                 </p>
                                 <p style={{ margin: "2px 0 0", fontSize: "0.72rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.4, maxWidth: "560px" }}>
-                                    Desbloqueie as análises dos módulos e receba acompanhamento virtual com especialista Musok (무속) coreano por 90 dias.&nbsp;
+                                    Acesse os 4 pilares do programa de conformidade e receba suporte especializado em LGPD.&nbsp;
                                     <strong style={{ color: "#f5d97a" }}>Pague em até 6x no cartão.</strong>&nbsp;
                                     <span style={{ color: "#f09e6e" }}>Vagas limitadas.</span>
                                 </p>
