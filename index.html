@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>4 Pilares LGPD | Plataforma de Adequacao LGPD para Empresas Brasileiras</title>
+  <meta name="description" content="Plataforma SaaS de conformidade com a Lei Geral de Protecao de Dados. Diagnostico, plano de adequacao e suporte especializado estruturado em 4 pilares: Lei, Regras, Conformidade e Titular." />
+  <meta name="keywords" content="LGPD, conformidade, compliance, protecao de dados, ANPD, adequacao LGPD, Brasil" />
+  <meta property="og:title" content="4 Pilares LGPD | Adequacao LGPD para Empresas" />
+  <meta property="og:description" content="Guie sua empresa pela conformidade com a LGPD estruturado em 4 pilares fundamentais." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0614;
+      --bg2:       #0f0c1a;
+      --bg3:       #130e20;
+      --gold:      #C9A84C;
+      --gold-light:#e4c97e;
+      --gold-dim:  #8a7030;
+      --cream:     #F5EDD6;
+      --cream-dim: #c8b890;
+      --white:     #ffffff;
+      --border:    rgba(201,168,76,0.18);
+      --border-hi: rgba(201,168,76,0.45);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--cream);
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 18px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ---- NOISE OVERLAY ---- */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ---- NAV ---- */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 4rem;
+      background: rgba(10,6,20,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      transition: padding 0.3s;
+    }
+    .nav-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--cream-dim);
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-cta {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--gold);
+      padding: 0.55rem 1.5rem;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.25s, transform 0.2s;
+    }
+    .nav-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+    /* ---- HERO ---- */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 2rem 4rem;
+      overflow: hidden;
+    }
+
+    /* radial glow background */
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -60%);
+      width: 800px; height: 600px;
+      background: radial-gradient(ellipse, rgba(201,168,76,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ornamental lines */
+    .ornament {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+    .ornament-line {
+      width: 80px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold));
+    }
+    .ornament-line.rev {
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+    .ornament-diamond {
+      width: 6px; height: 6px;
+      background: var(--gold);
+      transform: rotate(45deg);
+    }
+    .ornament-text {
+      font-family: 'Cinzel', serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .hero-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(3rem, 7vw, 6.5rem);
+      font-weight: 900;
+      line-height: 1.0;
+      letter-spacing: 0.04em;
+      color: var(--cream);
+      margin-bottom: 0.3rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.4s forwards;
+    }
+    .hero-title span {
+      color: var(--gold);
+    }
+    .hero-subtitle-line {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      color: var(--gold-dim);
+      text-transform: uppercase;
+      margin-bottom: 1.8rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.55s forwards;
+    }
+    .hero-desc {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1rem, 1.5vw, 1.2rem);
+      font-style: italic;
+      color: var(--cream-dim);
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.7s forwards;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.9s forwards;
+    }
+    .btn-primary {
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--gold);
+      padding: 1rem 2.5rem;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      position: relative;
+      transition: all 0.25s;
+    }
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border: 1px solid var(--gold);
+      opacity: 0;
+      transition: opacity 0.25s, inset 0.25s;
+    }
+    .btn-primary:hover { background: var(--gold-light); }
+    .btn-primary:hover::after { opacity: 0.5; inset: -6px; }
+
+    .btn-secondary {
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: transparent;
+      padding: 1rem 2.5rem;
+      border: 1px solid var(--border-hi);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.25s;
+    }
+    .btn-secondary:hover { background: rgba(201,168,76,0.06); border-color: var(--gold); }
+
+    /* scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      opacity: 0;
+      animation: fadeIn 1s 1.4s forwards;
+    }
+    .scroll-hint span {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      color: var(--gold-dim);
+      text-transform: uppercase;
+    }
+    .scroll-arrow {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--gold-dim), transparent);
+      animation: scrollPulse 2s infinite;
+    }
+
+    /* ---- DIVIDER ---- */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 0 4rem;
+      margin: 0 auto;
+      max-width: 900px;
+    }
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-hi), transparent);
+    }
+    .divider-emblem {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .divider-d { width: 5px; height: 5px; background: var(--gold); transform: rotate(45deg); }
+
+    /* ---- SECTIONS COMMON ---- */
+    section {
+      padding: 7rem 2rem;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .section-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+    .section-intro {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-style: italic;
+      color: var(--cream-dim);
+      max-width: 620px;
+      margin-bottom: 4rem;
+    }
+
+    /* ---- PILARES GRID ---- */
+    .pilares-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+    }
+    .pilar-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 3rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .pilar-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      transform: scaleX(0);
+      transition: transform 0.4s;
+    }
+    .pilar-card:hover { border-color: var(--border-hi); background: var(--bg3); }
+    .pilar-card:hover::before { transform: scaleX(1); }
+
+    .pilar-number {
+      font-family: 'Cinzel', serif;
+      font-size: 4rem;
+      font-weight: 900;
+      color: rgba(201,168,76,0.08);
+      position: absolute;
+      top: 1.2rem; right: 1.8rem;
+      line-height: 1;
+      pointer-events: none;
+      transition: color 0.3s;
+    }
+    .pilar-card:hover .pilar-number { color: rgba(201,168,76,0.14); }
+
+    .pilar-icon {
+      width: 42px; height: 42px;
+      border: 1px solid var(--border-hi);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+    .pilar-icon svg { width: 20px; height: 20px; fill: none; stroke: var(--gold); stroke-width: 1.5; }
+
+    .pilar-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+    .pilar-desc {
+      font-family: 'EB Garamond', serif;
+      font-size: 0.98rem;
+      color: var(--cream-dim);
+      line-height: 1.7;
+    }
+    .pilar-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+    .pilar-tag {
+      font-family: 'Cinzel', serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      border: 1px solid rgba(201,168,76,0.2);
+      padding: 0.25rem 0.7rem;
+    }
+
+    /* ---- METRICS ---- */
+    .metrics-section {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+    .metric-item {
+      padding: 3rem 2rem;
+      text-align: center;
+      border-right: 1px solid var(--border);
+      position: relative;
+    }
+    .metric-item:last-child { border-right: none; }
+    .metric-number {
+      font-family: 'Cinzel', serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .metric-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cream-dim);
+    }
+
+    /* ---- STACK ---- */
+    .stack-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      margin-top: 3rem;
+    }
+    .stack-item {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: border-color 0.25s;
+    }
+    .stack-item:hover { border-color: var(--border-hi); }
+    .stack-badge {
+      width: 8px; height: 8px;
+      background: var(--gold);
+      transform: rotate(45deg);
+      flex-shrink: 0;
+    }
+    .stack-name {
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--cream);
+    }
+    .stack-cat {
+      font-family: 'EB Garamond', serif;
+      font-size: 0.85rem;
+      color: var(--gold-dim);
+      margin-left: auto;
+    }
+
+    /* ---- COMPLIANCE CALLOUT ---- */
+    .callout {
+      border: 1px solid var(--border-hi);
+      padding: 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .callout::before {
+      content: '';
+      position: absolute;
+      top: -60%; left: 50%;
+      transform: translateX(-50%);
+      width: 500px; height: 300px;
+      background: radial-gradient(ellipse, rgba(201,168,76,0.05) 0%, transparent 70%);
+    }
+    .callout-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 1rem;
+    }
+    .callout-subtitle {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--cream-dim);
+      margin-bottom: 2.5rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ---- LEGAL FOOTER ---- */
+    .law-banner {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 2rem 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+    .law-banner-text {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+    }
+    .law-badge {
+      background: rgba(201,168,76,0.08);
+      border: 1px solid var(--border-hi);
+      padding: 0.5rem 1.2rem;
+      font-family: 'Cinzel', serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    footer {
+      padding: 3rem 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .footer-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.12em;
+    }
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .footer-links a {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--cream-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-legal {
+      font-family: 'EB Garamond', serif;
+      font-size: 0.85rem;
+      color: var(--gold-dim);
+    }
+
+    /* ---- ANIMATIONS ---- */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes scrollPulse {
+      0%,100% { opacity: 0.4; }
+      50%      { opacity: 1; }
+    }
+
+    /* intersection observer reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s, transform 0.8s;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .pilares-grid { grid-template-columns: 1fr; }
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+      .stack-list { grid-template-columns: 1fr; }
+      footer { flex-direction: column; text-align: center; padding: 2rem; }
+      .law-banner { flex-direction: column; padding: 1.5rem; }
+      .callout { padding: 2.5rem 1.5rem; }
+    }
+    @media (max-width: 600px) {
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+      section { padding: 4rem 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">4 Pilares LGPD</a>
+  <ul class="nav-links">
+    <li><a href="#pilares">Pilares</a></li>
+    <li><a href="#stack">Tecnologia</a></li>
+    <li><a href="#compliance">Conformidade</a></li>
+    <li><a href="https://github.com/joaopedropassostocantins/4pilares-lgpd" target="_blank" rel="noopener">GitHub</a></li>
+  </ul>
+  <a href="#compliance" class="nav-cta">Iniciar Adequacao</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="ornament">
+    <span class="ornament-line"></span>
+    <span class="ornament-diamond"></span>
+    <span class="ornament-text">Lei 13.709/2018 &middot; ANPD &middot; LGPD</span>
+    <span class="ornament-diamond"></span>
+    <span class="ornament-line rev"></span>
+  </div>
+
+  <h1 class="hero-title">
+    4 Pilares<br><span>LGPD</span>
+  </h1>
+  <p class="hero-subtitle-line">Plataforma de Adequacao para Empresas Brasileiras</p>
+  <p class="hero-desc">
+    Conformidade com a Lei Geral de Protecao de Dados estruturada em quatro pilares fundamentais. Diagnostico, plano de adequacao e suporte especializado.
+  </p>
+  <div class="hero-actions">
+    <a href="#pilares" class="btn-primary">Conhecer os Pilares</a>
+    <a href="https://github.com/joaopedropassostocantins/4pilares-lgpd" target="_blank" rel="noopener" class="btn-secondary">Ver Repositorio</a>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Explorar</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="section-divider">
+  <div class="divider-line"></div>
+  <div class="divider-emblem">
+    <div class="divider-d"></div>
+    <div class="divider-d" style="opacity:0.5;transform:rotate(45deg) scale(0.6);"></div>
+    <div class="divider-d"></div>
+  </div>
+  <div class="divider-line"></div>
+</div>
+
+<!-- METRICS -->
+<section class="metrics-section">
+  <div class="metrics-grid">
+    <div class="metric-item reveal">
+      <span class="metric-number">4</span>
+      <span class="metric-label">Pilares de Conformidade</span>
+    </div>
+    <div class="metric-item reveal reveal-delay-1">
+      <span class="metric-number">8</span>
+      <span class="metric-label">Tabelas no Banco de Dados</span>
+    </div>
+    <div class="metric-item reveal reveal-delay-2">
+      <span class="metric-number">24</span>
+      <span class="metric-label">Modulos de Adequacao</span>
+    </div>
+    <div class="metric-item reveal reveal-delay-3">
+      <span class="metric-number">100%</span>
+      <span class="metric-label">Conformidade LGPD</span>
+    </div>
+  </div>
+</section>
+
+<!-- PILARES -->
+<section id="pilares">
+  <div class="container">
+    <span class="section-label reveal">Framework de Conformidade</span>
+    <h2 class="section-title reveal">Os Quatro Pilares</h2>
+    <p class="section-intro reveal">
+      Cada pilar cobre um dominio essencial da conformidade com a LGPD, guiando sua empresa por um processo estruturado e auditavel de adequacao.
+    </p>
+
+    <div class="pilares-grid">
+
+      <!-- Pilar 1 -->
+      <div class="pilar-card reveal">
+        <span class="pilar-number">01</span>
+        <div class="pilar-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L3 7v10l9 5 9-5V7z"/><path d="M12 2v20M3 7l9 5 9-5"/></svg>
+        </div>
+        <div class="pilar-name">Lei</div>
+        <p class="pilar-desc">
+          Fundamentos juridicos da Lei 13.709/2018. Bases legais do Art. 7 e Art. 11, dados sensiveis, principios da LGPD e o regime sancionatorio da ANPD com multas de ate 2% do faturamento.
+        </p>
+        <div class="pilar-tags">
+          <span class="pilar-tag">Art. 7 LGPD</span>
+          <span class="pilar-tag">Dados Sensiveis</span>
+          <span class="pilar-tag">Sancoes ANPD</span>
+          <span class="pilar-tag">Principios</span>
+        </div>
+      </div>
+
+      <!-- Pilar 2 -->
+      <div class="pilar-card reveal reveal-delay-1">
+        <span class="pilar-number">02</span>
+        <div class="pilar-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+        </div>
+        <div class="pilar-name">Regras</div>
+        <p class="pilar-desc">
+          Instrumentos operacionais de conformidade. Politicas de privacidade, ROPA (Registro de Operacoes de Tratamento), contratos com operadores e programas de treinamento de equipes.
+        </p>
+        <div class="pilar-tags">
+          <span class="pilar-tag">Politica de Privacidade</span>
+          <span class="pilar-tag">ROPA</span>
+          <span class="pilar-tag">Contratos DPA</span>
+          <span class="pilar-tag">Treinamento</span>
+        </div>
+      </div>
+
+      <!-- Pilar 3 -->
+      <div class="pilar-card reveal reveal-delay-2">
+        <span class="pilar-number">03</span>
+        <div class="pilar-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/><path d="M8 3.5A9 9 0 0 1 21 12"/></svg>
+        </div>
+        <div class="pilar-name">Conformidade</div>
+        <p class="pilar-desc">
+          Diagnostico de maturidade, data mapping de fluxos de dados, Relatorio de Impacto (DPIA) e plano de adequacao com roadmap personalizado e indicadores de progresso.
+        </p>
+        <div class="pilar-tags">
+          <span class="pilar-tag">Diagnostico</span>
+          <span class="pilar-tag">Data Mapping</span>
+          <span class="pilar-tag">DPIA</span>
+          <span class="pilar-tag">Roadmap</span>
+        </div>
+      </div>
+
+      <!-- Pilar 4 -->
+      <div class="pilar-card reveal reveal-delay-3">
+        <span class="pilar-number">04</span>
+        <div class="pilar-icon">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="pilar-name">Titular</div>
+        <p class="pilar-desc">
+          Direitos dos titulares de dados. Canal de atendimento a solicitacoes, fluxos de resposta dentro dos prazos legais, portabilidade de dados e exercicio do direito ao esquecimento.
+        </p>
+        <div class="pilar-tags">
+          <span class="pilar-tag">Canal de Atendimento</span>
+          <span class="pilar-tag">Portabilidade</span>
+          <span class="pilar-tag">Direito ao Esquecimento</span>
+          <span class="pilar-tag">Prazos Legais</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="section-divider">
+  <div class="divider-line"></div>
+  <div class="divider-emblem"><div class="divider-d"></div></div>
+  <div class="divider-line"></div>
+</div>
+
+<!-- STACK -->
+<section id="stack">
+  <div class="container">
+    <span class="section-label reveal">Infraestrutura</span>
+    <h2 class="section-title reveal">Stack Tecnica</h2>
+    <p class="section-intro reveal">
+      Arquitetura moderna e type-safe, construida para escalar com seguranca e conformidade desde a fundacao.
+    </p>
+
+    <div class="stack-list">
+      <div class="stack-item reveal"><div class="stack-badge"></div><span class="stack-name">React 18 + TypeScript</span><span class="stack-cat">Frontend</span></div>
+      <div class="stack-item reveal reveal-delay-1"><div class="stack-badge"></div><span class="stack-name">Node.js 22 + Express</span><span class="stack-cat">Backend</span></div>
+      <div class="stack-item reveal reveal-delay-2"><div class="stack-badge"></div><span class="stack-name">PostgreSQL + Drizzle ORM</span><span class="stack-cat">Banco de Dados</span></div>
+      <div class="stack-item reveal"><div class="stack-badge"></div><span class="stack-name">tRPC</span><span class="stack-cat">API Type-Safe</span></div>
+      <div class="stack-item reveal reveal-delay-1"><div class="stack-badge"></div><span class="stack-name">Mercado Pago</span><span class="stack-cat">Pagamentos BR</span></div>
+      <div class="stack-item reveal reveal-delay-2"><div class="stack-badge"></div><span class="stack-name">Supabase</span><span class="stack-cat">Infraestrutura</span></div>
+      <div class="stack-item reveal"><div class="stack-badge"></div><span class="stack-name">Tailwind CSS + shadcn/ui</span><span class="stack-cat">Design System</span></div>
+      <div class="stack-item reveal reveal-delay-1"><div class="stack-badge"></div><span class="stack-name">Framer Motion</span><span class="stack-cat">Animacoes</span></div>
+      <div class="stack-item reveal reveal-delay-2"><div class="stack-badge"></div><span class="stack-name">Zod + React Hook Form</span><span class="stack-cat">Validacao</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- LAW BANNER -->
+<div class="law-banner">
+  <span class="law-banner-text">Plataforma construida em conformidade com a Lei 13.709/2018 &mdash; Lei Geral de Protecao de Dados Pessoais</span>
+  <span class="law-badge">LGPD Compliant</span>
+  <span class="law-badge">ANPD Ready</span>
+  <span class="law-badge">ISO 27001 Aligned</span>
+</div>
+
+<!-- CTA -->
+<section id="compliance">
+  <div class="container">
+    <div class="callout reveal">
+      <h2 class="callout-title">Inicie sua Adequacao LGPD</h2>
+      <p class="callout-subtitle">
+        Estruture o processo de conformidade da sua empresa com metodo, tecnologia e suporte especializado.
+      </p>
+      <div style="display:flex; gap:1.2rem; justify-content:center; flex-wrap:wrap;">
+        <a href="https://github.com/joaopedropassostocantins/4pilares-lgpd" class="btn-primary" target="_blank" rel="noopener">Acessar Repositorio</a>
+        <a href="mailto:contato@sajodiagnos.club" class="btn-secondary">Contato Direto</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">4 Pilares LGPD</div>
+  <ul class="footer-links">
+    <li><a href="#pilares">Pilares</a></li>
+    <li><a href="#stack">Stack</a></li>
+    <li><a href="https://github.com/joaopedropassostocantins/4pilares-lgpd" target="_blank" rel="noopener">GitHub</a></li>
+    <li><a href="mailto:contato@sajodiagnos.club">Contato</a></li>
+  </ul>
+  <span class="footer-legal">CNPJ 58.551.044/0001-90 &mdash; Tocantins, Brasil</span>
+</footer>
+
+<script>
+  // Intersection Observer para animacoes de reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Nav shrink on scroll
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    if (window.scrollY > 60) {
+      nav.style.padding = '0.8rem 4rem';
+    } else {
+      nav.style.padding = '1.2rem 4rem';
+    }
+  });
+</script>
+
+</body>
+</html>
