@@ -338,9 +338,6 @@ export default function CheckoutFlow() {
       brickRef.current = await bricksBuilder.create("payment", "paymentBrick_container", {
         initialization: {
           amount: amount,
-          payer: {
-            email: form.email,
-          },
         },
         customization: {
           paymentMethods: {
@@ -362,20 +359,19 @@ export default function CheckoutFlow() {
           },
           onSubmit: async (formData: any) => {
             console.log("📤 Formulário de pagamento enviado:", formData);
-            console.log("🔍 Tipo de pagamento:", formData.paymentMethodId);
             setLoading(true);
 
             try {
-              // O Payment Brick já gera o token automaticamente
-              // Não precisamos fazer nada aqui, apenas enviar para o servidor
+              // Validar token
               if (!formData.token) {
                 console.error("❌ Token não gerado pelo Payment Brick");
+                console.error("❌ Estrutura recebida:", formData);
                 toast.error("Erro: Token de pagamento não gerado. Tente novamente.");
                 setLoading(false);
                 return;
               }
 
-              console.log("✅ Token gerado com sucesso");
+              console.log("✅ Token gerado com sucesso:", formData.token);
               console.log(`💳 Processando pagamento: ${form.email} - Plano ${planoSelecionado.id}`);
 
               const response = await processPayment.mutateAsync({
@@ -393,11 +389,11 @@ export default function CheckoutFlow() {
               if (response.status === "approved") {
                 console.log("✅ Pagamento aprovado!");
                 toast.success("Pagamento aprovado com sucesso!");
-                setLocation("/checkout-success");
+                setLocation(`/confirmation?payment_id=${response.paymentId}&status=approved`);
               } else if (response.status === "pending") {
                 console.log("⏳ Pagamento pendente");
                 toast.info("Pagamento em processamento. Você receberá confirmação por e-mail.");
-                setLocation("/checkout-success");
+                setLocation(`/confirmation?payment_id=${response.paymentId}&status=pending`);
               } else if (response.status === "rejected") {
                 console.error("❌ Pagamento rejeitado");
                 toast.error(`Pagamento rejeitado: ${response.message || "Motivo desconhecido"}`);

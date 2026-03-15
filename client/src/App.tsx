@@ -38,6 +38,7 @@ import AdminIncidentes from "./pages/AdminIncidentes";
 import Checkout from "./pages/Checkout";
 import CheckoutFlow from "./pages/CheckoutFlow";
 import CheckoutSuccess from "./pages/CheckoutSuccess";
+import PaymentConfirmation from "./pages/PaymentConfirmation";
 import SubscriptionDashboard from "./pages/SubscriptionDashboard";
 import PlanUpgrade from "./pages/PlanUpgrade";
 
@@ -90,6 +91,8 @@ function Router() {
       <Route path="/dashboard" component={() => <ProtectedRoute component={Dashboard} />} />
       <Route path="/checkout" component={CheckoutFlow} />
       <Route path="/checkout-success" component={CheckoutSuccess} />
+      <Route path="/confirmation" component={PaymentConfirmation} />
+      <Route path="/payment-confirmation" component={PaymentConfirmation} />
       <Route path="/subscription" component={() => <ProtectedRoute component={SubscriptionDashboard} />} />
       <Route path="/upgrade-plan" component={() => <ProtectedRoute component={PlanUpgrade} />} />
       <Route path="/preco" component={Preco} />
