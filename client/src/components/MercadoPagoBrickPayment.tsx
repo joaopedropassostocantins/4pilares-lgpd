@@ -161,8 +161,8 @@ export default function MercadoPagoBrickPayment({
               paymentMethods: {
                 creditCard: "all",
                 debitCard: "all",
-                ticket: "all",
-                bankTransfer: "all",
+                ticket: "none",
+                bankTransfer: "none",
               },
               visual: {
                 hidePaymentButton: false,
