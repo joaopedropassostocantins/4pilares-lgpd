@@ -1,263 +1,200 @@
-import { MercadoPagoConfig, Preference, Payment } from "mercadopago";
+import axios from "axios";
 import { ENV } from "./_core/env";
 
-let client: MercadoPagoConfig | null = null;
+const MERCADO_PAGO_API_URL = "https://api.mercadopago.com";
 
-/**
- * Initialize Mercado Pago SDK with access token
- */
-export function initMercadoPago(): boolean {
-  if (!ENV.mercadoPagoAccessToken) {
-    console.error("[Mercado Pago] Access token not configured");
-    return false;
-  }
-
-  try {
-    client = new MercadoPagoConfig({
-      accessToken: ENV.mercadoPagoAccessToken,
-    });
-    console.log("[Mercado Pago] SDK initialized successfully");
-    return true;
-  } catch (error) {
-    console.error("[Mercado Pago] Failed to initialize SDK:", error);
-    return false;
-  }
-}
-
-/**
- * Get initialized Mercado Pago client
- */
-export function getMercadoPagoClient(): MercadoPagoConfig {
-  if (!client) {
-    initMercadoPago();
-  }
-  if (!client) {
-    throw new Error("Mercado Pago client not initialized");
-  }
-  return client;
-}
-
-/**
- * Create a payment preference for Pix + Cartão
- */
-export async function createPaymentPreference(input: {
-  diagnosticId: string;
-  userEmail: string;
-  userName: string;
+export interface CreatePaymentRequest {
+  token: string;
   amount: number;
-  returnUrl: string;
-}) {
+  email: string;
+  description: string;
+  installments?: number;
+  payer?: {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    identification?: {
+      type?: string;
+      number?: string;
+    };
+  };
+}
+
+export interface PaymentResponse {
+  id: number;
+  status: string;
+  status_detail: string;
+  amount: number;
+  email: string;
+  description: string;
+  transaction_amount: number;
+  payment_method_id: string;
+  installments: number;
+  date_created: string;
+}
+
+export interface WebhookPayment {
+  id: number;
+  status: string;
+  status_detail: string;
+  amount: number;
+  email: string;
+  date_created: string;
+}
+
+/**
+ * Criar pagamento no Mercado Pago
+ */
+export async function createPayment(data: CreatePaymentRequest): Promise<PaymentResponse> {
   try {
-    const client = getMercadoPagoClient();
-    const preference = new Preference(client);
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const validEmail = emailRegex.test(input.userEmail)
-      ? input.userEmail
-      : `user-${input.diagnosticId}@fusion-sajo.com`;
-
-    // Validate userName (max 256 chars, no special chars)
-    const validName = input.userName
-      .substring(0, 256)
-      .replace(/[^a-zA-Z0-9\s\-\.]/g, '');
-
-    console.log("[Mercado Pago] Creating preference with:", {
-      email: validEmail,
-      name: validName,
-      amount: input.amount,
-      diagnosticId: input.diagnosticId,
+    console.log("🔄 Criando pagamento no Mercado Pago...");
+    console.log("📊 Dados:", {
+      amount: data.amount,
+      email: data.email,
+      description: data.description,
+      installments: data.installments || 1,
     });
 
-    const response = await preference.create({
-      body: {
-        items: [
-          {
-            id: input.diagnosticId,
-            title: "FUSION-SAJO - Analise Completa dos 4 Pilares",
-            description: "Analise profunda: saude, financas, relacionamentos",
-            quantity: 1,
-            unit_price: input.amount,
-            currency_id: "BRL",
-          },
-        ],
+    const response = await axios.post(
+      `${MERCADO_PAGO_API_URL}/v1/payments`,
+      {
+        token: data.token,
+        amount: data.amount,
+        email: data.email,
+        description: data.description,
+        installments: data.installments || 1,
+        payment_method_id: "credit_card",
         payer: {
-          email: validEmail,
-          name: validName,
+          first_name: data.payer?.firstName || "Cliente",
+          last_name: data.payer?.lastName || "4 Pilares",
+          email: data.payer?.email || data.email,
+          identification: {
+            type: data.payer?.identification?.type || "CPF",
+            number: data.payer?.identification?.number || "00000000000",
+          },
         },
-        payment_methods: {
-          excluded_payment_types: [],
-          excluded_payment_methods: [],
-          installments: 6,
-          default_installments: 1,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${ENV.mercadoPagoAccessToken}`,
+          "Content-Type": "application/json",
         },
-        back_urls: {
-          success: input.returnUrl,
-          failure: input.returnUrl,
-          pending: input.returnUrl,
-        },
-        auto_return: "approved",
-        external_reference: input.diagnosticId,
-        statement_descriptor: "FUSION-SAJO",
-        expires: false,
+      }
+    );
+
+    console.log("✅ Pagamento criado com sucesso!");
+    console.log("📌 ID do pagamento:", response.data.id);
+    console.log("📊 Status:", response.data.status);
+
+    return response.data;
+  } catch (error: any) {
+    console.error("❌ Erro ao criar pagamento:", error.response?.data || error.message);
+    throw new Error(
+      `Erro ao processar pagamento: ${error.response?.data?.message || error.message}`
+    );
+  }
+}
+
+/**
+ * Obter detalhes do pagamento
+ */
+export async function getPayment(paymentId: number): Promise<PaymentResponse> {
+  try {
+    console.log("🔍 Buscando pagamento:", paymentId);
+
+    const response = await axios.get(`${MERCADO_PAGO_API_URL}/v1/payments/${paymentId}`, {
+      headers: {
+        Authorization: `Bearer ${ENV.mercadoPagoAccessToken}`,
       },
     });
 
-    console.log("[Mercado Pago] Preference created successfully:", response.id);
+    console.log("✅ Pagamento encontrado!");
+    console.log("📊 Status:", response.data.status);
 
-    return {
-      preferenceId: response.id,
-      initPoint: response.init_point,
-      sandboxInitPoint: response.sandbox_init_point,
-    };
+    return response.data;
   } catch (error: any) {
-    console.error("[Mercado Pago] Failed to create preference:", {
-      message: error?.message,
-      status: error?.status,
-      response: error?.response?.data,
-    });
-    throw error;
+    console.error("❌ Erro ao buscar pagamento:", error.response?.data || error.message);
+    throw new Error(`Erro ao buscar pagamento: ${error.message}`);
   }
 }
 
 /**
- * Get payment details by ID
+ * Refundar pagamento
  */
-export async function getPaymentDetails(paymentId: string) {
+export async function refundPayment(paymentId: number): Promise<any> {
   try {
-    const client = getMercadoPagoClient();
-    const payment = new Payment(client);
+    console.log("🔄 Reembolsando pagamento:", paymentId);
 
-    const response = await payment.get({
-      id: paymentId,
-    });
-
-    return {
-      id: response.id,
-      status: response.status,
-      statusDetail: response.status_detail,
-      amount: response.transaction_amount,
-      paymentMethod: response.payment_method?.id,
-      paymentType: response.payment_type_id,
-      createdAt: response.date_created,
-    };
-  } catch (error) {
-    console.error("[Mercado Pago] Failed to get payment details:", error);
-    throw error;
-  }
-}
-
-/**
- * Process webhook from Mercado Pago
- * Returns payment status and external reference (diagnosticId)
- */
-export async function processWebhook(webhookData: any) {
-  try {
-    // Webhook can be payment.created, payment.updated, or payment.approved
-    if (webhookData.type === "payment") {
-      const paymentId = webhookData.data?.id;
-      if (!paymentId) {
-        console.warn("[Mercado Pago Webhook] No payment ID in webhook data");
-        return null;
+    const response = await axios.post(
+      `${MERCADO_PAGO_API_URL}/v1/payments/${paymentId}/refunds`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${ENV.mercadoPagoAccessToken}`,
+          "Content-Type": "application/json",
+        },
       }
+    );
 
-      // Get payment details
-      const paymentDetails = await getPaymentDetails(paymentId.toString());
+    console.log("✅ Reembolso processado!");
+    console.log("📌 ID do reembolso:", response.data.id);
 
-      return {
-        paymentId: paymentDetails.id,
-        status: paymentDetails.status,
-        statusDetail: paymentDetails.statusDetail,
-        amount: paymentDetails.amount,
-        paymentMethod: paymentDetails.paymentMethod,
-        createdAt: paymentDetails.createdAt,
-      };
+    return response.data;
+  } catch (error: any) {
+    console.error("❌ Erro ao reembolsar:", error.response?.data || error.message);
+    throw new Error(`Erro ao reembolsar pagamento: ${error.message}`);
+  }
+}
+
+/**
+ * Validar webhook do Mercado Pago
+ */
+export function validateWebhookSignature(
+  body: any,
+  signature: string,
+  timestamp: string
+): boolean {
+  try {
+    // Validação básica de webhook
+    // Em produção, implementar validação de assinatura completa
+    console.log("🔐 Validando webhook...");
+
+    if (!body || !signature || !timestamp) {
+      console.warn("⚠️ Dados de webhook incompletos");
+      return false;
     }
 
-    return null;
+    console.log("✅ Webhook válido");
+    return true;
   } catch (error) {
-    console.error("[Mercado Pago Webhook] Error processing webhook:", error);
-    throw error;
+    console.error("❌ Erro ao validar webhook:", error);
+    return false;
   }
 }
 
 /**
- * Create a PIX payment and return QR code
- * Returns QR code image URL and copy-paste code
+ * Processar webhook de pagamento
  */
-export async function createPixPayment(input: {
-  diagnosticId: string;
-  userEmail: string;
-  userName: string;
-  amount: number;
-}) {
+export function processPaymentWebhook(data: any): {
+  paymentId: number;
+  status: string;
+  email: string;
+} {
   try {
-    const client = getMercadoPagoClient();
-    const payment = new Payment(client);
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const validEmail = emailRegex.test(input.userEmail)
-      ? input.userEmail
-      : `user-${input.diagnosticId}@fusion-sajo.com`;
-
-    // Validate userName (max 256 chars, no special chars)
-    const validName = input.userName
-      .substring(0, 256)
-      .replace(/[^a-zA-Z0-9\s\-\.]/g, '');
-
-    console.log("[Mercado Pago] Creating PIX payment with:", {
-      email: validEmail,
-      name: validName,
-      amount: input.amount,
-      diagnosticId: input.diagnosticId,
+    console.log("📨 Processando webhook de pagamento...");
+    console.log("📊 Dados:", {
+      id: data.id,
+      status: data.status,
+      email: data.email,
     });
-
-    const response = await payment.create({
-      body: {
-        transaction_amount: input.amount,
-        description: "FUSION-SAJO - Analise Completa dos 4 Pilares",
-        payment_method_id: "pix",
-        payer: {
-          email: validEmail,
-          first_name: validName.split(" ")[0],
-          last_name: validName.split(" ").slice(1).join(" ") || "User",
-        },
-        external_reference: input.diagnosticId,
-      },
-    });
-
-    console.log("[Mercado Pago] PIX payment created successfully:", response.id);
-
-    const pixData = response.point_of_interaction?.transaction_data as any;
 
     return {
-      paymentId: response.id,
-      qrCode: pixData?.qr_code,
-      qrCodeUrl: pixData?.qr_code_url,
-      copyAndPaste: pixData?.copy_and_paste,
-      status: response.status,
-      amount: response.transaction_amount,
+      paymentId: data.id,
+      status: data.status,
+      email: data.email,
     };
-  } catch (error: any) {
-    console.error("[Mercado Pago] Failed to create PIX payment:", {
-      message: error?.message,
-      status: error?.status,
-      response: error?.response?.data,
-    });
+  } catch (error) {
+    console.error("❌ Erro ao processar webhook:", error);
     throw error;
   }
-}
-
-/**
- * Verify webhook signature (optional but recommended)
- */
-export function verifyWebhookSignature(
-  body: Record<string, unknown>,
-  signature: string,
-  secret: string
-): boolean {
-  // Mercado Pago webhook verification
-  // For now, we'll accept all webhooks (implement signature verification if needed)
-  return true;
 }

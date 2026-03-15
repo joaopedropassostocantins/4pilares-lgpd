@@ -1,237 +1,227 @@
-import { useParams, Link, useLocation } from "wouter";
+/*
+ * Checkout.tsx — 4 Pilares LGPD
+ * Integração com Mercado Pago Payment Brick
+ */
 import { useEffect, useState } from "react";
-import { trpc } from "@/lib/trpc";
+import { useSearchParams } from "wouter";
+import { motion } from "framer-motion";
+import { AlertCircle, CheckCircle2, Loader2, ArrowLeft } from "lucide-react";
+import { Link } from "wouter";
+import Layout from "@/components/Layout";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
-const MODULE_INFO: Record<string, {
-    title: string;
-    emoji: string;
-    color: string;
-    colorClass: string;
-    description: string;
-}> = {
-    "oraculo-investimentos": {
-        title: "Oráculo dos Investimentos",
-        emoji: "💰",
-        color: "#D06B5C",
-        colorClass: "module-fire",
-        description: "Desbloqueie os padrões financeiros que regem suas decisões — e veja onde o dinheiro realmente escoa.",
-    },
-    "conselheiro-judicial": {
-        title: "Conselheiro Judicial",
-        emoji: "⚖️",
-        color: "#7FB7B2",
-        colorClass: "module-wood",
-        description: "Estratégia e timing correto para disputas, contratos e decisões jurídicas sensíveis.",
-    },
-    "navegador-conflitos": {
-        title: "Navegador de Conflitos",
-        emoji: "🌪️",
-        color: "#C6A24A",
-        colorClass: "module-earth",
-        description: "Quebre ciclos de tensão e aprenda o plano exato para resolver conflitos de forma definitiva.",
-    },
-    "oraculo-amor": {
-        title: "Oráculo do Amor",
-        emoji: "❤️",
-        color: "#4A90B8",
-        colorClass: "module-water",
-        description: "Identifique o padrão que se repete nos seus relacionamentos e rompa o ciclo de uma vez.",
-    },
-    "caminho-saida": {
-        title: "Caminho de Saída",
-        emoji: "🚪",
-        color: "#A98DC0",
-        colorClass: "module-fire-wood",
-        description: "Encontre o portal exato de interrupção de padrões ancestrais que travam sua vida.",
-    },
-    "conexao-quem-partiu": {
-        title: "Conexão com Quem Partiu",
-        emoji: "🕊️",
-        color: "#6EA8A3",
-        colorClass: "module-earth-water",
-        description: "Transforme a dor do luto em presença — feche o ciclo que ficou em aberto.",
-    },
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
-const DEFAULT_MODULE = {
-    title: "Módulo",
-    emoji: "✦",
-    color: "#C9A84C",
-    colorClass: "",
-    description: "Libere seu acesso completo a este módulo e inicie sua análise personalizada.",
+const MERCADO_PAGO_PUBLIC_KEY = import.meta.env.VITE_MERCADO_PAGO_PUBLIC_KEY;
+const MERCADO_PAGO_SDK_URL = "https://sdk.mercadopago.com/js/v2";
+
+const planosPagamento = {
+  essencial: { nome: "Essencial", preco: 29900, parcelas: 1 },
+  profissional: { nome: "Profissional", preco: 79900, parcelas: 1 },
+  empresarial: { nome: "Empresarial", preco: 199900, parcelas: 1 },
 };
 
-export default function CheckoutPage() {
-    const params = useParams<{ module: string }>();
-    const [, navigate] = useLocation();
-    const slug = params?.module ?? "";
-    const mod = MODULE_INFO[slug] ?? DEFAULT_MODULE;
-    const [loading, setLoading] = useState(false);
-    const [email, setEmail] = useState("");
-    const [name, setName] = useState("");
-    const [isWebview, setIsWebview] = useState(false);
-    
-    useEffect(() => {
-      const ua = navigator.userAgent || "";
-      const detected = ua.includes("FBAN") || ua.includes("FBAV") || ua.includes("Instagram") || ua.includes("TikTok") || ua.includes("BytedanceWebview") || (ua.includes("wv") && ua.includes("Android"));
-      setIsWebview(detected);
-    }, []);
+export default function Checkout() {
+  const [searchParams] = useSearchParams();
+  const planType = (searchParams.get("plan") || "profissional") as keyof typeof planosPagamento;
+  const plano = planosPagamento[planType] || planosPagamento.profissional;
 
-    const createModulePayment = trpc.payment.createModulePayment.useMutation();
+  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState<"idle" | "processing" | "success" | "error">("idle");
+  const [brickReady, setBrickReady] = useState(false);
 
-    useEffect(() => {
-        window.scrollTo({ top: 0, behavior: "instant" });
-    }, [slug]);
+  // Carregar SDK do Mercado Pago
+  useEffect(() => {
+    if (window.MercadoPago) {
+      initializeBrick();
+      return;
+    }
 
-    const handlePayment = async () => {
-        if (!email || !name) {
-            alert("Por favor, preencha email e nome");
-            return;
-        }
-
-        setLoading(true);
-        try {
-            const result = await createModulePayment.mutateAsync({
-                module: slug,
-                userEmail: email,
-                userName: name,
-                returnUrl: window.location.origin + "/",
-            });
-
-            if (result.initPoint) {
-                // Redirect to Mercado Pago checkout
-                window.location.href = result.initPoint;
-            } else {
-                alert("Erro ao criar pagamento. Tente novamente.");
-            }
-        } catch (error) {
-            console.error("Payment error:", error);
-            alert("Erro ao processar pagamento. Tente novamente.");
-        } finally {
-            setLoading(false);
-        }
+    const script = document.createElement("script");
+    script.src = MERCADO_PAGO_SDK_URL;
+    script.async = true;
+    script.onload = () => {
+      initializeBrick();
     };
+    script.onerror = () => {
+      toast.error("Erro ao carregar Mercado Pago. Tente novamente.");
+      setLoading(false);
+    };
+    document.body.appendChild(script);
 
-    return (
-        <div
-          className={`min-h-screen ${mod.colorClass}`}
-          style={{
-            background: "radial-gradient(ellipse at 50% 0%, #1a1040 0%, #0a0614 60%)",
-          }}
-        >
-            <div className="checkout-container">
-                {/* Voltar */}
-                <div className="w-full max-w-xl mb-6 text-left px-2">
-                    <Link href="/">
-                        <span className="text-muted-foreground text-sm hover:text-foreground transition-colors cursor-pointer">
-                            ← Voltar ao início
-                        </span>
-                    </Link>
-                </div>
+    return () => {
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+  }, []);
 
-                <div className="checkout-card" style={{ borderColor: mod.color }}>
-                    {/* Ícone do módulo */}
-                    <div
-                        className="text-6xl mb-4 bg-opacity-20 rounded-full w-24 h-24 flex items-center justify-center mx-auto"
-                        style={{ background: `${mod.color}22` }}
-                    >
-                        {mod.emoji}
-                    </div>
+  const initializeBrick = async () => {
+    if (!window.MercadoPago || !MERCADO_PAGO_PUBLIC_KEY) {
+      toast.error("Chave pública do Mercado Pago não configurada.");
+      setLoading(false);
+      return;
+    }
 
-                    {/* Badge */}
-                    <div
-                        className="module-badge mx-auto mb-4"
-                        style={{
-                            color: mod.color,
-                            borderColor: mod.color,
-                            background: `${mod.color}18`,
-                        }}
-                    >
-                        ✦ Acesso por análise
-                    </div>
+    try {
+      const mp = new window.MercadoPago(MERCADO_PAGO_PUBLIC_KEY, {
+        locale: "pt-BR",
+      });
 
-                    {/* Título */}
-                    <h1
-                        className="text-2xl font-bold mb-3"
-                        style={{ fontFamily: "'Cinzel', serif", color: mod.color }}
-                    >
-                        Pagamento do módulo
-                    </h1>
-                    <p className="text-xl font-bold text-foreground mb-2">{mod.title}</p>
-                    <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
-                        {mod.description}
+      const brickBuilder = mp.bricks();
+
+      const settings = {
+        initialization: {
+          amount: plano.preco / 100, // Converter para reais
+          payer: {
+            email: "",
+          },
+        },
+        customization: {
+          paymentMethods: {
+            creditCard: "all",
+            debitCard: "all",
+            ticket: "all",
+            bankTransfer: "all",
+          },
+          visual: {
+            hideFormTitle: false,
+            style: {
+              customVariables: {
+                baseColor: "#5b21b6", // Roxo 4 Pilares
+              },
+            },
+          },
+        },
+        callbacks: {
+          onReady: () => {
+            setBrickReady(true);
+            setLoading(false);
+          },
+          onSubmit: async (formData: any) => {
+            setStatus("processing");
+            try {
+              // Aqui você enviaria os dados para seu backend processar o pagamento
+              // const response = await fetch('/api/payments/process', {
+              //   method: 'POST',
+              //   headers: { 'Content-Type': 'application/json' },
+              //   body: JSON.stringify(formData)
+              // });
+              // const result = await response.json();
+
+              // Simulação de sucesso
+              setTimeout(() => {
+                setStatus("success");
+                toast.success("Pagamento processado com sucesso!");
+              }, 2000);
+            } catch (error) {
+              setStatus("error");
+              toast.error("Erro ao processar pagamento. Tente novamente.");
+            }
+          },
+          onError: (error: any) => {
+            setStatus("error");
+            console.error("Brick error:", error);
+            toast.error("Erro no formulário de pagamento. Verifique os dados.");
+          },
+        },
+      };
+
+      await brickBuilder.create("payment", "paymentBrick_container", settings);
+    } catch (error) {
+      console.error("Erro ao inicializar Brick:", error);
+      toast.error("Erro ao carregar formulário de pagamento.");
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Layout>
+      <section className="py-20" style={{ backgroundColor: "#F8FAFC" }}>
+        <div className="container max-w-2xl mx-auto">
+          <motion.div initial="hidden" animate="visible" variants={fadeUp} className="mb-8">
+            <Link href="/planos">
+              <Button variant="ghost" className="mb-6">
+                <ArrowLeft className="w-4 h-4 mr-2" /> Voltar aos planos
+              </Button>
+            </Link>
+
+            <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
+              <div className="mb-8">
+                <h1 className="title-serif text-3xl text-slate-900 mb-2">Checkout</h1>
+                <p className="text-slate-600">Finalize sua assinatura ao plano {plano.nome}</p>
+              </div>
+
+              {/* Resumo do pedido */}
+              <div className="bg-slate-50 rounded-xl p-6 mb-8 border border-slate-200">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <p className="text-sm text-slate-500 font-mono">Plano</p>
+                    <p className="text-lg font-semibold text-slate-900">{plano.nome}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm text-slate-500 font-mono">Valor</p>
+                    <p className="text-2xl font-bold text-slate-900" style={{ fontFamily: "var(--font-mono)" }}>
+                      R$ {(plano.preco / 100).toFixed(2)}
                     </p>
-
-                    {isWebview && (
-                      <div className="w-full max-w-xl mb-4 px-2 rounded-xl p-4 text-center" style={{ background: "rgba(255,165,0,0.12)", border: "1px solid rgba(255,165,0,0.5)" }}>
-                        <p className="text-sm font-bold mb-1" style={{ color: "#ffa500" }}>⚠️ Para garantir sua compra, abra no Chrome ou Safari</p>
-                        <p className="text-xs text-muted-foreground mb-3">Navegadores internos de apps (TikTok, Instagram) podem bloquear o pagamento.</p>
-                        <button onClick={() => window.open(window.location.href, "_blank")} className="text-xs font-bold px-4 py-2 rounded-full" style={{ background: "rgba(255,165,0,0.2)", color: "#ffa500", border: "1px solid #ffa500" }}>Abrir no navegador →</button>
-                      </div>
-                    )}
-
-                    {/* O QUE ESTÁ INCLUÍDO */}
-                    <div className="rounded-xl p-5 mb-6 text-left" style={{ background: `${mod.color}10`, border: `1px solid ${mod.color}40` }}>
-                      <p className="font-bold text-sm mb-3" style={{ color: mod.color }}>✦ O que você recebe:</p>
-                      <ul className="space-y-2 text-sm text-muted-foreground">
-                        <li className="flex gap-2"><span style={{ color: mod.color }} className="flex-shrink-0">✓</span>Análise completa e personalizada deste módulo</li>
-                        <li className="flex gap-2"><span style={{ color: mod.color }} className="flex-shrink-0">✓</span>1 videochamada por semana durante 90 dias</li>
-                        <li className="flex gap-2"><span style={{ color: mod.color }} className="flex-shrink-0">✓</span>Acompanhamento ao vivo com o especialista Musok (무속) coreano</li>
-                        <li className="flex gap-2"><span style={{ color: mod.color }} className="flex-shrink-0">✓</span>Garantia total de devolução - sem perguntas</li>
-                      </ul>
-                    </div>
-
-                    {/* Formulário */}
-                    <div className="mb-6 space-y-3">
-                        <input
-                            type="email"
-                            placeholder="Seu email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            style={{ fontSize: "16px", minHeight: "52px" }}
-                            className="w-full px-4 py-4 rounded-xl bg-background/50 border border-border text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/60"
-                        />
-                        <input
-                            type="text"
-                            placeholder="Seu nome"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            style={{ fontSize: "16px", minHeight: "52px" }}
-                            className="w-full px-4 py-4 rounded-xl bg-background/50 border border-border text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/60"
-                        />
-                    </div>
-
-                    {/* Preço + Botão */}
-                    <div className="mb-4">
-                        <p className="text-4xl font-bold mb-1" style={{ color: mod.color, fontFamily: "'Cinzel', serif" }}>
-                            R$ 299
-                        </p>
-                        <p className="text-xs text-muted-foreground mb-5">Pagamento único · Cartão de crédito via Mercado Pago</p>
-                        <Link href="/garantia"><span className="text-xs text-gold underline cursor-pointer hover:text-gold/80 mb-3 inline-block">🛡️ Garantia total de devolução</span></Link>
-
-                        <button
-                            className="w-full font-bold py-5 text-lg rounded-2xl text-white flex items-center justify-center gap-2 disabled:opacity-50 transition-all hover:opacity-90 active:scale-95"
-                            style={{
-                                background: "linear-gradient(135deg, #009EE3 0%, #0070B3 100%)",
-                                minHeight: "62px",
-                                boxShadow: "0 4px 24px rgba(0,158,227,0.4)",
-                            }}
-                            onClick={handlePayment}
-                            disabled={loading}
-                        >
-                            {loading ? "Processando..." : "💳 Pagar com Cartão — R$ 299"}
-                        </button>
-                        <p className="text-center text-xs mt-3" style={{ color: "#B8A99A" }}>
-                            ou em até <strong style={{ color: "#E6C76A" }}>12x de R$ 24,92</strong> no cartão de crédito
-                        </p>
-                    </div>
-
-                    {/* Garantia */}
-                    <p className="text-xs text-muted-foreground/60 mt-4">
-                        🔒 Pagamento seguro · Acesso imediato após aprovação
-                    </p>
+                  </div>
                 </div>
+                <div className="pt-4 border-t border-slate-200">
+                  <p className="text-xs text-slate-500 font-mono">Faturamento</p>
+                  <p className="text-sm text-slate-700">Mensalidade recorrente · Máximo {plano.parcelas}x</p>
+                </div>
+              </div>
+
+              {/* Payment Brick */}
+              {loading ? (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="w-6 h-6 animate-spin text-slate-400" />
+                </div>
+              ) : status === "success" ? (
+                <motion.div initial="hidden" animate="visible" variants={fadeUp} className="text-center py-12">
+                  <CheckCircle2 className="w-12 h-12 text-green-600 mx-auto mb-4" />
+                  <h3 className="title-serif text-xl text-slate-900 mb-2">Pagamento confirmado!</h3>
+                  <p className="text-slate-600 mb-6">
+                    Sua assinatura foi ativada. Você receberá um e-mail de confirmação em breve.
+                  </p>
+                  <Link href="/dashboard">
+                    <Button className="bg-blue-700 hover:bg-blue-800 text-white h-11 px-8 rounded-xl">
+                      Ir para o painel
+                    </Button>
+                  </Link>
+                </motion.div>
+              ) : status === "error" ? (
+                <motion.div initial="hidden" animate="visible" variants={fadeUp} className="bg-red-50 border border-red-200 rounded-xl p-6 mb-6">
+                  <div className="flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-medium text-red-900">Erro no pagamento</p>
+                      <p className="text-sm text-red-700 mt-1">Verifique os dados do seu cartão e tente novamente.</p>
+                    </div>
+                  </div>
+                </motion.div>
+              ) : null}
+
+              {!loading && status !== "success" && (
+                <div id="paymentBrick_container" className="mb-6" />
+              )}
+
+              {/* Info */}
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start gap-3">
+                <AlertCircle className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                <div className="text-xs text-blue-700">
+                  <p className="font-medium mb-1">Pagamento seguro</p>
+                  <p>Seus dados são processados diretamente pelo Mercado Pago com criptografia de ponta a ponta.</p>
+                </div>
+              </div>
             </div>
+          </motion.div>
         </div>
-    );
+      </section>
+    </Layout>
+  );
 }

@@ -1,10 +1,21 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json, decimal, boolean } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json, decimal } from "drizzle-orm/mysql-core";
 
+/**
+ * Core user table backing auth flow.
+ * Extend this file with additional tables as your product grows.
+ * Columns use camelCase to match both database fields and generated types.
+ */
 export const users = mysqlTable("users", {
+  /**
+   * Surrogate primary key. Auto-incremented numeric value managed by the database.
+   * Use this for relations between tables.
+   */
   id: int("id").autoincrement().primaryKey(),
+  /** Manus OAuth identifier (openId) returned from the OAuth callback. Unique per user. */
   openId: varchar("openId", { length: 64 }).notNull().unique(),
   name: text("name"),
   email: varchar("email", { length: 320 }),
+  password: varchar("password", { length: 255 }),
   loginMethod: varchar("loginMethod", { length: 64 }),
   role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -15,88 +26,155 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-export const diagnostics = mysqlTable("diagnostics", {
+/**
+ * Tabela de Degustação (Trial/Demo)
+ * Armazena informações básicas da empresa e demandas de conformidade
+ */
+export const tastings = mysqlTable("tastings", {
   id: int("id").autoincrement().primaryKey(),
-  publicId: varchar("publicId", { length: 32 }).notNull().unique(),
-  consultantName: varchar("consultantName", { length: 128 }),
-  email: varchar("email", { length: 320 }),
-  gender: mysqlEnum("gender", ["male", "female", "other"]),
-  birthDate: varchar("birthDate", { length: 20 }).notNull(),
-  birthTime: varchar("birthTime", { length: 10 }),
-  birthPlace: varchar("birthPlace", { length: 256 }),
-  hasDst: int("hasDst").default(0).notNull(),
-  pillarsData: json("pillarsData"),
-  tastingAnalysis: text("tastingAnalysis"),
-  basicAnalysis: text("basicAnalysis"),
-  fullAnalysis: text("fullAnalysis"),
-  paymentId: varchar("paymentId", { length: 64 }),
-  paymentStatus: mysqlEnum("paymentStatus", ["pending", "paid"]).default("pending").notNull(),
-  paymentMethod: mysqlEnum("paymentMethod", ["pix", "card"]),
-  pixPayload: text("pixPayload"),
-  pixTxid: varchar("pixTxid", { length: 64 }),
-  amountPaid: decimal("amountPaid", { precision: 10, scale: 2 }),
-  couponApplied: varchar("couponApplied", { length: 64 }),
-  analysisVariant: mysqlEnum("analysisVariant", ["epic", "predictive"]).default("predictive").notNull(),
-  archetype: varchar("archetype", { length: 64 }),
-  whatsappPhone: varchar("whatsappPhone", { length: 20 }),
-  whatsappSentAt: timestamp("whatsappSentAt"),
-  emailSentAt: timestamp("emailSentAt"),
-  abTestVariant: mysqlEnum("abTestVariant", ["A", "B"]).default("A").notNull(),
-  selectedPlan: mysqlEnum("selectedPlan", ["promo", "normal", "lifetime"]),
-  selectedHooks: json("selectedHooks"),
-  selectedVariants: json("selectedVariants"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  
+  // Identificação
+  userId: int("user_id"),
+  email: varchar("email", { length: 320 }).notNull(),
+  
+  // Informações da Empresa
+  razaoSocial: varchar("razao_social", { length: 255 }).notNull(),
+  cnpj: varchar("cnpj", { length: 18 }).notNull().unique(),
+  segmento: varchar("segmento", { length: 100 }),
+  tamanho: mysqlEnum("tamanho", ["micro", "pequena", "media", "grande", "multinacional"]),
+  
+  // Localização
+  cep: varchar("cep", { length: 9 }),
+  estado: varchar("estado", { length: 2 }),
+  cidade: varchar("cidade", { length: 100 }),
+  
+  // Contato
+  responsavel: varchar("responsavel", { length: 255 }),
+  cargo: varchar("cargo", { length: 100 }),
+  telefone: varchar("telefone", { length: 20 }),
+  
+  // Demandas (JSON array)
+  demandas: json("demandas").$type<string[]>(),
+  
+  // Riscos identificados (JSON array)
+  riscos: json("riscos").$type<string[]>(),
+  
+  // Status de conformidade por pilar (0-100%)
+  statusLei: int("status_lei").notNull(),
+  statusRegras: int("status_regras").notNull(),
+  statusConformidade: int("status_conformidade").notNull(),
+  statusTitular: int("status_titular").notNull(),
+  
+  // Observações
+  observacoes: text("observacoes"),
+  
+  // Status
+  status: mysqlEnum("status", ["draft", "submitted", "converted", "expired"]).default("draft"),
+  
+  // Timestamps
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+  submittedAt: timestamp("submitted_at"),
 });
 
-export type Diagnostic = typeof diagnostics.$inferSelect;
-export type InsertDiagnostic = typeof diagnostics.$inferInsert;
+export type Tasting = typeof tastings.$inferSelect;
+export type InsertTasting = typeof tastings.$inferInsert;
 
-export const feedbacks = mysqlTable("feedbacks", {
+/**
+ * Tabela de Assinaturas
+ * Rastreia planos ativos, datas de renovação e status de pagamento
+ */
+export const subscriptions = mysqlTable("subscriptions", {
   id: int("id").autoincrement().primaryKey(),
-  diagnosticId: int("diagnosticId").notNull(),
-  accuracy: mysqlEnum("accuracy", ["very_accurate", "accurate", "neutral", "inaccurate", "very_inaccurate"]).notNull(),
-  comment: text("comment"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  userId: int("user_id").notNull(),
+  
+  // Plano
+  planId: varchar("plan_id", { length: 64 }).notNull(),
+  planName: varchar("plan_name", { length: 100 }).notNull(),
+  
+  // Preço
+  priceMonthly: decimal("price_monthly", { precision: 10, scale: 2 }).notNull(),
+  discount: decimal("discount", { precision: 5, scale: 2 }),
+  
+  // Empresa
+  razaoSocial: varchar("razao_social", { length: 255 }).notNull(),
+  cnpj: varchar("cnpj", { length: 18 }).notNull(),
+  
+  // Mercado Pago
+  mercadoPagoId: varchar("mercado_pago_id", { length: 255 }),
+  paymentStatus: mysqlEnum("payment_status", ["pending", "approved", "failed", "cancelled"]).default("pending"),
+  
+  // Status
+  status: mysqlEnum("status", ["active", "cancelled", "suspended", "expired"]).default("active"),
+  
+  // Datas
+  startDate: timestamp("start_date").notNull(),
+  nextBillingDate: timestamp("next_billing_date"),
+  endDate: timestamp("end_date"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });
 
-export type Feedback = typeof feedbacks.$inferSelect;
-export type InsertFeedback = typeof feedbacks.$inferInsert;
+export type Subscription = typeof subscriptions.$inferSelect;
+export type InsertSubscription = typeof subscriptions.$inferInsert;
 
-export const coupons = mysqlTable("coupons", {
+/**
+ * Tabela de Documentos
+ * Armazena documentos gerados para cada cliente (políticas, contratos, etc)
+ */
+export const documents = mysqlTable("documents", {
   id: int("id").autoincrement().primaryKey(),
-  code: varchar("code", { length: 64 }).notNull().unique(),
-  discountType: mysqlEnum("discountType", ["fixed", "percentage"]).notNull(),
-  discountValue: decimal("discountValue", { precision: 10, scale: 2 }).notNull(),
-  maxUses: int("maxUses").notNull(),
-  usedCount: int("usedCount").default(0).notNull(),
-  isActive: boolean("isActive").default(true).notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  expiresAt: timestamp("expiresAt"),
+  userId: int("user_id").notNull(),
+  
+  // Identificação
+  type: mysqlEnum("type", ["politica", "termos", "ripd", "ropa", "dpa", "procuracao"]),
+  title: varchar("title", { length: 255 }).notNull(),
+  
+  // Armazenamento
+  fileUrl: varchar("file_url", { length: 500 }),
+  fileKey: varchar("file_key", { length: 255 }),
+  
+  // Status
+  status: mysqlEnum("status", ["draft", "pending_review", "approved", "signed"]).default("draft"),
+  
+  // Timestamps
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });
 
-export type Coupon = typeof coupons.$inferSelect;
-export type InsertCoupon = typeof coupons.$inferInsert;
+export type Document = typeof documents.$inferSelect;
+export type InsertDocument = typeof documents.$inferInsert;
 
-export const couponRedemptions = mysqlTable("coupon_redemptions", {
+/**
+ * Tabela de Eventos de Webhook
+ * Armazena IDs de webhooks já processados para evitar duplicação
+ */
+export const webhookEvents = mysqlTable("webhook_events", {
   id: int("id").autoincrement().primaryKey(),
-  couponId: int("couponId").notNull(),
-  diagnosticPublicId: varchar("diagnosticPublicId", { length: 32 }).notNull(),
-  appliedAt: timestamp("appliedAt").defaultNow().notNull(),
+  
+  // Identificação do evento
+  requestId: varchar("request_id", { length: 255 }).notNull().unique(),
+  paymentId: varchar("payment_id", { length: 255 }).notNull(),
+  
+  // Tipo de evento
+  eventType: varchar("event_type", { length: 50 }).notNull(), // "payment.created", "payment.updated", etc
+  
+  // Status
+  status: mysqlEnum("status", ["pending", "processed", "failed"]).default("pending"),
+  
+  // Dados do evento
+  eventData: json("event_data"),
+  
+  // Resultado do processamento
+  result: text("result"),
+  error: text("error"),
+  
+  // Timestamps
+  receivedAt: timestamp("received_at").defaultNow().notNull(),
+  processedAt: timestamp("processed_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });
 
-export type CouponRedemption = typeof couponRedemptions.$inferSelect;
-export type InsertCouponRedemption = typeof couponRedemptions.$inferInsert;
-
-export const capabilities = mysqlTable("capabilities", {
-  id: int("id").autoincrement().primaryKey(),
-  key: varchar("key", { length: 128 }).notNull().unique(),
-  name: varchar("name", { length: 256 }).notNull(),
-  status: mysqlEnum("status", ["enabled", "disabled", "beta"]).default("enabled").notNull(),
-  version: varchar("version", { length: 32 }).default("1.0.0").notNull(),
-  metadata: json("metadata"),
-  enabledAt: timestamp("enabledAt").defaultNow().notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
-
-export type Capability = typeof capabilities.$inferSelect;
-export type InsertCapability = typeof capabilities.$inferInsert;
+export type WebhookEvent = typeof webhookEvents.$inferSelect;
+export type InsertWebhookEvent = typeof webhookEvents.$inferInsert;
