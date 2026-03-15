@@ -7,7 +7,7 @@ import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
-import { processMercadoPagoWebhook, generateFullAnalysisOnPayment } from "../webhook";
+import { validateWebhookSignature, processarWebhookMercadoPago } from "../webhooks";
 import stripeWebhookRouter from "../webhooks/stripe";
 
 function isPortAvailable(port: number): Promise<boolean> {
@@ -38,15 +38,38 @@ async function startServer() {
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
 
-  // Mercado Pago webhook
-  app.post("/api/webhooks/mercadopago", express.json(), async (req, res) => {
+  // Mercado Pago webhook — com validação de assinatura HMAC
+  app.post("/api/webhooks/mercadopago", express.raw({ type: "application/json" }), async (req, res) => {
     try {
-      console.log("[Webhook] Received Mercado Pago event:", req.body);
-      await processMercadoPagoWebhook(req.body);
+      const xSignature = req.headers["x-signature"] as string;
+      const xRequestId = req.headers["x-request-id"] as string;
+      const body = req.body instanceof Buffer ? req.body.toString() : JSON.stringify(req.body);
+
+      console.log("[Webhook] Mercado Pago recebido — signature:", xSignature ? "presente" : "ausente");
+
+      if (!xSignature || !xRequestId) {
+        console.error("[Webhook] Headers de segurança ausentes");
+        return res.status(400).json({ error: "Headers de segurança ausentes" });
+      }
+
+      const isValid = validateWebhookSignature(body, xSignature, xRequestId);
+      if (!isValid) {
+        console.error("[Webhook] Assinatura HMAC inválida");
+        return res.status(401).json({ error: "Assinatura inválida" });
+      }
+
+      let data: unknown;
+      try {
+        data = JSON.parse(body);
+      } catch {
+        return res.status(400).json({ error: "JSON inválido" });
+      }
+
+      await processarWebhookMercadoPago({ ...(data as object), requestId: xRequestId });
       res.status(200).json({ success: true });
     } catch (error) {
-      console.error("[Webhook] Error processing Mercado Pago event:", error);
-      res.status(500).json({ error: "Internal server error" });
+      console.error("[Webhook] Erro ao processar evento:", error);
+      res.status(500).json({ error: "Erro interno" });
     }
   });
 

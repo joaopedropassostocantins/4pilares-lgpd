@@ -1,474 +1,146 @@
-import { useState } from "react";
+/*
+ * Blog.tsx — 4 Pilares LGPD
+ * Blog institucional — artigos sobre LGPD, jurisprudência, compliance digital
+ */
+import { motion } from "framer-motion";
+import { BookOpen, Calendar, ArrowRight, Tag } from "lucide-react";
 import { Link } from "wouter";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ArrowRight, Search, Calendar, User } from "lucide-react";
+import Layout from "@/components/Layout";
 
-interface BlogPost {
-  id: string;
-  title: string;
-  excerpt: string;
-  content?: string;
-  category: "ritual" | "pratica" | "historia" | "guia";
-  author: string;
-  date: string;
-  readTime: number;
-  image: string;
-}
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i = 0) => ({ opacity: 1, y: 0, transition: { delay: i * 0.08, duration: 0.5 } }),
+};
 
-const blogPosts: BlogPost[] = [
+const artigos = [
   {
-    id: "ralo-invisivel-dinheiro",
-    title: "O 'ralo invisível' do dinheiro: por que algumas pessoas acumulam e outras gastam tudo no mesmo mês",
-    excerpt: "Não é falta de disciplina. O comportamento com dinheiro tem um padrão que aparece no seu mapa de nascimento.",
-    category: "pratica",
-    author: "Especialista Musok (무속) coreano",
-    date: "2026-03-06",
-    readTime: 7,
-    image: "💵",
+    tag: "LGPD",
+    tagColor: "#1D4ED8",
+    tagBg: "#EFF6FF",
+    titulo: "O que muda com a LGPD para pequenas empresas em 2024",
+    resumo: "Análise das principais obrigações da LGPD aplicáveis a microempresas e EPPs, com foco nas medidas prioritárias e nos riscos mais comuns.",
+    data: "15 Jan 2024",
+    leitura: "8 min",
   },
   {
-    id: "saju-casamento-empresa",
-    title: "Por que os coreanos consultam o SAJU antes de casar, abrir empresa ou mudar de cidade",
-    excerpt: "Na Coreia, consultar o SAJU antes de decisões importantes não é superstição — é protocolo.",
-    category: "historia",
-    author: "Especialista Musok (무속) coreano",
-    date: "2026-03-05",
-    readTime: 6,
-    image: "🃶",
+    tag: "Jurisprudência",
+    tagColor: "#059669",
+    tagBg: "#ECFDF5",
+    titulo: "Primeiras sanções da ANPD: o que aprender com os casos julgados",
+    resumo: "Revisão dos primeiros processos administrativos sancionatórios da ANPD e as lições para empresas que ainda estão em processo de adequação.",
+    data: "22 Jan 2024",
+    leitura: "12 min",
   },
   {
-    id: "por-que-repito-erros",
-    title: "Você não é sabotador. Seu padrão de nascimento é que está no comando",
-    excerpt: "A psicologia chama de compulsão à repetição. O SAJU chama de padrão dos 4 Pilares.",
-    category: "pratica",
-    author: "Especialista Musok (무속) coreano",
-    date: "2026-03-04",
-    readTime: 8,
-    image: "🔄",
+    tag: "Compliance",
+    tagColor: "#EA580C",
+    tagBg: "#FFF7ED",
+    titulo: "DPO as a Service: quando contratar e como funciona",
+    resumo: "Guia completo sobre o papel do Encarregado de Dados, quando a modalidade externa é adequada e como estruturar o serviço.",
+    data: "05 Fev 2024",
+    leitura: "10 min",
   },
   {
-    id: "cetico-saju",
-    title: "Não acredito em misticismo — mas o SAJU me acertou em coisas que ninguém poderia saber",
-    excerpt: "Um olhar cético sobre o SAJU. O que é, como funciona, e por que o sistema não exige fé.",
-    category: "guia",
-    author: "Especialista Musok (무속) coreano",
-    date: "2026-03-03",
-    readTime: 7,
-    image: "🔍",
+    tag: "Titular",
+    tagColor: "#7C3AED",
+    tagBg: "#F5F3FF",
+    titulo: "Como estruturar o canal de atendimento ao titular de dados",
+    resumo: "Passo a passo para criar um canal eficiente de exercício de direitos dos titulares, com fluxos de atendimento e prazos legais.",
+    data: "18 Fev 2024",
+    leitura: "7 min",
   },
   {
-    id: "xamanismo-luto",
-    title: "O que o xamanismo coreano diz sobre as almas que partem sem despedida",
-    excerpt: "Na tradição coreana, mortes abruptas deixam almas em transição. O ritual Gut existe para fechar o que ficou em aberto.",
-    category: "ritual",
-    author: "Especialista Musok (무속) coreano",
-    date: "2026-03-02",
-    readTime: 8,
-    image: "🔮",
+    tag: "LGPD",
+    tagColor: "#1D4ED8",
+    tagBg: "#EFF6FF",
+    titulo: "ROPA: como elaborar o registro de atividades de tratamento",
+    resumo: "Tutorial detalhado sobre o Registro de Operações de Processamento de Dados, com modelo de planilha e exemplos práticos.",
+    data: "01 Mar 2024",
+    leitura: "15 min",
   },
   {
-    id: "battle-of-fates",
-    title: "O Disney+ acabou de provar que o SAJU é real — e o mundo está prestando atenção",
-    excerpt: "Battle of Fates (운명전쟁49) estreou no Disney+ e se tornou o reality mais assistido da história da plataforma na Coreia do Sul. 49 xamãs competem para provar quem realmente consegue ler o futuro.",
-    content: `Há algumas semanas, o Disney+ estreou um reality show diferente de tudo que já foi feito: **Battle of Fates (운명전쟁49)**. Nenhum chef. Nenhum cantor. Nenhuma prova de resistência física.
-
-49 leitores do destino — xamãs, tarólogos, fisiognomonistas e mestres do SAJO, a astrologia ancestral coreana — competindo para provar quem realmente consegue ler o futuro.
-
-## O Fenômeno do Reality
-
-O programa se tornou o reality mais assistido da história do Disney+ na Coreia do Sul, superando títulos com orçamentos milionários. E a razão é simples: as pessoas querem respostas que a lógica convencional não dá.
-
-Os participantes foram submetidos a desafios perturbadoramente precisos:
-- Identificar a causa da morte de desconhecidos
-- Encontrar pessoas com determinado patrimônio
-- Reconhecer casais com múltiplos filhos apenas pela energia
-
-No episódio final, três famílias que perderam entes queridos buscaram mensagens dos que partiram. Os xamãs conduziram rituais para guiar as almas em paz.
-
-## O Significado Cultural
-
-Crença ou ceticismo à parte: quando um dos maiores estúdios do mundo decide apostar em xamanismo e SAJO como formato de entretenimento global, algo mudou.
-
-Não é mais sobre crenças marginalizadas. É sobre reconhecimento de um sistema milenar que funciona.
-
-## O que o SAJU Realmente É
-
-O SAJU (四柱, "quatro pilares") não é adivinhação. É um sistema milenar de leitura de padrões baseado na sua data de nascimento — ano, mês, dia e hora — cruzados com os cinco elementos e os ciclos energéticos que governam cada período da sua vida.
-
-Enquanto o reality mostra o espetáculo, o que fazemos aqui vai mais fundo: identificamos o padrão específico que se repete na sua vida — em dinheiro, amor, saúde ou decisões — e mostramos a janela exata para romper esse ciclo.
-
-## Próximos Passos
-
-Você não precisa acreditar. Precisa ver.
-
-A análise gratuita leva 30 segundos. Sem cadastro. Revelar seu padrão agora.
-
-Quer ir mais fundo? Os módulos especializados combinam sua análise dos 4 Pilares com acompanhamento ao vivo — uma videochamada por semana durante 90 dias.
-
----
-
-**Referência:** Battle of Fates está disponível no Disney+. O programa marca um ponto de virada no reconhecimento global da sabedoria ancestral coreana.`,
-    category: "historia",
-    author: "Especialista Musok (무속) coreano",
-    date: "2026-03-01",
-    readTime: 6,
-    image: "📺",
-  },
-  {
-    id: "kut-ritual",
-    title: "O Kut: O Ritual Sagrado do Musok Coreano",
-    excerpt: "Descubra os mistérios do Kut, o ritual mais importante do xamanismo coreano, e como ele conecta o mundo espiritual com o humano.",
-    content: `O Kut (굿) é o ritual xamânico mais importante da tradição Musok coreana. É uma cerimônia complexa que pode durar horas ou até dias, envolvendo cânticos, danças sagradas, oferendas e comunicação direta com entidades espirituais.
-
-## Origens e Significado
-
-O Kut tem raízes que remontam a milhares de anos na história coreana. A palavra "Kut" significa literalmente "diversão" ou "celebração", mas seu significado vai muito além. É um ato de devoção, cura e comunicação com o mundo espiritual.
-
-## Estrutura do Ritual
-
-Um Kut típico segue uma estrutura bem definida:
-
-1. **Invocação Inicial** - O xamã (Mudang ou Paksu) invoca os espíritos e deidades
-2. **Oferendas** - Comida, bebida e objetos são oferecidos aos espíritos
-3. **Danças Sagradas** - Movimentos ritmados que induzem transe espiritual
-4. **Cânticos Sagrados** - Mantras e hinos que elevam a energia espiritual
-5. **Comunicação** - O xamã recebe mensagens dos espíritos para os participantes
-6. **Cura e Bênção** - Rituais de cura e proteção são realizados
-
-## Propósitos do Kut
-
-O Kut é realizado para diversos propósitos:
-- **Cura Espiritual** - Remover maldições e bloqueios energéticos
-- **Proteção** - Afastar influências negativas
-- **Celebração** - Honrar deidades e espíritos ancestrais
-- **Adivinhação** - Receber orientações para o futuro
-- **Transição** - Ajudar almas a passar para o outro mundo
-
-## A Importância Contemporânea
-
-Apesar da modernização da Coreia do Sul, o Kut permanece uma prática viva e respeitada. Muitas famílias ainda realizam Kuts para honrar seus ancestrais e buscar bênçãos espirituais.`,
-    category: "ritual",
-    author: "Especialista Musok (무속) coreano",
-    date: "2026-03-01",
-    readTime: 8,
-    image: "🎭",
-  },
-  {
-    id: "shinbyeong",
-    title: "Shinbyeong: A Doença Espiritual que Transforma",
-    excerpt: "Conheça o Shinbyeong, a experiência espiritual que marca o chamado de um novo xamã e transforma vidas.",
-    content: `Shinbyeong (신병), literalmente "doença do espírito", é um fenômeno único na tradição Musok coreana. É uma experiência transformadora que marca o chamado de uma pessoa para se tornar xamã.
-
-## O que é Shinbyeong?
-
-Shinbyeong não é uma doença comum. É uma crise espiritual profunda que afeta pessoas escolhidas pelos espíritos para se tornarem xamãs. Os sintomas incluem:
-
-- Sonhos vívidos e perturbadores
-- Sensibilidade extrema a energias espirituais
-- Mudanças de humor repentinas
-- Sensação de presença espiritual
-- Desejo irresistível de dançar e cantar
-
-## A Jornada de Transformação
-
-A experiência de Shinbyeong é dividida em fases:
-
-1. **Crise Inicial** - O indivíduo experimenta sintomas perturbadores
-2. **Isolamento** - Afastamento temporário da vida normal
-3. **Iniciação** - Encontro com um xamã experiente
-4. **Treinamento** - Aprendizado dos rituais e práticas
-5. **Renascimento** - Aceitação da nova identidade como xamã
-
-## Significado Espiritual
-
-Shinbyeong é visto como um chamado divino. Os espíritos escolhem indivíduos com capacidades especiais para se tornarem intermediários entre os mundos. É uma honra e uma responsabilidade.
-
-## Reconhecimento Moderno
-
-Hoje, o Shinbyeong é reconhecido como uma experiência legítima de transformação espiritual. Muitas escolas de Musok oferecem programas para ajudar pessoas que passam por essa experiência.`,
-    category: "historia",
-    author: "Especialista Musok (무속) coreano",
-    date: "2026-02-28",
-    readTime: 7,
-    image: "✨",
-  },
-  {
-    id: "talismans",
-    title: "Talismãs e Amuletos: Proteção Através da Magia Coreana",
-    excerpt: "Aprenda sobre os talismãs sagrados do Musok e como usá-los para proteção e cura.",
-    content: `Os talismãs (부적) são objetos sagrados na tradição Musok coreana, criados através de rituais específicos para oferecer proteção, cura e bênção.
-
-## Tipos de Talismãs
-
-### Talismãs de Proteção
-Criados para afastar energias negativas e influências prejudiciais. Geralmente feitos com papel especial e símbolos sagrados.
-
-### Talismãs de Cura
-Usados para tratar doenças físicas e espirituais. Cada talismã é personalizado para a condição específica.
-
-### Talismãs de Abundância
-Atraem prosperidade, sucesso e oportunidades. Populares entre comerciantes e empreendedores.
-
-### Talismãs de Amor
-Fortalecem relacionamentos e atraem amor genuíno. Criados com intenção e rituais específicos.
-
-## Como Usar Talismãs
-
-1. **Purificação** - O talismã deve ser purificado antes do uso
-2. **Intenção** - Estabeleça uma intenção clara ao usar
-3. **Colocação** - Coloque em local apropriado (bolsa, casa, altar)
-4. **Manutenção** - Renove a energia periodicamente
-
-## Eficácia e Fé
-
-A eficácia de um talismã depende da fé do usuário e da intenção do criador. No Musok, acredita-se que a energia espiritual flui através da intenção e da conexão com o divino.`,
-    category: "pratica",
-    author: "Especialista Musok (무속) coreano",
-    date: "2026-02-25",
-    readTime: 6,
-    image: "🛡️",
-  },
-  {
-    id: "adivinhacao",
-    title: "Adivinhação no Musok: Lendo os Sinais do Universo",
-    excerpt: "Explore as técnicas ancestrais de adivinhação usadas pelos xamãs coreanos para orientar decisões importantes.",
-    content: `A adivinhação (점) é uma prática central no Musok coreano. Os xamãs usam várias técnicas para ler sinais do universo e orientar as pessoas em suas jornadas.
-
-## Técnicas de Adivinhação
-
-### Leitura de Espíritos
-O xamã entra em transe e recebe mensagens diretas dos espíritos. É considerada a forma mais precisa de adivinhação.
-
-### Leitura de Símbolos
-Símbolos sagrados são interpretados para revelar mensagens ocultas sobre o futuro.
-
-### Leitura de Energia
-O xamã sente a energia ao redor de uma pessoa para compreender sua situação espiritual e física.
-
-### Leitura de Sonhos
-Os sonhos são analisados para revelar mensagens do inconsciente e do mundo espiritual.
-
-## Preparação para uma Leitura
-
-Antes de uma sessão de adivinhação:
-- Limpe sua mente de expectativas
-- Estabeleça uma intenção clara
-- Abra-se para receber a mensagem
-- Confie no processo
-
-## Aplicação Prática
-
-As orientações recebidas através da adivinhação podem ser aplicadas em:
-- Decisões de carreira
-- Relacionamentos
-- Saúde e bem-estar
-- Desenvolvimento espiritual
-- Resolução de conflitos`,
-    category: "guia",
-    author: "Especialista Musok (무속) coreano",
-    date: "2026-02-20",
-    readTime: 7,
-    image: "🔮",
-  },
-  {
-    id: "mudang",
-    title: "Mudang: As Mulheres Xamãs da Coreia",
-    excerpt: "Conheça a história e o papel das Mudang na preservação da tradição Musok coreana.",
-    content: `Mudang (무당) são as mulheres xamãs da tradição Musok coreana. Elas ocupam um papel central na preservação e transmissão dessa sabedoria ancestral.
-
-## História das Mudang
-
-As Mudang têm uma história que remonta aos tempos antigos da Coreia. Historicamente, eram respeitadas como intermediárias entre os mundos espiritual e humano.
-
-## Papel na Comunidade
-
-### Cura Espiritual
-As Mudang realizam rituais de cura para indivíduos e comunidades.
-
-### Orientação Espiritual
-Oferecem orientações através de adivinhação e comunicação com espíritos.
-
-### Preservação da Tradição
-Transmitem conhecimentos ancestrais para novas gerações.
-
-### Celebração Ritual
-Conduzem cerimônias importantes como Kuts e rituais de passagem.
-
-## Treinamento e Iniciação
-
-O caminho para se tornar Mudang envolve:
-1. Experiência de Shinbyeong
-2. Aprendizado com uma Mudang experiente
-3. Realização de rituais de iniciação
-4. Desenvolvimento contínuo de habilidades espirituais
-
-## Mudang Contemporâneas
-
-Hoje, muitas Mudang combinam práticas tradicionais com abordagens modernas, oferecendo orientação espiritual para pessoas em busca de significado e cura.`,
-    category: "historia",
-    author: "Especialista Musok (무속) coreano",
-    date: "2026-02-15",
-    readTime: 8,
-    image: "👩‍🔮",
+    tag: "Compliance",
+    tagColor: "#EA580C",
+    tagBg: "#FFF7ED",
+    titulo: "Transferência internacional de dados: o que sua empresa precisa saber",
+    resumo: "Análise das hipóteses de transferência internacional permitidas pela LGPD e as cláusulas contratuais padrão aprovadas pela ANPD.",
+    data: "12 Mar 2024",
+    leitura: "11 min",
   },
 ];
 
-const categoryLabels = {
-  ritual: "🎭 Rituais",
-  pratica: "✨ Práticas",
-  historia: "📚 História",
-  guia: "🧭 Guia",
-};
-
-const categoryColors = {
-  ritual: "bg-fire/10 text-fire border-fire/30",
-  pratica: "bg-purple-light/10 text-purple-light border-purple-light/30",
-  historia: "bg-wood/10 text-wood border-wood/30",
-  guia: "bg-earth/10 text-earth border-earth/30",
-};
-
-export default function BlogPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
-  const filteredPosts = blogPosts.filter((post) => {
-    const matchesSearch =
-      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = !selectedCategory || post.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
-
+export default function Blog() {
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-primary/10 to-primary/5 border-b border-border/30 py-12">
-        <div className="container mx-auto px-4">
-          <Link href="/">
-            <Button variant="ghost" className="mb-6">← Voltar</Button>
-          </Link>
-          <div className="text-5xl mb-4">📚</div>
-          <h1 className="text-4xl font-bold text-primary mb-2" style={{ fontFamily: "'Cinzel', serif" }}>
-            Blog Pilares da Sabedoria
-          </h1>
-          <p className="text-xl text-muted-foreground">Conteúdo educativo sobre Musok, rituais e práticas ancestrais</p>
+    <Layout>
+      <section className="bg-white py-20 border-b border-slate-100">
+        <div className="container">
+          <motion.div initial="hidden" animate="visible" variants={fadeUp} className="max-w-2xl">
+            <p className="section-number mb-3">Blog</p>
+            <h1 className="title-serif text-4xl lg:text-5xl text-slate-900 mb-4">
+              Artigos sobre LGPD e privacidade
+            </h1>
+            <p className="text-slate-600 text-lg">
+              Conteúdo especializado sobre proteção de dados, compliance digital e jurisprudência da ANPD.
+            </p>
+          </motion.div>
         </div>
-      </div>
+      </section>
 
-      {/* Search and Filter */}
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-2xl mx-auto mb-12">
-          <div className="relative mb-6">
-            <Search className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-            <Input
-              placeholder="Buscar artigos..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-
-          {/* Category Filter */}
-          <div className="flex flex-wrap gap-2">
-            <Button
-              variant={selectedCategory === null ? "default" : "outline"}
-              onClick={() => setSelectedCategory(null)}
-              size="sm"
-            >
-              Todos
-            </Button>
-            {Object.entries(categoryLabels).map(([key, label]) => (
-              <Button
-                key={key}
-                variant={selectedCategory === key ? "default" : "outline"}
-                onClick={() => setSelectedCategory(key)}
-                size="sm"
+      <section className="py-20" style={{ backgroundColor: "#F8FAFC" }}>
+        <div className="container">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {artigos.map((artigo, i) => (
+              <motion.div
+                key={artigo.titulo}
+                custom={i}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeUp}
               >
-                {label}
-              </Button>
+                <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-300 hover:-translate-y-1 group h-full flex flex-col">
+                  <div className="h-2" style={{ backgroundColor: artigo.tagColor }} />
+                  <div className="p-6 flex flex-col flex-1">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium"
+                        style={{ backgroundColor: artigo.tagBg, color: artigo.tagColor }}
+                      >
+                        <Tag className="w-3 h-3" />
+                        {artigo.tag}
+                      </span>
+                    </div>
+                    <h3 className="title-serif text-lg text-slate-900 mb-3 group-hover:text-blue-700 transition-colors leading-snug">
+                      {artigo.titulo}
+                    </h3>
+                    <p className="text-sm text-slate-600 leading-relaxed flex-1 mb-4">{artigo.resumo}</p>
+                    <div className="flex items-center justify-between text-xs text-slate-400 pt-4 border-t border-slate-100">
+                      <div className="flex items-center gap-1.5">
+                        <Calendar className="w-3.5 h-3.5" />
+                        {artigo.data}
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <BookOpen className="w-3.5 h-3.5" />
+                        {artigo.leitura}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
             ))}
           </div>
-        </div>
 
-        {/* Posts Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {filteredPosts.map((post) => (
-            <Link key={post.id} href={`/blog/${post.id}`}>
-              <div className="bg-card border border-border/30 rounded-lg overflow-hidden hover:shadow-lg transition-shadow cursor-pointer h-full flex flex-col">
-                {/* Image */}
-                <div className="bg-primary/10 h-40 flex items-center justify-center text-6xl">
-                  {post.image}
-                </div>
-
-                {/* Content */}
-                <div className="p-6 flex flex-col flex-grow">
-                  {/* Category Badge */}
-                  <div className={`inline-flex w-fit px-3 py-1 rounded-full text-xs font-semibold mb-3 border ${categoryColors[post.category]}`}>
-                    {categoryLabels[post.category]}
-                  </div>
-
-                  {/* Title */}
-                  <h3 className="text-lg font-bold text-foreground mb-2 line-clamp-2">
-                    {post.title}
-                  </h3>
-
-                  {/* Excerpt */}
-                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2 flex-grow">
-                    {post.excerpt}
-                  </p>
-
-                  {/* Meta */}
-                  <div className="flex items-center justify-between text-xs text-muted-foreground pt-4 border-t border-border/30">
-                    <div className="flex items-center gap-4">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="h-3 w-3" />
-                        {new Date(post.date).toLocaleDateString("pt-BR")}
-                      </span>
-                      <span>{post.readTime} min</span>
-                    </div>
-                    <ArrowRight className="h-4 w-4" />
-                  </div>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-
-        {/* Empty State */}
-        {filteredPosts.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground text-lg">Nenhum artigo encontrado.</p>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setSearchQuery("");
-                setSelectedCategory(null);
-              }}
-              className="mt-4"
+          <div className="mt-12 text-center">
+            <p className="text-sm text-slate-500 mb-4">Mais artigos em breve. Assine nossa newsletter para ser notificado.</p>
+            <a
+              href="mailto:contato@sajodiagnos.club?subject=Newsletter 4 Pilares LGPD"
+              className="inline-flex items-center gap-2 px-6 h-11 rounded-xl text-sm font-medium bg-blue-700 text-white no-underline hover:bg-blue-800 transition-colors"
             >
-              Limpar filtros
-            </Button>
+              Assinar newsletter <ArrowRight className="w-4 h-4" />
+            </a>
           </div>
-        )}
-      </div>
-
-      {/* CTA */}
-      <div className="bg-primary/10 border-t border-border/30 py-12">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl font-bold text-primary mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
-            Quer aprender mais?
-          </h2>
-          <p className="text-muted-foreground mb-6">
-            Explore nossos módulos educativos e comece sua jornada na sabedoria do Musok coreano.
-          </p>
-          <Link href="/">
-            <Button size="lg" className="gap-2">
-              Explorar Módulos <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
         </div>
-      </div>
-    </div>
+      </section>
+    </Layout>
   );
 }
