@@ -55,12 +55,12 @@ export async function createMercadoPagoPreference(input: CreatePreferenceRequest
       },
       external_reference: externalReference,
       back_urls: {
-        success: `${process.env.FRONTEND_URL || "https://4pilareslgpd.club"}/checkout/sucesso`,
-        failure: `${process.env.FRONTEND_URL || "https://4pilareslgpd.club"}/checkout/erro`,
-        pending: `${process.env.FRONTEND_URL || "https://4pilareslgpd.club"}/checkout/pendente`,
+        success: `${ENV.appUrl}/checkout/sucesso`,
+        failure: `${ENV.appUrl}/checkout/erro`,
+        pending: `${ENV.appUrl}/checkout/pendente`,
       },
       auto_return: "approved",
-      notification_url: `${process.env.WEBHOOK_URL || "https://4pilareslgpd-upm86dcc.manus.space"}/api/webhooks/mercadopago`,
+      notification_url: `${ENV.appUrl}/api/webhooks/mercadopago`,
       recurring_payment: {
         frequency: 1,
         frequency_type: "months",

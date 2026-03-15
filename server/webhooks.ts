@@ -13,6 +13,13 @@ export function validateWebhookSignature(
   xSignature: string,
   xRequestId: string
 ): boolean {
+  if (!ENV.mercadoPagoWebhookSecret) {
+    console.error(
+      "[Webhook] MERCADO_PAGO_WEBHOOK_SECRET não configurado — rejeitando webhook por segurança."
+    );
+    return false;
+  }
+
   try {
     const parts = xSignature.split(",");
     const signatureData = parts.reduce((acc, part) => {
@@ -25,7 +32,7 @@ export function validateWebhookSignature(
     const v1 = signatureData.v1;
 
     if (!ts || !v1) {
-      console.log("❌ Assinatura inválida: faltam ts ou v1");
+      console.error("[Webhook] Assinatura inválida: campos ts ou v1 ausentes no header x-signature");
       return false;
     }
 
@@ -35,13 +42,13 @@ export function validateWebhookSignature(
       .update(manifest)
       .digest("hex");
 
-    const isValid = hmac === v1;
+    const isValid = crypto.timingSafeEqual(Buffer.from(hmac, "hex"), Buffer.from(v1, "hex"));
     if (!isValid) {
-      console.log("❌ Assinatura HMAC inválida");
+      console.error("[Webhook] Assinatura HMAC inválida — possível webhook forjado");
     }
     return isValid;
   } catch (error) {
-    console.error("❌ Erro ao validar assinatura:", error);
+    console.error("[Webhook] Erro ao validar assinatura:", error);
     return false;
   }
 }
