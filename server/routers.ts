@@ -153,24 +153,41 @@ export const appRouter = router({
           const precoReais = precoCentavos / 100;
 
           console.log(`💳 Processando pagamento real: ${input.email} - Plano ${input.planId} - R$ ${precoReais}`);
+          console.log(`🔑 Token recebido: ${input.token.substring(0, 20)}...`);
+
+          // Validar token
+          if (!input.token || input.token.trim().length === 0) {
+            console.error("❌ Token vazio ou inválido");
+            throw new TRPCError({ code: "BAD_REQUEST", message: "Token de pagamento inválido" });
+          }
+
+          // Gerar ID unico para idempotencia
+          const idempotencyKey = `${input.cnpj}-${input.planId}-${Date.now()}`;
+          console.log(`🔐 Chave de idempotência: ${idempotencyKey}`);
 
           // Criar pagamento real no Mercado Pago usando token
           // IMPORTANTE: transaction_amount deve estar em REAIS, não em centavos
-          // Gerar ID unico para idempotencia
-          const idempotencyKey = `${input.cnpj}-${input.planId}-${Date.now()}`;
+          const paymentPayload = {
+            token: input.token,
+            transaction_amount: precoReais,
+            installments: 1,
+            description: `Plano ${input.planName} - 4 Pilares LGPD`,
+            payer: {
+              email: input.email,
+            },
+            external_reference: idempotencyKey,
+            metadata: {
+              planId: input.planId,
+              razaoSocial: input.razaoSocial,
+              cnpj: input.cnpj,
+            },
+          };
+
+          console.log("📤 Enviando pagamento para Mercado Pago:", JSON.stringify(paymentPayload, null, 2));
 
           const mpResponse = await axios.post(
             "https://api.mercadopago.com/v1/payments",
-            {
-              token: input.token,
-              transaction_amount: precoReais,
-              installments: 1,
-              description: `Plano ${input.planName} - 4 Pilares LGPD`,
-              payer: {
-                email: input.email,
-              },
-              external_reference: idempotencyKey,
-            },
+            paymentPayload,
             {
               headers: {
                 Authorization: `Bearer ${ENV.mercadoPagoAccessToken}`,
@@ -183,8 +200,14 @@ export const appRouter = router({
           const paymentId = mpResponse.data.id;
           const paymentStatus = mpResponse.data.status;
           const paymentAmount = mpResponse.data.transaction_amount;
+          const paymentMethodId = mpResponse.data.payment_method_id;
 
-          console.log(`✅ Pagamento criado no Mercado Pago: ${paymentId} - Status: ${paymentStatus} - Valor: R$ ${paymentAmount / 100}`);
+          console.log(`✅ Pagamento criado no Mercado Pago:`);
+          console.log(`   ID: ${paymentId}`);
+          console.log(`   Status: ${paymentStatus}`);
+          console.log(`   Valor: R$ ${(paymentAmount / 100).toFixed(2)}`);
+          console.log(`   Método: ${paymentMethodId}`);
+          console.log(`   Referência: ${mpResponse.data.external_reference}`);
 
           // Criar ou atualizar usuario
           let user = await getUserByEmail(input.email);
