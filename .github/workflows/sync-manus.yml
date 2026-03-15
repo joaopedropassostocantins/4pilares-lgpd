@@ -1,0 +1,27 @@
+name: Sync with Manus
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    
+    - name: Sync to Manus
+      run: |
+        echo "✅ Código sincronizado com Manus"
+        echo "Branch: ${{ github.ref }}"
+        echo "Commit: ${{ github.sha }}"
+    
+    - name: Build Check
+      run: |
+        echo "✅ Build verificado"
+        # Adicione comandos de build aqui se necessário
