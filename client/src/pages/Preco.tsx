@@ -8,6 +8,7 @@ import { Link } from "wouter";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { PLANOS_ARRAY, formatarPreco, formatarPrecoSimples } from "@/const/pricing";
+import PayPalCheckout from "@/components/PayPalCheckout";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -146,8 +147,8 @@ export default function Preco() {
                   a: "Você paga R$150/mês pelos primeiros 12 meses. A partir do 13º mês, o valor volta a R$299/mês.",
                 },
                 {
-                  q: "Vocês aceitam outras formas de pagamento?",
-                  a: "Atualmente aceitamos cartão de crédito. Consulte-nos para outras opções.",
+                  q: "Vocês aceitam PayPal?",
+                  a: "Sim! Aceitamos PayPal com cartão de crédito, débito ou saldo PayPal. Use o botão de pagamento na seção abaixo.",
                 },
               ].map((item) => (
                 <div key={item.q}>
@@ -159,6 +160,9 @@ export default function Preco() {
           </div>
         </div>
       </section>
+
+      {/* Pagamento via PayPal */}
+      <PayPalCheckout />
 
       {/* CTA Final */}
       <section className="py-16 bg-white border-t border-slate-100">

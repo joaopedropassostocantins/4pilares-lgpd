@@ -3,7 +3,7 @@
  */
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Phone, Mail, Building2, Clock, ArrowRight } from "lucide-react";
+import { Phone, PhoneCall, Mail, Building2, Clock, ArrowRight } from "lucide-react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -56,6 +56,14 @@ export default function Contato() {
               </div>
 
               {[
+                {
+                  icon: PhoneCall,
+                  color: "#1D4ED8",
+                  bg: "#EFF6FF",
+                  label: "Telefone",
+                  value: "(63) 98438-1782",
+                  href: "tel:+5563984381782",
+                },
                 {
                   icon: Phone,
                   color: "#25D366",
