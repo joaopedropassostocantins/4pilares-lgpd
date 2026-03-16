@@ -12,7 +12,7 @@ import { PLANOS_ARRAY, formatarPreco } from "@/const/pricing";
 
 // ─── PayPal Client ID (identificador público — seguro no frontend) ───────────
 const PAYPAL_CLIENT_ID =
-  "AXgq3cLTSt5YwJRX92x3pb1se7u5r98RZFY9k7vEi4jfnGPxPfPO83lDj37OyG9go7h_d3e5Ghv50iGE";
+  "EDi4eUiZDOuGRIbFkgCnDEkge26nDW0yvaHpynKolU7koqXa77WPkQuEeDLFyqRYLBGO1p1sYJEcCfML";
 
 // Planos com preço definido (Enterprise é "sob consulta")
 const PLANOS_PAGAVEIS = PLANOS_ARRAY.filter((p) => p.precoNormal !== null);
